@@ -1,0 +1,48 @@
+##########################################################################################
+##                                                                                      ##
+##                      Powershell script to create SSIS objects.                       ##
+##                                                                                      ##
+##########################################################################################
+
+$file_content = Get-Content "config.properties"
+$file_content = $file_content -join [Environment]::NewLine
+$config = ConvertFrom-StringData($file_content)
+$SSISNamespace = "Microsoft.SqlServer.Management.IntegrationServices"
+$SSISServerName = $config.'serverName'
+$outputloglocation = $config.'outputloglocation'
+$products = $config.'products'
+$products = $products -split ","
+
+Start-Transcript -Path $outputloglocation\ssis-output-$((get-date).ToString("yyyy-MM-dd-HH-mm-ss")).txt
+Write-Host "Going to Start Deploying SSIS package"
+
+	$SSISDBConnectionString = "Data Source=" + $SSISServerName + ";Initial Catalog=SSISDB;Integrated Security = True;"
+	$sqlConnection = New-Object System.Data.SqlClient.SqlConnection $SSISDBConnectionString;	[System.Reflection.Assembly]::LoadWithPartialName("Microsoft.SqlServer.Management.IntegrationServices") | Out-Null;
+	$sqlConnection.Open();
+	$integrationServices = New-Object $SSISNamespace".IntegrationServices" $sqlConnection -ErrorAction Stop
+	$catalog = $integrationServices.Catalogs["SSISDB"]
+	
+	foreach ($product in $products)
+	{
+		Write-Host 'Going to Deploy SSIS package for: ' $product
+		$ProjectName = $product
+		$folderCCB = $catalog.folders[$product]
+		#Create a folder in SSISDB if doesn't exist
+		if (!$folderCCB)
+		{
+			#Create a folder in SSISDB
+			Write-Host "Creating Folder: $folderCCB to deploy SSIS of the product: $product."
+			$folder = New-Object "$SSISNamespace.CatalogFolder" ($catalog, $product, $product)            
+			$folder.Create()
+			$folderCCB = $catalog.folders[$product]
+		}
+#		$IspacFileFullPathEtl= $pwd.Path+"\SSISPack\"+"FTI.ispac"
+		$IspacFileFullPathEtl= $pwd.Path+"\SSISPack\"+$product+".ispac"
+		[byte[]] $projectFileEtl= [System.IO.File]::ReadAllBytes($IspacFileFullPathEtl)
+#		$folderCCB.DeployProject("FTI_Pack", $projectFileEtl)
+		$folderCCB.DeployProject($ProjectName, $projectFileEtl)
+		Write-Host "Successfully Deployed SSIS for the Product $product and Project Name $ProjectName."
+	}	
+
+Write-Host "Finished executing SSIS deployment"
+Stop-Transcript

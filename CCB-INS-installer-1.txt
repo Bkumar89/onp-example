@@ -1,0 +1,26 @@
+cls
+@echo off
+echo 		############################################################################
+echo 		####                 CCB Insights On Prem Installer                     ####
+echo 		############################################################################
+echo.
+echo.
+echo In case of installation resume,after an error; open a new command prompt window, to restart installation process.
+echo.
+echo.
+
+setlocal
+
+set installPath=%cd%
+set TIMESTAMP=%DATE:~7,2%-%DATE:~4,2%-%DATE:~-4%-%TIME::=-%
+set TIMESTAMP=%TIMESTAMP: =%
+set LOG_FILE=CCB_INS_OP_Installer_%TIMESTAMP%.log
+powershell .\installer.ps1; exit $LASTEXITCODE >> %LOG_FILE%
+
+echo Installation completed.
+echo. >> %LOG_FILE%
+echo. >> %LOG_FILE%
+echo Installation completed. >> %LOG_FILE%
+echo. >> %LOG_FILE%
+echo. >> %LOG_FILE%
+echo.

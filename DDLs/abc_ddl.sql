@@ -1,0 +1,991 @@
+--GTP_USER
+CREATE TABLE GTP_USER(
+	USER_ID Number(22, 0) NOT NULL,
+	ACTV_FLAG Nvarchar2(1) NULL,
+	ADDRESS_LINE_1 Nvarchar2(35) NULL,
+	ADDRESS_LINE_2 Nvarchar2(35) NULL,
+	COMPANY_ABBV_NAME Nvarchar2(35) NOT NULL,
+	COMPANY_ID Number(19) NOT NULL,
+	COUNTRY Nvarchar2(2) NULL,
+	CREATED Timestamp(6) NULL,
+	CUR_CODE Nvarchar2(3) NULL,
+	DELETED Timestamp(6) NULL,
+	DOM Nvarchar2(35) NULL,
+	EMAIL Nvarchar2(255) NULL,
+	FAX Nvarchar2(32) NULL,
+	FIRST_NAME Nvarchar2(35) NULL,
+	LANGUAGE Nvarchar2(5) NULL,
+	LAST_NAME Nvarchar2(35) NULL,
+	LASTLOGIN Timestamp(6) NULL,
+	LOGIN_ID Nvarchar2(32) NOT NULL,
+	MODIFIED Timestamp(6) NULL,
+	OBJECTDATA Nvarchar2(35) NULL,
+	PASSWORD_VALUE Nvarchar2(512) NULL,
+	PHONE Nvarchar2(32) NULL,
+	REFERENCE Nvarchar2(255) NULL,
+	TIME_ZONE Nvarchar2(35) NULL,
+	ORG_LOGIN_ID Nvarchar2(32) NULL,
+	COUNTRY_SUB_DIV Nvarchar2(35) NULL,
+	COUNTY Nvarchar2(35) NULL,
+	COUNTRY_NAME Nvarchar2(35) NULL,
+	PENDING_TRANS_NOTIFY Nvarchar2(1) NULL,
+	ACCESS_COUNTER Number(19) NULL,
+	CREATOR_COMPANY Nvarchar2(35) NULL,
+	CREATOR_ID Number(22, 0) NULL,
+	CREATOR_LOGIN Nvarchar2(32) NULL,
+	EMPLOYEE_DEPARTMENT Nvarchar2(35) NULL,
+	EMPLOYEE_NO Nvarchar2(35) NULL,
+	LEGAL_COUNTRY Nvarchar2(2) NULL,
+	LEGAL_NO Nvarchar2(50) NULL,
+	LEGAL_TYPE Nvarchar2(10) NULL,
+	LOCKED_TIME Timestamp(6) NULL,
+	LOGIN_ATTEMPTS Number(19) NULL,
+	ONE_FA_LAST_LOGIN Timestamp(6) NULL,
+	PASSWORD_EXPIRY Timestamp(6) NULL,
+	PASSWORD_MIGRATED Nvarchar2(1) NULL,
+	REAUTH_MODE Nvarchar2(35) NULL,
+	TERMS_CONDS_ACCEPT_DATE Timestamp(6) NULL,
+	COMPANY_DEFAULT_USER Nvarchar2(1) NULL,
+	CORRESPONDENCE_LANGUAGE Nvarchar2(5) NULL,
+	RMGROUP Nvarchar2(255) NULL,
+	LAST_PASSWORD_CHANGE_DATE Timestamp(6) NULL
+);
+commit;
+-----------------------------------------------------------------------------------------------
+--GTP_XCH_RATES
+CREATE TABLE GTP_XCH_RATES(
+	BANK_ABBV_NAME Nvarchar2(35) NULL,
+	ISO_CODE Nvarchar2(3) NULL,
+	BASE_ISO_CODE Nvarchar2(3) NULL,
+	BRCH_CODE Nvarchar2(5) NULL,
+	EURO_IN_CURRENCY Nvarchar2(1) NULL,
+	EURO_RATE Number(14, 8) NULL,
+	PATY_VAL Number(19) NULL,
+	UPDATE_DATE Timestamp(6) NULL,
+	START_VALUE_DATE Timestamp(6) NULL,
+	END_VALUE_DATE Timestamp(6) NULL,
+	SELL_TT_RATE Number(21, 15) NULL,
+	MID_TT_RATE Number(21, 15) NULL,
+	BUY_TT_RATE Number(21, 15) NULL
+);
+commit;
+-----------------------------------------------------------------------------------------------
+--GTP_COMPANY
+CREATE TABLE GTP_COMPANY(
+	COMPANY_ID Number(22, 0) NOT NULL,
+	ABBV_NAME Nvarchar2(35) NOT NULL,
+	ACTV_FLAG Nvarchar2(1) NULL,
+	ADDRESS_LINE_1 Nvarchar2(35) NULL,
+	ADDRESS_LINE_2 Nvarchar2(35) NULL,
+	BASE_CUR_CODE Nvarchar2(3) NULL,
+	COMPANY_GROUP Number(22, 0) NULL,
+	CONTACT_NAME Nvarchar2(35) NULL,
+	COUNTRY Nvarchar2(2) NULL,
+	DOM Nvarchar2(35) NULL,
+	EMAIL Nvarchar2(255) NULL,
+	FAX Nvarchar2(32) NULL,
+	ISO_CODE Nvarchar2(11) NULL,
+	LANGUAGE Nvarchar2(5) NULL,
+	NAME Nvarchar2(200) NULL,
+	OWNER_ID Number(22, 0) NULL,
+	PHONE Nvarchar2(32) NULL,
+	REFERENCE Nvarchar2(64) NULL,
+	TELEX Nvarchar2(32) NULL,
+	TYPE Nvarchar2(2) NULL,
+	WEB_ADDRESS Nvarchar2(40) NULL,
+	TIME_ZONE Nvarchar2(35) NULL,
+	CHARGE_ACCOUNT_ADDRESS_LINE_1 Nvarchar2(35) NULL,
+	CHARGE_ACCOUNT_ADDRESS_LINE_2 Nvarchar2(35) NULL,
+	CHARGE_ACCOUNT_ADDRESS_LINE_3 Nvarchar2(35) NULL,
+	CHARGE_ACCOUNT_ADDRESS_LINE_4 Nvarchar2(35) NULL,
+	CHARGE_ACCOUNT Nvarchar2(35) NULL,
+	DUAL_CONTROL Nvarchar2(2) NULL,
+	PASSWORD_EXPIRY Number(19) NULL,
+	ATTACHMENT_MAX_UPLOAD_SIZE Number(19) NULL,
+	RETENTION_PERIOD Number(19) NULL,
+	BEI Nvarchar2(11) NULL,
+	STREET_NAME Nvarchar2(35) NULL,
+	POST_CODE Nvarchar2(16) NULL,
+	TOWN_NAME Nvarchar2(35) NULL,
+	COUNTRY_SUB_DIV Nvarchar2(35) NULL,
+	CRM_EMAIL Nvarchar2(35) NULL,
+	LEGAL_ID_TYPE Nvarchar2(5) NULL,
+	LEGAL_ID_NO Nvarchar2(30) NULL,
+	COUNTRY_LEGALID Nvarchar2(2) NULL,
+	AUTHORIZE_OWN_TRANSACTION Nvarchar2(1) NULL,
+	BULK_AUTHORIZE_LIMIT Nvarchar2(1) NULL,
+	AUTO_FWD_DATE Nvarchar2(1) NULL,
+	CHECK_FILE_HASH_VALUE Nvarchar2(1) NULL,
+	CHECK_DUPLICATE_FILE Nvarchar2(1) NULL,
+	CHECK_DUPLICATE_CUST_REF Nvarchar2(1) NULL,
+	FILE_ENCRYPTION_METHOD Nvarchar2(20) NULL,
+	REJECT_FILE_ON_ERROR Nvarchar2(2) NULL,
+	MERGE_DEMERGE_ALLOWED Nvarchar2(1) NULL,
+	BULK_DRAFT_ON_ERROR Nvarchar2(2) NULL,
+	COUNTY Nvarchar2(40) NULL,
+	COUNTRY_NAME Nvarchar2(40) NULL,
+	TREASURY_BRANCH_REFERENCE Nvarchar2(2) NULL,
+	CREATED Timestamp(6) NULL,
+	PSML_TEMPLATE Nvarchar2(255) NULL,
+	LIQUIDITY_FREQUENCY Nvarchar2(35) NULL,
+	INTERNAL_CHANNEL Number(22, 0) NULL,
+	LIQUIDITY_BALANCE_TYPE Nvarchar2(35) NULL,
+	LIQUIDITY_CCY_CUR_CODE Nvarchar2(3) NULL,
+	RMGROUP Nvarchar2(255) NULL,
+	LIQUIDITY_BRANCH_REFERENCE Nvarchar2(2) NULL
+);
+commit;
+-----------------------------------------------------------------------------------------------
+--GTP_ACCOUNT
+CREATE TABLE GTP_ACCOUNT(
+	ACCOUNT_ID Number(22, 7) NOT NULL,
+	ACCOUNT_NO Varchar2(35) NOT NULL,
+	ACCOUNT_TYPE Varchar2(2) NULL,
+	FORMAT Varchar2(2) NULL,
+	COUNTRY Varchar2(2) NULL,
+	CUR_CODE Varchar2(3) NULL,
+	PRINCIPAL_AMOUNT Number(18, 3) NULL,
+	MATURITY_AMOUNT Number(18, 3) NULL,
+	START_DATE Timestamp(6) NULL,
+	END_DATE Timestamp(6) NULL,
+	ACTV_FLAG Varchar2(1) NULL,
+	ACCT_NAME Varchar2(99) NULL
+);
+commit;
+-----------------------------------------------------------------------------------------------
+--GTP_ACCOUNT_STATEMENT
+CREATE TABLE GTP_ACCOUNT_STATEMENT(
+	ACCOUNT_ID Number(22, 0) NOT NULL,
+	STATEMENT_ID Number(20, 0) NOT NULL,
+	BRCH_CODE Varchar2(5) NOT NULL,
+	TYPE Varchar2(2) NULL,
+	IDX Number(22, 2) NULL,
+	SEQ_IDX Number(22, 2) NULL,
+	DESCRIPTION Varchar2(255) NULL,
+	VALUE_DATE Timestamp(6) NULL
+);
+commit;
+-----------------------------------------------------------------------------------------------
+--GTP_ACCOUNT_STATEMENT_LINE
+CREATE TABLE GTP_ACCOUNT_STATEMENT_LINE(
+	STATEMENT_ID Number(20, 0) NOT NULL,
+	LINE_ID Number(22, 0) NOT NULL,
+	POST_DATE Timestamp(6) NULL,
+	VALUE_DATE Timestamp(6) NULL,
+	CUR_CODE Nvarchar2(3) NULL,
+	WITHDRAWAL Number(18, 3) NULL,
+	DESCRIPTION Nvarchar2(500) NULL,
+	DEPOSIT Number(18, 3) NULL,
+	TNX_TYPE Nvarchar2(3) NULL,
+	ENTRY_TYPE Nvarchar2(2) NULL,
+	RUNBAL_BOOKED Number(18, 3) NULL,
+	RUNBAL_CLEARED Number(18, 3) NULL,
+	CHEQUE_NUMBER Nvarchar2(20) NULL,
+	BRANCH_TELLER Nvarchar2(20) NULL
+);
+commit;
+-----------------------------------------------------------------------------------------------
+--GTP_ENTITY
+CREATE TABLE GTP_ENTITY(
+	ENTITY_ID Number(22, 0) NOT NULL,
+	COMPANY_ID Number(22, 0) NOT NULL,
+	COMPANY_ABBV_NAME Nvarchar2(35) NULL,
+	ABBV_NAME Nvarchar2(35) NULL,
+	ADDRESS_LINE_1 Nvarchar2(35) NULL,
+	ADDRESS_LINE_2 Nvarchar2(35) NULL,
+	DOM Nvarchar2(35) NULL,
+	COUNTRY Nvarchar2(2) NULL,
+	BEI Nvarchar2(20) NULL,
+	STREET_NAME Nvarchar2(35) NULL,
+	POST_CODE Nvarchar2(16) NULL,
+	TOWN_NAME Nvarchar2(35) NULL,
+	COUNTRY_SUB_DIV Nvarchar2(35) NULL,
+	CRM_EMAIL Nvarchar2(20) NULL,
+	SUBSCRIPTION_CODE Nvarchar2(5) NULL,
+	CUSTOMISE_PACKAGE Nvarchar2(5) NULL,
+	BRCH_CODE Nvarchar2(5) NULL,
+	NAME Nvarchar2(200) NULL,
+	PACKAGE_ID Number(19, 0) NULL,
+	ADDRESS_LINE_3 Nvarchar2(35) NULL,
+	ADDRESS_LINE_4 Nvarchar2(35) NULL,
+	CONTACT_EMAIL Nvarchar2(255) NULL,
+	CONTACT_PERSON Nvarchar2(35) NULL
+);
+commit;
+-----------------------------------------------------------------------------------------------
+--GTP_ENTITY_ACCOUNT
+CREATE TABLE GTP_ENTITY_ACCOUNT(
+	ENTITY_ID Number(22, 0) NOT NULL,
+	ACCOUNT_ID Number(22, 0) NOT NULL,
+	REFERENCE Varchar2(64) NULL,
+	NICK_NAME Varchar2(75) NULL
+);
+commit;
+-----------------------------------------------------------------------------------------------
+
+
+--GTP_PRODUCT_BG_TNX_INC
+
+CREATE TABLE GTP_PRODUCT_BG_TNX_INC
+(
+COMPANY_ID Number(22, 0) NOT NULL,
+REF_ID Nvarchar2(20) NOT NULL,
+TNX_ID Nvarchar2(20) NOT NULL,
+APPL_DATE timestamp(6) NULL,
+BG_AMT Number(18, 3) NULL,
+BG_CUR_CODE Nvarchar2(3) NULL,
+BO_RELEASE_DTTM timestamp(6) NULL,
+COMPANY_NAME Nvarchar2(1024) NULL,
+INP_DTTM timestamp(6) NULL,
+INP_USER_ID Number(19) NULL,
+PROD_STAT_CODE Nvarchar2(2) NULL,
+PRODUCT_CODE Nvarchar2(2) NULL,
+TNX_AMT Number(18, 3) NULL,
+TNX_CUR_CODE Nvarchar2(3) NULL,
+TNX_STAT_CODE Nvarchar2(2) NULL,
+TNX_TYPE_CODE Nvarchar2(2) NULL,
+TNX_VAL_DATE timestamp(6) NULL,
+SUB_PRODUCT_CODE Nvarchar2(5) NULL,
+BULK_REF_ID Nvarchar2(20) NULL,
+AMD_DATE timestamp(6),
+BO_INP_DTTM	timestamp(6),
+ISS_DATE timestamp(6),
+RELEASE_DTTM timestamp(6),
+CLAIM_PRESENT_DATE	timestamp(6)
+);commit; 
+
+----------------------------------------------------------------------------------------------------------------------
+-- GTP_PRODUCT_BK_TNX_INC
+
+CREATE TABLE GTP_PRODUCT_BK_TNX_INC
+(
+COMPANY_ID Number(22, 0) NOT NULL,
+COMPANY_NAME Nvarchar2(1024) NULL,
+REF_ID Nvarchar2(20) NOT NULL,
+TNX_ID Nvarchar2(20) NOT NULL,
+APPL_DATE timestamp(6) NULL,
+BK_CUR_CODE Nvarchar2(3) NULL,
+BK_TOTAL_AMT Number(18, 3) NULL,
+BK_TYPE Nvarchar2(5) NULL,
+PROD_STAT_CODE Nvarchar2(2) NULL,
+PRODUCT_CODE Nvarchar2(2) NULL,
+SUB_PRODUCT_CODE Nvarchar2(5) NULL,
+BO_RELEASE_DTTM timestamp(6) NULL,
+INP_DTTM timestamp(6) NULL,
+INP_USER_ID Number(19) NULL,
+TNX_AMT Number(18, 3) NULL,
+TNX_CUR_CODE Nvarchar2(3) NULL,
+TNX_STAT_CODE Nvarchar2(2) NULL,
+TNX_TYPE_CODE Nvarchar2(2) NULL,
+TNX_VAL_DATE timestamp(6) NULL,
+BULK_REF_ID Nvarchar2(20) NULL,
+BK_REPAY_DATE timestamp(6) NULL 
+	);commit; 
+
+----------------------------------------------------------------------------------------------------------------------
+--GTP_PRODUCT_BR_TNX_INC
+
+CREATE TABLE GTP_PRODUCT_BR_TNX_INC(
+REF_ID Nvarchar2(20) NOT NULL,
+APPL_DATE timestamp(6) NULL,
+TNX_ID Nvarchar2(20) NOT NULL,
+COMPANY_ID Number(22, 2) NULL,
+BG_AMT Number(18, 3) NULL,
+BG_CUR_CODE Nvarchar2(3) NULL,
+BG_TYPE_CODE Nvarchar2(2) NULL,
+BO_RELEASE_DTTM timestamp(6) NULL,
+COMPANY_NAME Nvarchar2(1024) NULL,
+ENTITY Nvarchar2(35) NULL,
+INP_DTTM timestamp(6) NULL,
+INP_USER_ID Number(19) NULL,
+PROD_STAT_CODE Nvarchar2(2) NULL,
+PRODUCT_CODE Nvarchar2(2) NULL,
+TNX_AMT Number(18, 3) NULL,
+TNX_CUR_CODE Nvarchar2(3) NULL,
+TNX_STAT_CODE Nvarchar2(2) NULL,
+TNX_TYPE_CODE Nvarchar2(2) NULL,
+TNX_VAL_DATE timestamp(6) NULL,
+SUB_PRODUCT_CODE Nvarchar2(5) NULL,
+BULK_REF_ID Nvarchar2(20) NULL
+); commit;
+
+----------------------------------------------------------------------------------------------------------------------
+--GTP_PRODUCT_EC_TNX_INC
+
+CREATE TABLE GTP_PRODUCT_EC_TNX_INC(
+	COMPANY_ID Number(22, 0) NOT NULL,
+	REF_ID Nvarchar2(20) NOT NULL,
+	TNX_ID Nvarchar2(20) NOT NULL,
+	TNX_AMT Number(18, 3) NULL,
+	TNX_CUR_CODE Nvarchar2(3) NULL,
+	TNX_STAT_CODE Nvarchar2(2) NULL,
+	TNX_TYPE_CODE Nvarchar2(2) NULL,
+	TNX_VAL_DATE timestamp(6) NULL,
+	SUB_PRODUCT_CODE Nvarchar2(5) NULL,
+	SUB_TNX_STAT_CODE Nvarchar2(2) NULL,
+	BULK_REF_ID Nvarchar2(20) NULL,
+	APPL_DATE timestamp(6) NULL,
+	BO_RELEASE_DTTM timestamp(6) NULL,
+	COMPANY_NAME Nvarchar2(1024) NULL,
+	EC_AMT Number(18, 3) NULL,
+	EC_CUR_CODE Nvarchar2(3) NULL,
+	PROD_STAT_CODE Nvarchar2(2) NULL,
+	PRODUCT_CODE Nvarchar2(2) NULL,
+	INP_DTTM timestamp(6) NULL,
+	INP_USER_ID Number(19) NULL,
+	SUB_TNX_TYPE_CODE Nvarchar2(2) NULL,
+    AMD_DATE timestamp(6) NULL,
+    RELEASE_DTTM timestamp(6) NULL,
+    BO_INP_DTTM timestamp(6) NULL
+	); commit;
+
+----------------------------------------------------------------------------------------------------------------------
+
+--GTP_PRODUCT_EL_TNX_INC
+
+CREATE TABLE GTP_PRODUCT_EL_TNX_INC(
+REF_ID Nvarchar2(20) NOT NULL,
+TNX_ID Nvarchar2(20) NOT NULL,
+APPL_DATE timestamp(6) NULL,
+BO_RELEASE_DTTM timestamp(6) NULL,
+COMPANY_ID Number(19) NULL,
+COMPANY_NAME Nvarchar2(1024) NULL,
+ENTITY Nvarchar2(35) NULL,
+INP_DTTM timestamp(6) NULL,
+INP_USER_ID Number(19) NULL,
+LC_AMT Number(18, 3) NULL,
+LC_CUR_CODE Nvarchar2(3) NULL,
+PROD_STAT_CODE Nvarchar2(2) NULL,
+PRODUCT_CODE Nvarchar2(2) NULL,
+TNX_AMT Number(18, 3) NULL,
+TNX_CUR_CODE Nvarchar2(3) NULL,
+TNX_STAT_CODE Nvarchar2(2) NULL,
+TNX_TYPE_CODE Nvarchar2(2) NULL,
+TNX_VAL_DATE timestamp(6) NULL,
+SUB_PRODUCT_CODE Nvarchar2(5) NULL,
+BULK_REF_ID Nvarchar2(20) NULL,
+AMD_DATE timestamp(6) NULL,
+RELEASE_DTTM timestamp(6) NULL
+); commit;
+
+----------------------------------------------------------------------------------------------------------------------
+--GTP_PRODUCT_FT_TNX_INC
+
+CREATE TABLE GTP_PRODUCT_FT_TNX_INC(
+COMPANY_ID Number(22, 0) NOT NULL,
+REF_ID Nvarchar2(20) NOT NULL,
+TNX_ID Nvarchar2(20) NOT NULL,
+APPL_DATE timestamp(6) NULL,
+BO_RELEASE_DTTM timestamp(6) NULL,
+COMPANY_NAME Nvarchar2(35) NULL,
+ENTITY Nvarchar2(35) NULL,
+FT_AMT Number(18, 3) NULL,
+FT_CUR_CODE Nvarchar2(3) NULL,
+INP_DTTM timestamp(6) NULL,
+FT_TYPE Nvarchar2(2) NULL,
+INP_USER_ID Number(19) NULL,
+PROD_STAT_CODE Nvarchar2(2) NULL,
+PRODUCT_CODE Nvarchar2(2) NULL,
+TNX_AMT Number(18, 3) NULL,
+TNX_CUR_CODE Nvarchar2(3) NULL,
+TNX_STAT_CODE Nvarchar2(2) NULL,
+TNX_TYPE_CODE Nvarchar2(2) NULL,
+TNX_VAL_DATE timestamp(6) NULL,
+SUB_PRODUCT_CODE Nvarchar2(5) NULL,
+BULK_REF_ID Nvarchar2(20) NULL	
+);commit; 
+
+----------------------------------------------------------------------------------------------------------------------
+-- GTP_PRODUCT_FX_TNX_INC
+
+CREATE TABLE GTP_PRODUCT_FX_TNX_INC(
+COMPANY_ID Number(22, 0) NOT NULL,
+REF_ID Nvarchar2(20) NOT NULL,
+TNX_ID Nvarchar2(20) NOT NULL,
+APPL_DATE timestamp(6) NULL,
+BO_RELEASE_DTTM timestamp(6) NULL,
+COMPANY_NAME Nvarchar2(35) NULL,
+ENTITY Nvarchar2(35) NULL,
+FX_CUR_CODE Nvarchar2(3) NULL,
+INP_DTTM timestamp(6) NULL,
+INP_USER_ID Number(19) NULL,
+PROD_STAT_CODE Nvarchar2(2) NULL,
+PRODUCT_CODE Nvarchar2(2) NULL,
+TNX_AMT Number(18, 3) NULL,
+TNX_CUR_CODE Nvarchar2(3) NULL,
+TNX_STAT_CODE Nvarchar2(2) NULL,
+TNX_TYPE_CODE Nvarchar2(2) NULL,
+TNX_VAL_DATE timestamp(6) NULL,
+SUB_PRODUCT_CODE Nvarchar2(5) NULL,
+BULK_REF_ID Nvarchar2(20) NULL,
+FX_AMT Number(18, 3) NULL,
+ISS_DATE timestamp(6) NULL,
+VALUE_DATE timestamp(6) NULL
+); commit;
+
+----------------------------------------------------------------------------------------------------------------------
+--GTP_PRODUCT_IC_TNX_INC
+
+CREATE TABLE GTP_PRODUCT_IC_TNX_INC(
+REF_ID Nvarchar2(20) NOT NULL,
+TNX_ID Nvarchar2(20) NOT NULL,
+INP_DTTM timestamp(6) NULL,
+INP_USER_ID Number(19) NULL,
+TNX_AMT Number(18, 3) NULL,
+TNX_CUR_CODE Nvarchar2(3) NULL,		
+TNX_STAT_CODE Nvarchar2(2) NULL,
+TNX_TYPE_CODE Nvarchar2(2) NULL,
+TNX_VAL_DATE timestamp(6) NULL,
+SUB_PRODUCT_CODE Nvarchar2(5) NULL,
+SUB_TNX_STAT_CODE Nvarchar2(2) NULL,
+BULK_REF_ID Nvarchar2(20) NULL,
+IC_AMT Number(18, 3) NULL,
+IC_CUR_CODE Nvarchar2(3) NULL,
+BO_RELEASE_DTTM timestamp(6) NULL,
+APPL_DATE timestamp(6) NULL,
+COMPANY_ID Number(19) NULL,
+COMPANY_NAME Nvarchar2(1024) NULL,
+ENTITY Nvarchar2(35) NULL,
+PROD_STAT_CODE Nvarchar2(2) NULL,
+PRODUCT_CODE Nvarchar2(2) NULL,
+BO_INP_DTTM timestamp(6) NULL,
+INT_START_DATE timestamp(6) NULL,
+TENOR_BASE_DATE timestamp(6) NULL,
+RELEASE_DTTM timestamp(6) NULL
+); commit;
+
+----------------------------------------------------------------------------------------------------------------------
+--GTP_PRODUCT_IR_TNX_INC
+
+CREATE TABLE GTP_PRODUCT_IR_TNX_INC(
+REF_ID Nvarchar2(20) NOT NULL,
+TNX_ID Nvarchar2(20) NOT NULL,
+APPL_DATE timestamp(6) NULL,
+BO_RELEASE_DTTM timestamp(6) NULL,
+COMPANY_ID Number(22, 0) NULL,
+COMPANY_NAME Nvarchar2(35) NULL,
+ENTITY Nvarchar2(35) NULL,
+INP_DTTM timestamp(6) NULL,
+INP_USER_ID Number(19) NULL,
+IR_AMT Number(18, 3) NULL,
+IR_CUR_CODE Nvarchar2(3) NULL,
+PROD_STAT_CODE Nvarchar2(2) NULL,
+PRODUCT_CODE Nvarchar2(2) NULL,
+SUB_PRODUCT_CODE Nvarchar2(5) NULL,
+REMITTANCE_DATE timestamp(6) NULL,
+TNX_AMT Number(18, 3) NULL,
+TNX_CUR_CODE Nvarchar2(3) NULL,
+TNX_STAT_CODE Nvarchar2(2) NULL,
+TNX_TYPE_CODE Nvarchar2(2) NULL,
+TNX_VAL_DATE timestamp(6) NULL,
+BULK_REF_ID Nvarchar2(20) NULL,
+BO_INP_DTTM timestamp(6) NULL
+); commit;
+
+----------------------------------------------------------------------------------------------------------------------
+--GTP_PRODUCT_LC_TNX_INC
+
+CREATE TABLE GTP_PRODUCT_LC_TNX_INC(
+COMPANY_ID Number(22, 0) NOT NULL,
+REF_ID Nvarchar2(20) NOT NULL,
+TNX_ID Nvarchar2(20) NOT NULL,
+APPL_DATE timestamp(6) NULL,
+BO_RELEASE_DTTM timestamp(6) NULL,
+COMPANY_NAME Nvarchar2(1024) NULL,
+ENTITY Nvarchar2(35) NULL,
+INP_DTTM timestamp(6) NULL,
+INP_USER_ID Number(19) NULL,
+LC_AMT Number(18, 3) NULL,
+LC_CUR_CODE Nvarchar2(3) NULL,
+PROD_STAT_CODE Nvarchar2(2) NULL,
+PRODUCT_CODE Nvarchar2(2) NULL,
+TNX_AMT Number(18, 3) NULL,
+TNX_CUR_CODE Nvarchar2(3) NULL,
+TNX_STAT_CODE Nvarchar2(2) NULL,
+TNX_TYPE_CODE Nvarchar2(2) NULL,
+TNX_VAL_DATE timestamp(6) NULL,
+SUB_PRODUCT_CODE Nvarchar2(5) NULL,
+BULK_REF_ID Nvarchar2(20) NULL,
+AMD_DATE timestamp(6) NULL,
+ISS_DATE timestamp(6) NULL,
+CLAIM_PRESENT_DATE timestamp(6) NULL,
+BO_INP_DTTM timestamp(6) NULL,
+RELEASE_DTTM timestamp(6) NULL
+	); commit;
+	
+----------------------------------------------------------------------------------------------------------------------
+--GTP_PRODUCT_LI_TNX_INC
+
+CREATE TABLE GTP_PRODUCT_LI_TNX_INC 
+(
+COMPANY_ID NUMBER(22,0) NOT NULL ENABLE, 
+REF_ID NVARCHAR2(20) NOT NULL ENABLE, 
+TNX_ID NVARCHAR2(20) NOT NULL ENABLE, 
+INP_DTTM timestamp(6), 
+INP_USER_ID NUMBER(19,0), 
+LI_AMT NUMBER(18,3), 
+LI_CUR_CODE NVARCHAR2(3), 
+PROD_STAT_CODE NVARCHAR2(2), 
+PRODUCT_CODE NVARCHAR2(2), 
+TNX_AMT NUMBER(18,3), 
+TNX_CUR_CODE NVARCHAR2(3), 
+TNX_STAT_CODE NVARCHAR2(2), 
+TNX_TYPE_CODE NVARCHAR2(2), 
+TNX_VAL_DATE timestamp(6), 
+SUB_PRODUCT_CODE NVARCHAR2(5), 
+BULK_REF_ID NVARCHAR2(20), 
+BO_RELEASE_DTTM timestamp(6), 
+APPL_DATE timestamp(6), 
+ENTITY NVARCHAR2(35), 
+COMPANY_NAME NVARCHAR2(35),
+BO_INP_DTTM timestamp(6),
+ISS_DATE timestamp(6));
+commit;
+
+----------------------------------------------------------------------------------------------------------------------
+--GTP_PRODUCT_LN_TNX_INC
+
+CREATE TABLE GTP_PRODUCT_LN_TNX_INC    
+(   
+COMPANY_ID    NUMBER(22,0)    NOT    NULL    ENABLE,
+REF_ID    NVARCHAR2(20)    NOT    NULL    ENABLE,   
+TNX_ID    NVARCHAR2(20)    NOT    NULL    ENABLE,   
+BO_RELEASE_DTTM    TIMESTAMP    (6),           
+COMPANY_NAME    NVARCHAR2(35),               
+ENTITY    NVARCHAR2(35),               
+INP_DTTM    TIMESTAMP    (6),           
+INP_USER_ID    NUMBER(19,0),               
+LN_AMT    NUMBER(18,3),               
+LN_CUR_CODE    NVARCHAR2(3),               
+PROD_STAT_CODE    NVARCHAR2(2),               
+PRODUCT_CODE    NVARCHAR2(2),               
+SUB_TNX_TYPE_CODE    nvarchar2(2),               
+TNX_AMT    NUMBER(18,3),               
+TNX_CUR_CODE    NVARCHAR2(3),               
+TNX_STAT_CODE    NVARCHAR2(2),               
+TNX_TYPE_CODE    NVARCHAR2(2),               
+TNX_VAL_DATE    TIMESTAMP    (6),           
+SUB_PRODUCT_CODE    NVARCHAR2(5),               
+APPL_DATE    TIMESTAMP    (6),           
+BULK_REF_ID    NVARCHAR2(20),               
+AMD_DATE    TIMESTAMP (6)           
+);COMMIT;
+	
+----------------------------------------------------------------------------------------------------------------------
+--GTP_PRODUCT_LS_TNX_INC
+
+CREATE TABLE GTP_PRODUCT_LS_TNX_INC(
+COMPANY_ID Number(22, 0) NOT NULL,
+REF_ID Nvarchar2(20) NOT NULL,
+TNX_ID Nvarchar2(20) NOT NULL,
+INP_DTTM timestamp(6) NULL,
+INP_USER_ID Number(19) NULL,
+LS_AMT Number(18, 3) NULL,
+LS_CUR_CODE Nvarchar2(3) NULL,
+PROD_STAT_CODE Nvarchar2(2) NULL,
+PRODUCT_CODE Nvarchar2(2) NULL,
+SUB_PRODUCT_CODE Nvarchar2(5) NULL,
+TNX_AMT Number(18, 3) NULL,
+TNX_CUR_CODE Nvarchar2(3) NULL,
+TNX_STAT_CODE Nvarchar2(2) NULL,
+TNX_TYPE_CODE Nvarchar2(2) NULL,
+TNX_VAL_DATE timestamp(6) NULL,
+BO_RELEASE_DTTM timestamp(6) NULL,
+APPL_DATE timestamp(6) NULL,
+COMPANY_NAME Nvarchar2(35) NULL,
+BULK_REF_ID Nvarchar2(20) NULL,
+ENTITY Nvarchar2(35) NULL,
+ISS_DATE timestamp(6) NULL
+); commit;
+
+----------------------------------------------------------------------------------------------------------------------
+--GTP_PRODUCT_PO_TNX_INC
+
+CREATE TABLE GTP_PRODUCT_PO_TNX_INC(
+COMPANY_ID Number(22, 0) NOT NULL,
+REF_ID Nvarchar2(20) NOT NULL,
+TNX_ID Nvarchar2(20) NOT NULL,
+SUB_PRODUCT_CODE Nvarchar2(5) NULL,
+BULK_REF_ID Nvarchar2(20) NULL,
+FINANCE_AMT Number(18, 5) NULL,
+TNX_AMT Number(18, 5) NULL,
+TNX_CUR_CODE Nvarchar2(3) NULL,
+TNX_STAT_CODE Nvarchar2(2) NULL,
+TNX_TYPE_CODE Nvarchar2(2) NULL,
+TNX_VAL_DATE timestamp(6) NULL,
+PROD_STAT_CODE Nvarchar2(2) NULL,
+PRODUCT_CODE Nvarchar2(2) NULL,
+INP_USER_ID Number(19) NULL,
+ISS_DATE timestamp(6) NULL,
+ENTITY Nvarchar2(35) NULL,
+BO_RELEASE_DTTM timestamp(6) NULL,
+APPL_DATE timestamp(6) NULL,
+COMPANY_NAME Nvarchar2(35) NULL,
+INP_DTTM timestamp(6) NULL,
+AMD_DATE timestamp(6) NULL	
+); commit;
+
+----------------------------------------------------------------------------------------------------------------------
+--GTP_PRODUCT_SE_TNX_INC
+
+CREATE TABLE GTP_PRODUCT_SE_TNX_INC 
+(
+COMPANY_ID NUMBER(22,0) NOT NULL ENABLE, 
+REF_ID NVARCHAR2(20) NOT NULL ENABLE, 
+TNX_ID NVARCHAR2(20) NOT NULL ENABLE, 
+ENTITY NVARCHAR2(35), 
+COMPANY_NAME NVARCHAR2(35), 
+PROD_STAT_CODE NVARCHAR2(2), 
+PRODUCT_CODE NVARCHAR2(2), 
+APPL_DATE timestamp(6), 
+TNX_STAT_CODE NVARCHAR2(2), 
+INP_USER_ID NUMBER(22,0), 
+INP_DTTM timestamp(6), 
+BO_RELEASE_DTTM timestamp(6), 
+TNX_VAL_DATE timestamp(6), 
+TNX_CUR_CODE NVARCHAR2(3), 
+TNX_AMT NUMBER(18,3), 
+SE_AMT NUMBER(18,3), 
+SE_CUR_CODE NVARCHAR2(3), 
+TNX_TYPE_CODE NVARCHAR2(2), 
+SUB_PRODUCT_CODE NVARCHAR2(5), 
+BULK_REF_ID NVARCHAR2(20),
+READ_DTTM timestamp(6),
+RELEASE_DTTM timestamp(6),
+BO_INP_DTTM timestamp(6));
+commit; 
+
+----------------------------------------------------------------------------------------------------------------------
+--GTP_PRODUCT_SG_TNX_INC
+
+CREATE TABLE GTP_PRODUCT_SG_TNX_INC 
+(
+COMPANY_ID NUMBER(22,0) NOT NULL ENABLE, 
+REF_ID NVARCHAR2(20) NOT NULL ENABLE, 
+TNX_ID NVARCHAR2(20) NOT NULL ENABLE, 
+APPL_DATE timestamp(6), 
+BO_RELEASE_DTTM timestamp(6), 
+COMPANY_NAME NVARCHAR2(1024), 
+ENTITY NVARCHAR2(35), 
+INP_DTTM timestamp(6), 
+INP_USER_ID NUMBER(19,0), 
+PROD_STAT_CODE NVARCHAR2(2), 
+PRODUCT_CODE NVARCHAR2(2), 
+SG_AMT NUMBER(18,3), 
+SG_CUR_CODE NVARCHAR2(3), 
+TNX_AMT NUMBER(18,3), 
+TNX_CUR_CODE NVARCHAR2(3), 
+TNX_STAT_CODE NVARCHAR2(2), 
+TNX_TYPE_CODE NVARCHAR2(2), 
+TNX_VAL_DATE timestamp(6), 
+SUB_PRODUCT_CODE NVARCHAR2(5), 
+BULK_REF_ID NVARCHAR2(20),
+ISS_DATE timestamp(6),
+RELEASE_DTTM timestamp(6));
+commit;
+
+----------------------------------------------------------------------------------------------------------------------
+--GTP_PRODUCT_TD_TNX_INC
+
+CREATE TABLE GTP_PRODUCT_TD_TNX_INC 
+(
+COMPANY_ID NUMBER(22,0) NOT NULL ENABLE, 
+REF_ID NVARCHAR2(20) NOT NULL ENABLE, 
+TNX_ID NVARCHAR2(20) NOT NULL ENABLE, 
+APPL_DATE timestamp(6), 
+BO_RELEASE_DTTM timestamp(6), 
+COMPANY_NAME NVARCHAR2(35), 
+ENTITY NVARCHAR2(35), 
+INP_DTTM timestamp(6), 
+INP_USER_ID NUMBER(19,0), 
+TD_AMT NUMBER(18,3), 
+TD_CUR_CODE NVARCHAR2(3), 
+PROD_STAT_CODE NVARCHAR2(2), 
+PRODUCT_CODE NVARCHAR2(2), 
+TNX_AMT NUMBER(18,3), 
+TNX_CUR_CODE NVARCHAR2(3), 
+TNX_STAT_CODE NVARCHAR2(2), 
+TNX_TYPE_CODE NVARCHAR2(2), 
+TNX_VAL_DATE timestamp(6), 
+SUB_PRODUCT_CODE NVARCHAR2(5), 
+BULK_REF_ID NVARCHAR2(20),
+ISS_DATE timestamp(6));
+commit;
+
+----------------------------------------------------------------------------------------------------------------------
+--GTP_PRODUCT_TF_TNX_INC
+
+CREATE TABLE GTP_PRODUCT_TF_TNX_INC 
+(	
+COMPANY_ID NUMBER(22,0) NOT NULL ENABLE, 
+APPL_DATE timestamp(6), 
+REF_ID NVARCHAR2(20) NOT NULL ENABLE, 
+TNX_ID NVARCHAR2(20) NOT NULL ENABLE, 
+BO_RELEASE_DTTM timestamp(6), 
+COMPANY_NAME NVARCHAR2(35), 
+ENTITY NVARCHAR2(35), 
+FIN_AMT NUMBER(18,3), 
+FIN_CUR_CODE NVARCHAR2(3), 
+INP_DTTM timestamp(6), 
+INP_USER_ID NUMBER(19,0), 
+PROD_STAT_CODE NVARCHAR2(2), 
+PRODUCT_CODE NVARCHAR2(2), 
+TNX_AMT NUMBER(18,3), 
+TNX_CUR_CODE NVARCHAR2(3), 
+TNX_STAT_CODE NVARCHAR2(2), 
+TNX_TYPE_CODE NVARCHAR2(2), 
+TNX_VAL_DATE timestamp(6), 
+SUB_PRODUCT_CODE NVARCHAR2(5), 
+BULK_REF_ID NVARCHAR2(20),
+BO_INP_DTTM timestamp(6),
+ISS_DATE timestamp(6),
+RELEASE_DTTM timestamp(6));
+commit; 
+
+---------------------------
+--GTP_PRODUCT_BR
+
+CREATE TABLE GTP_PRODUCT_BR_INC
+(
+COMPANY_ID Number(22,0) NOT NULL,
+REF_ID NVARCHAR2(20) NOT NULL,
+APPL_DATE TIMESTAMP(6),
+APPLICANT_COUNTRY NVARCHAR2(2),
+APPLICANT_NAME NVARCHAR2(1024),
+BENEFICIARY_COUNTRY NVARCHAR2(2),
+BENEFICIARY_NAME NVARCHAR2(1024),
+BG_AMT Number(18,3),
+BG_CUR_CODE NVARCHAR2(3),
+COMPANY_NAME NVARCHAR2(1024),
+ENTITY NVARCHAR2(35),
+ISS_DATE TIMESTAMP(6),
+PROD_STAT_CODE NVARCHAR2(2),
+PRODUCT_CODE NVARCHAR2(2),
+SUB_PRODUCT_CODE NVARCHAR2(5) ,
+BG_AVAILABLE_AMT Number(18,3) 
+);COMMIT;
+
+----------------------------------------------------------------------------------
+--GTP_PRODUCT_BG
+
+CREATE TABLE GTP_PRODUCT_BG_INC
+(	
+ROW_ID NUMBER GENERATED BY DEFAULT ON NULL AS IDENTITY  NOT NULL ENABLE, 
+COMPANY_ID decimal(22, 0) NOT NULL,
+REF_ID NVARCHAR2 (20) NOT NULL,
+BENEFICIARY_COUNTRY NVARCHAR2(2) NULL,
+BENEFICIARY_NAME NVARCHAR2(1024) NULL,
+BG_AMT decimal(18, 3) NULL,
+BG_CUR_CODE NVARCHAR2(3) NULL,
+BG_TYPE_CODE NVARCHAR2(2) NULL,
+COMPANY_NAME NVARCHAR2(1024) NULL,
+ENTITY NVARCHAR2(35) NULL,
+PROD_STAT_CODE NVARCHAR2(2) NULL,
+PRODUCT_CODE NVARCHAR2(2) NULL,
+SUB_PRODUCT_CODE NVARCHAR2(5) NULL,
+BG_AVAILABLE_AMT decimal(18, 3) NULL,
+AMD_DATE TIMESTAMP(6) NULL,
+APPL_DATE TIMESTAMP(6) NULL,
+ISS_DATE TIMESTAMP(6) NULL,
+CLAIM_PRESENT_DATE TIMESTAMP(6) NULL
+); COMMIT;
+
+----------------------------------------------------------------------------------
+--GTP_PRODUCT_EC
+
+ CREATE TABLE GTP_PRODUCT_EC_INC(
+COMPANY_ID Number(22, 0) NOT NULL,
+REF_ID Varchar2(20) NOT NULL,
+COMPANY_NAME Varchar2(1024) NULL,
+DRAWEE_NAME Varchar2(1024) NULL,
+DRAWER_NAME Varchar2(1024) NULL,
+EC_AMT Number(18, 3) NULL,
+EC_CUR_CODE Varchar2(3) NULL,
+EC_TYPE_CODE Varchar2(2) NULL,
+ENTITY Varchar2(35) NULL,
+PROD_STAT_CODE Varchar2(2) NULL,
+PRODUCT_CODE Varchar2(2) NULL,
+TENOR_TYPE Varchar2(2) NULL,
+SUB_PRODUCT_CODE Varchar2(5) NULL,
+APPL_DATE TIMESTAMP(6) NULL,
+AMD_DATE TIMESTAMP(6) NULL
+); COMMIT;
+
+----------------------------------------------------------------------------------
+--GTP_PRODUCT_EL
+
+CREATE TABLE GTP_PRODUCT_EL_INC (
+COMPANY_ID Number(22, 0) NOT NULL,
+REF_ID Varchar2(20) NOT NULL,
+BENEFICIARY_COUNTRY Varchar2(2) NULL,
+BENEFICIARY_NAME Varchar2(1024) NULL,
+COMPANY_NAME Varchar2(1024) NULL,
+ENTITY Varchar2(35) NULL,
+LC_AMT Number(18, 3) NULL,
+LC_CUR_CODE Varchar2(3) NULL,
+PROD_STAT_CODE Varchar2(2) NULL,
+PRODUCT_CODE Varchar2(2) NULL,
+SUB_PRODUCT_CODE Varchar2(5) NULL,
+LC_AVAILABLE_AMT Number(18, 3) NULL,
+AMD_DATE TIMESTAMP(6) NULL,
+APPL_DATE TIMESTAMP(6) NULL,
+ISS_DATE TIMESTAMP(6) NULL
+);COMMIT;
+
+----------------------------------------------------------------------------------
+--GTP_PRODUCT_IC
+
+CREATE TABLE GTP_PRODUCT_IC_INC (
+COMPANY_ID Number(22, 0) NOT NULL,
+REF_ID NVARCHAR2(20) NOT NULL,
+COMPANY_NAME NVARCHAR2(1024) NULL,
+DRAWEE_NAME NVARCHAR2(1024) NULL,
+DRAWER_NAME NVARCHAR2(1024) NULL,
+ENTITY NVARCHAR2(35) NULL,
+IC_AMT Number(18, 3) NULL,
+IC_CUR_CODE NVARCHAR2(3) NULL,
+IC_LIAB_AMT Number(18, 3) NULL,
+IC_TYPE_CODE NVARCHAR2(2) NULL,
+TENOR_TYPE NVARCHAR2(2) NULL,
+PROD_STAT_CODE NVARCHAR2(2) NULL,
+PRODUCT_CODE NVARCHAR2(2) NULL,
+SUB_PRODUCT_CODE NVARCHAR2(5) NULL,
+APPL_DATE TIMESTAMP(6) NULL,
+INT_START_DATE TIMESTAMP(6) NULL,
+TENOR_BASE_DATE TIMESTAMP(6) NULL
+);COMMIT;
+
+----------------------------------------------------------------------------------
+--GTP_PRODUCT_LC
+
+CREATE TABLE GTP_PRODUCT_LC_INC(
+COMPANY_ID Number(22, 0) NOT NULL,
+REF_ID Nvarchar2(20) NOT NULL,
+BENEFICIARY_COUNTRY Nvarchar2(2) NULL,
+BENEFICIARY_NAME Nvarchar2(1024) NULL,
+COMPANY_NAME Nvarchar2(1024) NULL,
+ENTITY Nvarchar2(35) NULL,
+LC_AMT Number(18, 3) NULL,
+LC_CUR_CODE Nvarchar2(3) NULL,
+LC_LIAB_AMT Number(18, 3) NULL,
+PROD_STAT_CODE Nvarchar2(2) NULL,
+PRODUCT_CODE Nvarchar2(2) NULL,
+SUB_PRODUCT_CODE Nvarchar2(5) NULL,
+LC_AVAILABLE_AMT Number(18, 3) NULL,
+APPL_DATE TIMESTAMP(6) NULL,
+ISS_DATE TIMESTAMP(6) NULL,
+AMD_DATE TIMESTAMP(6) NULL,
+CLAIM_PRESENT_DATE TIMESTAMP(6) NULL
+); COMMIT;
+
+----------------------------------------------------------------------------------
+--GTP_PRODUCT_LI
+
+CREATE TABLE GTP_PRODUCT_LI_INC(
+COMPANY_ID Number(22, 0) NOT NULL,
+REF_ID NVarchar2(20) NOT NULL,
+BENEFICIARY_COUNTRY NVarchar2(2) NULL,
+BENEFICIARY_NAME NVarchar2(35) NULL,
+COMPANY_NAME NVarchar2(35) NULL,
+ENTITY NVarchar2(35) NULL,
+LI_AMT Number(18, 3) NULL,
+LI_CUR_CODE NVarchar2(3) NULL,
+LI_LIAB_AMT Number(18, 3) NULL,
+PROD_STAT_CODE NVarchar2(2) NULL,
+PRODUCT_CODE NVarchar2(2) NULL,
+ISS_DATE TIMESTAMP(6) NULL,
+BOL_DATE TIMESTAMP(6) NULL,
+APPL_DATE TIMESTAMP(6) NULL
+);  COMMIT;
+
+----------------------------------------------------------------------------------
+--GTP_PRODUCT_PO
+
+create table GTP_PRODUCT_PO_INC(
+COMPANY_ID	nvarchar2(30)	not	null,
+REF_ID	nvarchar2(30)	not	null,
+APPL_DATE	timestamp(6),		
+BUYER_COUNTRY	nvarchar2(2),		
+BUYER_NAME	nvarchar2(200),		
+COMPANY_NAME	nvarchar2(35),		
+ENTITY	nvarchar2(35),		
+LAST_SHIP_DATE	timestamp(6),		
+PROD_STAT_CODE	nvarchar2(2),		
+PRODUCT_CODE	nvarchar2(2),		
+SELLER_COUNTRY	nvarchar2(2),		
+SELLER_NAME	nvarchar2(200),		
+TOTAL_NET_AMT	number(18,5),		
+TOTAL_NET_CUR_CODE	nvarchar2(3),		
+FSCM_PROGRAMME_CODE	nvarchar2(35),		
+DUE_DATE	timestamp(6),		
+PROGRAM_ID	number(22,0),		
+FINANCE_REQUESTED_AMT	number(18,5),		
+FINANCE_REQUESTED_CUR_CODE	nvarchar2(3),		
+FINANCE_REPAYMENT_AMT	number(18,5),		
+FINANCE_REPAYMENT_CUR_CODE	nvarchar2(3));
+commit;
+
+----------------------------------------------------------------------------------
+--GTP_PRODUCT_SG
+
+CREATE TABLE GTP_PRODUCT_SG_INC(
+COMPANY_ID Number(22, 0) NOT NULL,
+REF_ID NVarchar2(20) NOT NULL,
+BENEFICIARY_COUNTRY NVarchar2(2) NULL,
+BENEFICIARY_NAME NVarchar2(1024) NULL,
+COMPANY_NAME NVarchar2(1024) NULL,
+ENTITY NVarchar2(35) NULL,
+PROD_STAT_CODE NVarchar2(2) NULL,
+PRODUCT_CODE NVarchar2(2) NULL,
+SG_AMT Number(18, 3) NULL,
+SG_CUR_CODE NVarchar2(3) NULL,
+SG_LIAB_AMT Number(18, 3) NULL,
+SUB_PRODUCT_CODE NVarchar2(5) NULL,
+BULK_REF_ID NVarchar2(20) NULL,
+ISS_DATE TIMESTAMP(6) NULL,
+APPL_DATE TIMESTAMP(6) NULL
+);COMMIT;
+
+----------------------------------------------------------------------------------
+--GTP_PRODUCT_TF
+
+CREATE TABLE GTP_PRODUCT_TF_INC(
+COMPANY_ID Number(22, 0) NOT NULL,
+REF_ID NVarchar2(20) NOT NULL,
+COMPANY_NAME NVarchar2(35) NULL,
+ENTITY NVarchar2(35) NULL,
+FIN_AMT Number(18, 3) NULL,
+FIN_CUR_CODE NVarchar2(3) NULL,
+FIN_TYPE NVarchar2(2) NULL,
+PROD_STAT_CODE NVarchar2(2) NULL,
+SUB_PRODUCT_CODE NVarchar2(5) NULL,
+PRODUCT_CODE NVarchar2(2) NULL,
+ISS_DATE TIMESTAMP(6) NULL,
+APPL_DATE TIMESTAMP(6) NULL,
+MATURITY_DATE TIMESTAMP(6) NULL
+) ;COMMIT;
+
+----------------------------------------------------------------------------------
+--GTP_PRODUCT_LN
+
+create table GTP_PRODUCT_LN_INC(
+COMPANY_ID	number(22,0)	not	null,
+REF_ID	nvarchar2(20)	not	null,
+APPL_DATE	timestamp(6),		
+BO_FACILITY_NAME	nvarchar2(50),		
+BO_DEAL_NAME	nvarchar2(50),		
+COMPANY_NAME	nvarchar2(35),		
+ENTITY	nvarchar2(35),		
+LN_LIAB_AMT	number(18,3),		
+LN_AMT	number(18,3),		
+LN_CUR_CODE	nvarchar2(3),		
+LN_MATURITY_DATE	timestamp(6),		
+PRICING_OPTION	nvarchar2(35),		
+PROD_STAT_CODE	nvarchar2(2),		
+PRODUCT_CODE	nvarchar2(2),		
+REPRICING_DATE	timestamp(6),		
+RISK_TYPE	nvarchar2(35),		
+STATUS	nvarchar2(3));
+commit;
+
+exit;

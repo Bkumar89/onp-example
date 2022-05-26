@@ -1,0 +1,54 @@
+﻿##########################################################################################
+##                                                                                      ##
+##                 Powershell script to load .dacpac file into MSSQL DB                 ##
+##                                                                                      ##
+##########################################################################################
+
+#_____________________________Get parameters from config file____________________________
+
+Import-Module -Name (Resolve-Path('Powershell-cmdlts\sqlserver'))
+$file_content = Get-Content "config.properties"
+$file_content = $file_content -join [Environment]::NewLine
+$config = ConvertFrom-StringData($file_content)
+$serverName = $config.'serverName'
+$databaseName = $config.'databaseName'
+$databaseUser = $config.'databaseUser'
+$databasePass = $config.'databasePass'
+$outputloglocation = $config.'outputloglocation'
+
+Start-Transcript -Path $outputloglocation\dacpac-output-$((get-date).ToString("yyyy-MM-dd-HH-mm-ss")).txt 
+
+#___________________________Deploy .dacpac files to MSSQL Server_________________________
+
+
+Write-Host "Deploying the DACPAC with the following settings" 
+Write-Host "Server Name: $serverName" 
+Write-Host "DataBase Name: $databaseName"
+Write-Host "DataBase User: $databaseUser"
+Write-Host "Log file location: $outputloglocation"
+
+    $dacpac  = Get-ChildItem -Path Dacpac -Recurse -Include "*.dacpac"
+    Write-Host 'Executing:' $dacpac
+    $sqlProcessRes = SqlPackage `
+        /Action:Publish,
+        /SourceFile:$dacpac,
+        /TargetConnectionString:Server="$serverName\MSSQLSERVER; `
+                                        Database=$databaseName; `
+                                        User Id=$databaseUser; `
+                                        Password=$databasePass"
+
+
+  echo $sqlProcessRes
+  
+  if($sqlProcessRes -match '\s*\w*Successfully published database.\s*\w*')
+  {
+    Write-Host "DacPac is deployed Successfully."
+  }
+  else
+  {
+    throw "Some Error has occured. Please check the log file, verify your MSSQL server connection details and if the SqlPackage is installed in the system from where you are running this script."
+  }
+
+
+Write-Host "Finished executing the Dacpac file."
+Stop-Transcript

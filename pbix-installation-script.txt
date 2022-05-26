@@ -1,0 +1,175 @@
+function Publish-PBIXFile {
+    [CmdletBinding(DefaultParameterSetName = 'ByUserName', SupportsShouldProcess)]
+    Param(
+        [Parameter(Mandatory = $true)]
+        [string]$FolderName,
+        [Parameter(Mandatory = $true)]
+        [string]$ReportServerURI,
+        [Parameter(Mandatory = $true)]
+        [string]$FolderLocation,
+        [Parameter(Mandatory = $true)]
+        [string]$PBIXFile,
+        [Parameter()]
+        [string]$Description = "Description of Your report Should go here",
+        [Parameter()]
+        [ValidateSet('Windows','SQL')]
+        [string]$AuthenticationType,
+        [Parameter(ParameterSetName = 'ByUserName')]
+        [string]$ConnectionUserName, 
+        [Parameter(ParameterSetName = 'ByUserName')]
+        [string]$Secret,
+        [Parameter(Mandatory = $true, ParameterSetName = 'ByCred')]
+        [pscredential]$Credential
+    )
+
+    $FolderPath = $FolderLocation + $FolderName
+    $PBIXName = $PBIXFile.Split('\')[-1].Replace('.pbix', '')
+
+    try {
+        # Write-Host "Creating a session to the Report Server $ReportServerURI"
+        # establish session w/ Report Server
+        $session = New-RsRestSession -ReportPortalUri $ReportServerURI
+        # Write-Host "Created a session to the Report Server $ReportServerURI"
+    }
+    catch {
+        Write-Warning "Failed to create a session to the report server $reportserveruri"
+		throw "Failed to create a session to the report server $reportserveruri"
+    }
+
+    # create folder (optional)
+    try {
+        if ($PSCmdlet.ShouldProcess("$ReportServerURI", "Creating a folder called $FolderName at $FolderLocation")) {
+            $Null = New-RsRestFolder -WebSession $session -RsFolder $FolderLocation  -FolderName $FolderName -ErrorAction Stop
+        }
+    }
+    catch [System.Exception] {
+        If ($_.Exception.InnerException.Message -eq 'The remote server returned an error: (409) Conflict.') {
+            Write-Host "The folder already exists - moving on"
+        }
+    }
+    catch {
+        Write-Warning "Failed to create a folder called $FolderName at $FolderLocation report server $ReportServerURI but not because it already exists"
+        throw "Failed to create a folder called $FolderName at $FolderLocation report server $ReportServerURI but not because it already exists"
+    }
+
+    try {
+        if ($PSCmdlet.ShouldProcess("$ReportServerURI", "Uploading the pbix from $PBIXFile to the report server ")) {
+            # upload copy of PBIX to new folder
+            Write-RsRestCatalogItem -WebSession $session -Path $PBIXFile -RsFolder $folderPath -Description $Description -Overwrite
+        }
+    }
+    catch {
+        Write-Warning "Failed to upload the file $PBIXFile to report server $ReportServerURI"
+        throw Write-Warning "Failed to upload the file $PBIXFile to report server $ReportServerURI"
+    }
+
+    try {
+        # Write-Host "Getting the datasources from the pbix file for updating"
+        # get data source object
+        $datasources = Get-RsRestItemDataSource -WebSession $session -RsItem "$FolderPath/$PBIXName"
+        # Write-Host "Got the datasources for updating"
+    }
+    catch {
+        Write-Warning "Failed to get the datasources"
+        throw Write-Warning "Failed to get the datasources"
+    }
+
+
+    try {
+        Write-Host "Updating Datasource"
+
+       
+        foreach ($dataSource in $datasources) {
+            if ($AuthenticationType -eq 'SQL') {
+                $dataSource.DataModelDataSource.AuthType = 'UsernamePassword'
+            }
+            else{
+                $dataSource.DataModelDataSource.AuthType = 'Windows'
+            }
+            if ($Credential -or $UserName) {
+                if ($Credential) {
+                    $UserName = $Credential.UserName
+                    $Password = $Credential.GetNetworkCredential().Password
+                }
+                else {
+                    $UserName = $ConnectionUserName
+                    $Password = $Secret
+                }
+                $dataSource.CredentialRetrieval = 'Store'
+                $dataSource.DataModelDataSource.Username = $UserName 
+                $dataSource.DataModelDataSource.Secret = $Password 
+            }
+            if ($PSCmdlet.ShouldProcess("$ReportServerURI", "Updating the data source for the report $PBIXName")) {
+                $initialCatalog = $datasource.ConnectionString.split(";")[1]
+                $datasource.ConnectionString = 'Data Source='+$serviceAddress+';'+$initialCatalog
+                #$datasource.ConnectionString = 'Data Source='+$serviceAddress+';Initial Catalog='+$initialcatalogpowerbi
+                Write-Host Update data source object on server with $datasource.ConnectionString
+                Set-RsRestItemDataSource -WebSession $session -RsItem "$folderPath/$PBIXName" -RsItemType PowerBIReport -DataSources $datasource
+            }
+        }
+    }
+    catch {
+        Write-Warning "Failed to set the datasource"
+        throw "Failed to set the datasource"
+    }
+    Write-Host "Completed Successfully for " $PBIXFile 
+}
+
+########################## END OF FUNCTION. DO NOT EDIT ANYTHING ABOVE ##########################
+
+
+
+##########################################################################################
+##                                                                                      ##
+##                    Powershell script to install Power BI reports.                    ##
+##                                                                                      ##
+##########################################################################################
+
+Import-Module -Name (Resolve-Path('Powershell-cmdlts\reportingservicestools'))
+
+#_____________________________Get parameters from config file____________________________ 
+
+$file_content = Get-Content "config.properties"
+$file_content = $file_content -join [Environment]::NewLine
+$config = ConvertFrom-StringData($file_content)
+$ReportServerURI = $config.'reportServerUrl'
+$folderName = $config.'reportServerFolderName'
+$description = $config.'reportServerFolderDesc'
+$folderLocation = '/' 
+$LocalPath = 'PBIX'
+$products = $config.'products'
+$products = $products -split ","
+$outputloglocation = $config.'outputloglocation'
+$serviceAddress = $config.'analysisservicename'
+$initialcatalogpowerbi = $config.'initialcatalogpowerbi'
+
+Start-Transcript -Path $outputloglocation\pbix-output-$((get-date).ToString("yyyy-MM-dd-HH-mm-ss")).txt
+
+#_________________________Deploy .pbix files to PowerBi Report Server____________________
+
+
+    ForEach ($product in $products)
+    {   Write-Host "Started deploying reports for $product"
+        # holds full path for all reports in a product category
+	    $reports = Get-ChildItem -Path $LocalPath -Recurse -Include "*.pbix" -Filter "*$product*";
+
+
+	    ForEach ($report in $reports)
+	    {    
+		    $reportFolder = Split-Path -Path "$($report.Directory)" -Leaf
+		    $publishPBIXFileSplat = @{
+		    ReportServerURI    = $ReportServerURI
+		    folderLocation     = $folderLocation
+		    description        = $description
+		    pbixfile           = $report.FullName
+		    folderName         = $folderName
+		    AuthenticationType = 'Windows'
+		    ConnectionUserName = $UserName1
+		    Secret             = $Password1
+		    Verbose            = $false
+	    }
+	    Publish-PBIXFile @publishPBIXFileSplat -ErrorAction Stop
+    }
+   }
+
+Stop-Transcript

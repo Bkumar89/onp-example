@@ -1,0 +1,48 @@
+##########################################################################################
+##                                                                                      ##
+##                  Powershell script to invoke component scripts.                      ##
+##                                                                                      ##
+##########################################################################################
+
+Write-Host 'In the main script'
+$file_content = Get-Content "config.properties"
+$file_content = $file_content -join [Environment]::NewLine
+$config = ConvertFrom-StringData($file_content)
+$components = $config.'components'
+Write-Host 'Selected components are ' $components
+try{
+if($components -Match 'all'){
+	Write-host 'Installing all'
+	./sql-intallation-script.ps1
+	./dacpac-intallation-script.ps1
+	./ssis-installation-script.ps1
+	./ssas-installation-script.ps1
+	./pbix-installation-script.ps1
+}else{
+	if($components -Match 'sql'){
+		Write-host 'Installing sql'
+		./sql-intallation-script.ps1
+	}
+	if($components -Match 'dacpac'){
+		Write-host 'Installing dacpac'
+		./dacpac-intallation-script.ps1
+	}
+	if($components -Match 'ssis'){
+		Write-host 'Installing ssis'
+		./ssis-installation-script.ps1
+	}
+	if($components -Match 'ssas'){
+		Write-host 'Installing ssas'
+		./ssas-installation-script.ps1
+	}
+	if($components -Match 'pbi'){
+		Write-host 'Installing pbi'
+		./pbix-installation-script.ps1
+	}
+}
+}catch{
+	Write-Host "Installation failed."
+	Write-Host "ERROR MESSAGE : "  $_.Exception.Message 
+	Write-Host "Installer will exit now."
+	exit 1
+}

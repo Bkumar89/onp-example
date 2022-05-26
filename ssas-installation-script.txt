@@ -1,0 +1,70 @@
+######################################################################################################
+##                                                                                                  ##
+##                                    Powershell script to create SSAS.                             ##
+##                                                                                                  ##
+######################################################################################################
+
+
+#_______________________________________Get parameters from config file_______________________________
+
+$file_content = Get-Content "config.properties"
+$file_content = $file_content -join [Environment]::NewLine
+$config = ConvertFrom-StringData($file_content)
+$serviceAddress = $config.'analysisservicename'
+$outputloglocation = $config.'outputloglocation'
+$products = $config.'products'
+$products = $products -split ","
+
+Start-Transcript -Path $outputloglocation\ssas-output-$((get-date).ToString("yyyy-MM-dd-HH-mm-ss")).txt
+
+#__________________________________Deploy .xmla files to Analysis Service_____________________________
+
+Write-Host "Going to Start Deploying Cubes to Analysis Service $serviceAddress"
+
+ForEach ($product in $products)
+
+{
+    Write-Host 'Going to Deploy SSAS Cube for: ' $product
+    $reports = Get-ChildItem -Path $LocalPath -Recurse -Include "*.xmla" -Filter "*$product*";
+  
+    ForEach ($report in $reports)
+	{       
+        #________________________Get Cube Name from inside .xmla File______________________
+        $CubeContent = (Get-Content($report.FullName))
+        $CubeDatabase = $CubeContent[3]
+        $CubeDatabase = $CubeDatabase.Split(':')[1].Trim(",").Replace("`"","").Trim()
+
+        #_______________________________Deploy the Cube____________________________________
+        [xml]$FIC = Invoke-ASCmd  -InputFile: $report.FullName -Server $serviceAddress -ErrorAction:Stop
+        Write-Host $FIC.return.root.Messages
+
+        #_______________________________Check Deployment Status____________________________
+        IF([string]::IsNullOrEmpty($FIC.return.root.Messages.error.Description))
+        {
+            Write-Host 'Successfully Deployed: ' $report.FullName 'SSAS Cube for: ' $report.Name
+        }
+        ELSE{
+
+            Write-Host 'SSAS Cube Deployment failed with following error message for:'$report.Name
+            $FIC.return.root.Messages.error.Description
+
+            #____________________________Delete Cube if already exiting________________________
+            Write-Host 'Dropping Cube: ' $report.Name
+            $asCmd = "<Delete xmlns='http://schemas.microsoft.com/analysisservices/2003/engine'> `
+                        <Object><DatabaseID>$CubeDatabase</DatabaseID></Object></Delete>"
+            $returnResult = Invoke-ASCmd -Server $serviceAddress -Query $asCmd -ErrorAction:Stop
+    
+            if (-not ($returnResult -like '*urn:schemas-microsoft-com:xml-analysis:empty*')) {
+                throw "Failed to drop cube $CubeDatabase"
+            }
+
+            #_______________________________Re-Deploy the Cube_________________________________
+            Write-Host 'Started re-deploying Cube: ' $report.Name
+            [xml]$FIC_1 = Invoke-ASCmd  -InputFile: $report.FullName -Server $serviceAddress -ErrorAction:Stop
+        }
+    }
+}
+
+Write-Host "Finished executing!"
+Stop-Transcript
+

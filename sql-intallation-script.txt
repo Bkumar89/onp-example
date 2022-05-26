@@ -1,0 +1,59 @@
+##########################################################################################
+##                                                                                      ##
+##                      Powershell script to create SQL objects.                        ##
+##                                                                                      ##
+##########################################################################################
+
+
+Import-Module -Name (Resolve-Path('Powershell-cmdlts\sqlserver'))
+$file_content = Get-Content "config.properties"
+$file_content = $file_content -join [Environment]::NewLine
+$config = ConvertFrom-StringData($file_content)
+$oracledbserver = $config.'oracledbserver'
+$oracledbport = $config.'oracledbport'
+$oracleschemauser = $config.'oracleschemauser'
+$oracleschemapassowrd = $config.'oracleschemapassowrd'
+$oraclesid = $config.'oraclesid'
+$sqlplusinstalledlocation = $config.'sqlplusinstalledlocation'
+$outputloglocation = $config.'outputloglocation'
+$products = $config.'products'
+$products = $products -split ","
+
+Write-Host $sqlplusinstalledlocation
+Write-Host $oracledbserver
+Write-Host $oracleschemauser
+Write-Host $oracledbport
+Write-Host $oracleschemapassowrd
+Write-Host $oraclesid
+
+Start-Transcript -Path $outputloglocation\DDLs-output-$((get-date).ToString("yyyy-MM-dd-HH-mm-ss")).txt
+
+    foreach ($product in $products)
+    {
+      if($product -like "HO*")
+      {
+        Write-Host "DDLs execution is not required for the Product: $product" 
+      }
+
+      else
+      {
+        Write-Host 'Going to run DDL for: ' $product
+        $prereqddlfilepath= $pwd.Path+"\DDLs\"+$product+"_ddl.sql"
+
+        $sqlProcessRes = sqlplus -L $oracleschemauser/$oracleschemapassowrd"@"$oracledbserver":"$oracledbport/$oraclesid @$prereqddlfilepath
+
+        if($sqlProcessRes -match '\s*\w*Unable to connect to Oracle.\s*\w*')
+          {
+            throw "Some Error has occured. Please check the log file, verify your Oracle server connection details and if the sqlplus is installed in the system from where you are running this script."
+          }
+
+        $sqlProcessRes | out-file "$outputloglocation\prereq-sql-output-$product.txt"
+      
+        Write-Host "Finished executing The Pre requisites DDLs file for Product: $product" 
+      }
+ 
+    }
+
+Write-Host "Finished executing All the Pre requisites DDLs files."
+
+Stop-Transcript

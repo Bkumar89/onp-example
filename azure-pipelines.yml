@@ -1,0 +1,31 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- none
+
+pool:
+  name: CCBInsightPool
+  demands:
+  - agent.name -equals w21d18102617002
+
+stages:
+  - stage: CCB_INSIGHT_ONPREM_DEPLOY
+    jobs:
+      - job: CCB_INSIGHT_ONPREM_DEPLOY
+        timeoutInMinutes: 200
+        displayName: CCB Insight On Prem Deployment
+        workspace:
+          clean: all
+        steps:
+          - checkout: self
+          - task: CmdLine@2
+            inputs:
+              script: |
+                cd $(System.DefaultWorkingDirectory)
+                .\CCB-INS-installer.bat
+              workingDirectory: '$(System.DefaultWorkingDirectory)'
+              failOnStderr: true
+

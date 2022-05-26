@@ -1,0 +1,1260 @@
+{
+  "create": {
+    "database": {
+      "name": "FRM",
+      "compatibilityLevel": 1400,
+      "model": {
+        "culture": "en-US",
+        "dataSources": [
+          {
+            "type": "structured",
+            "name": "SQL/p21d18102583001 database windows net;p21d18102583002",
+            "connectionDetails": {
+              "protocol": "tds",
+              "address": {
+                "server": "w21d18102617002",
+                "database": "Insights"
+              },
+              "authentication": null,
+              "query": null
+            },
+            "credential": {
+              "AuthenticationKind": "Windows",
+              "kind": "SQL",
+              "path": "w21d18102617002;Insights",
+              "Username": "devcorp\\u722444",
+              "EncryptConnection": false
+            }
+          }
+        ],
+        "tables": [
+          {
+            "name": "DIM_CURRENCY",
+            "columns": [
+              {
+                "name": "CCY_ID",
+                "dataType": "double",
+                "isHidden": true,
+                "sourceColumn": "CCY_ID"
+              },
+              {
+                "name": "Currency Code",
+                "dataType": "string",
+                "sourceColumn": "CCY_CD"
+              },
+              {
+                "name": "Currency Description",
+                "dataType": "string",
+                "sourceColumn": "CCY_DESC"
+              },
+              {
+                "name": "CCY_DEC",
+                "dataType": "int64",
+                "isHidden": true,
+                "sourceColumn": "CCY_DEC"
+              },
+              {
+                "name": "Country Name",
+                "dataType": "string",
+                "sourceColumn": "CNTRY_NAME"
+              },
+              {
+                "name": "CCY_ACC",
+                "dataType": "string",
+                "isHidden": true,
+                "sourceColumn": "CCY_ACC"
+              },
+              {
+                "name": "CCY_TYPE",
+                "dataType": "string",
+                "isHidden": true,
+                "sourceColumn": "CCY_TYPE"
+              },
+              {
+                "name": "CNTRY_CD",
+                "dataType": "string",
+                "isHidden": true,
+                "sourceColumn": "CNTRY_CD"
+              },
+              {
+                "name": "REC_STAT",
+                "dataType": "string",
+                "isHidden": true,
+                "sourceColumn": "REC_STAT"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = #\"SQL/p21d18102583001 database windows net;p21d18102583002\",",
+                    "    dbo_TAFB_CURRENCY = Source{[Schema=\"dbo\",Item=\"TAFB_CURRENCY\"]}[Data],",
+                    "    #\"Removed Columns\" = Table.RemoveColumns(dbo_TAFB_CURRENCY,{\"REF_ID\", \"REQ_TYPE\", \"RESTD_CCY\", \"XCHNG_RATE\"})",
+                    "in",
+                    "    #\"Removed Columns\""
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "FACT_TXN_FEE_CALCULATED",
+            "columns": [
+              {
+                "name": "FEE_REF_NO",
+                "dataType": "double",
+                "isHidden": true,
+                "sourceColumn": "FEE_REF_NO",
+                "formatString": "0"
+              },
+              {
+                "name": "ASSO_REF_NO",
+                "dataType": "int64",
+                "isHidden": true,
+                "sourceColumn": "ASSO_REF_NO"
+              },
+              {
+                "name": "CUST_ID",
+                "dataType": "string",
+                "isHidden": true,
+                "sourceColumn": "CUST_ID"
+              },
+              {
+                "name": "Transaction Currency",
+                "dataType": "string",
+                "sourceColumn": "From_CCY"
+              },
+              {
+                "name": "Base Currency",
+                "dataType": "string",
+                "sourceColumn": "To_CCY"
+              },
+              {
+                "name": "Fee Status",
+                "dataType": "string",
+                "isHidden": true,
+                "sourceColumn": "FEE_STAT"
+              },
+              {
+                "name": "CUST_CAT_ID",
+                "dataType": "string",
+                "isHidden": true,
+                "sourceColumn": "CUST_CAT_ID"
+              },
+              {
+                "name": "Fee Type",
+                "dataType": "string",
+                "sourceColumn": "FEE_TYPE"
+              },
+              {
+                "name": "Customer Category",
+                "dataType": "string",
+                "sourceColumn": "CUST_CAT_NAME"
+              },
+              {
+                "name": "Product Type",
+                "dataType": "string",
+                "sourceColumn": "PROD_TYPE"
+              },
+              {
+                "name": "PROD_SUB_TYPE_ID",
+                "dataType": "string",
+                "isHidden": true,
+                "sourceColumn": "PROD_SUB_TYPE_ID"
+              },
+              {
+                "name": "CRT_TMSTMP",
+                "dataType": "dateTime",
+                "isHidden": true,
+                "sourceColumn": "CRT_TMSTMP"
+              },
+              {
+                "name": "STATUS",
+                "dataType": "string",
+                "isHidden": true,
+                "sourceColumn": "STATUS"
+              },
+              {
+                "name": "DR_CR_STATUS",
+                "dataType": "string",
+                "isHidden": true,
+                "sourceColumn": "DR_CR_STATUS"
+              },
+              {
+                "name": "UPD_TMSTMP",
+                "dataType": "dateTime",
+                "isHidden": true,
+                "sourceColumn": "UPD_TMSTMP"
+              },
+              {
+                "name": "APPRV_TMSTMP",
+                "dataType": "dateTime",
+                "isHidden": true,
+                "sourceColumn": "APPRV_TMSTMP"
+              },
+              {
+                "name": "REQ_TYPE",
+                "dataType": "string",
+                "isHidden": true,
+                "sourceColumn": "REQ_TYPE"
+              },
+              {
+                "name": "APPRV_STAT",
+                "dataType": "string",
+                "isHidden": true,
+                "sourceColumn": "APPRV_STAT"
+              },
+              {
+                "name": "Customer Name",
+                "dataType": "string",
+                "sourceColumn": "CUST_NAME"
+              },
+              {
+                "name": "Sub-Product",
+                "dataType": "string",
+                "sourceColumn": "PROD_SUB_TYPE_DESC"
+              },
+              {
+                "name": "LOB_ID",
+                "dataType": "int64",
+                "isHidden": true,
+                "sourceColumn": "LOB_ID"
+              },
+              {
+                "name": "Business Area",
+                "dataType": "string",
+                "sourceColumn": "LOB_NAME"
+              },
+              {
+                "name": "PARENT_GROUP_CODE",
+                "dataType": "string",
+                "isHidden": true,
+                "sourceColumn": "PARENT_GROUP_CODE"
+              },
+              {
+                "name": "Customer RM",
+                "dataType": "string",
+                "sourceColumn": "CUSTOMER_RM"
+              },
+              {
+                "name": "Customer Group RM",
+                "dataType": "string",
+                "sourceColumn": "CUST_GROUP_RM"
+              },
+              {
+                "name": "Holding Company RM",
+                "dataType": "string",
+                "sourceColumn": "PARENT_GROUP_RM"
+              },
+              {
+                "name": "Revenue(Transaction Currency)",
+                "dataType": "double",
+                "sourceColumn": "Fee_Amount_After_Tax",
+                "formatString": "0.00"
+              },
+              {
+                "name": "Revenue(Base Currency)",
+                "dataType": "double",
+                "sourceColumn": "Revenue",
+                "formatString": "0.00"
+              },
+              {
+                "name": "OPTIMIZATION_DATE",
+                "dataType": "dateTime",
+                "isHidden": true,
+                "sourceColumn": "OPTIMIZATION_DATE"
+              },
+              {
+                "name": "Holding Company",
+                "dataType": "string",
+                "sourceColumn": "PARENT_GROUP_NAME"
+              },
+              {
+                "name": "ExchangeRate LastModifiedDate",
+                "dataType": "dateTime",
+                "sourceColumn": "ExchangeRate_LastModifiedDate"
+              },
+              {
+                "name": "LastModifiedDate",
+                "dataType": "dateTime",
+                "sourceColumn": "LastModifiedDate"
+              },
+              {
+                "name": "IsCreatedDt",
+                "dataType": "string",
+                "isHidden": true,
+                "sourceColumn": "IsCreatedDt"
+              },
+              {
+                "name": "IsUpdDt",
+                "dataType": "string",
+                "isHidden": true,
+                "sourceColumn": "IsUpdDt"
+              },
+              {
+                "name": "IsApprvDt",
+                "dataType": "string",
+                "isHidden": true,
+                "sourceColumn": "IsApprvDt"
+              },
+              {
+                "name": "IsOptimizedDt",
+                "dataType": "string",
+                "isHidden": true,
+                "sourceColumn": "IsOptimizedDt"
+              },
+              {
+                "name": "Transaction Date",
+                "dataType": "string",
+                "sourceColumn": "Value_Date",
+                "formatString": "General Date"
+              },
+              {
+                "name": "Product Name",
+                "dataType": "string",
+                "sourceColumn": "PROD_TYPE_DESC"
+              },
+              {
+                "type": "calculated",
+                "name": "Month_Sort",
+                "dataType": "int64",
+                "isDataTypeInferred": true,
+                "expression": "MONTH(FACT_TXN_FEE_CALCULATED[Transaction Date])*100+YEAR([Transaction Date])"
+              },
+              {
+                "name": "No_of_Txn",
+                "dataType": "int64",
+                "isHidden": true,
+                "sourceColumn": "NO_OF_TXNS"
+              },
+              {
+                "name": "Customer Group",
+                "dataType": "string",
+                "sourceColumn": "Customer Group"
+              },
+              {
+                "name": "TransDate",
+                "dataType": "dateTime",
+                "sourceColumn": "Value_Date - Copy"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = Value.NativeQuery(#\"SQL/p21d18102583001 database windows net;p21d18102583002\", ",
+                    "\"SELECT *  FROM [dbo].[Tafb_Txn_Fee_Calculated]\"),",
+                    "    #\"Added Conditional Column\" = Table.AddColumn(Source, \"IsCreatedDt\", each if [CRT_TMSTMP] = null then 0 else 1),",
+                    "    #\"Added Conditional Column1\" = Table.AddColumn(#\"Added Conditional Column\", \"IsUpdDt\", each if [UPD_TMSTMP] = null then 0 else 1),",
+                    "    #\"Added Conditional Column2\" = Table.AddColumn(#\"Added Conditional Column1\", \"IsApprvDt\", each if [APPRV_TMSTMP] = null then 0 else 1),",
+                    "    #\"Added Conditional Column3\" = Table.AddColumn(#\"Added Conditional Column2\", \"IsOptimizedDt\", each if [OPTIMIZATION_DATE] = null then 0 else 1),",
+                    "    #\"Added Custom\" = Table.AddColumn(#\"Added Conditional Column3\", \"Value_Date\", each if [IsOptimizedDt]=1 then [OPTIMIZATION_DATE] else if [IsApprvDt]=1 then [APPRV_TMSTMP] else if [IsUpdDt]=1  then [UPD_TMSTMP] else [CRT_TMSTMP]),",
+                    "    #\"Renamed Columns\" = Table.RenameColumns(#\"Added Custom\",{{\"GROUP_NAME\", \"Customer Group\"}}),",
+                    "    #\"Duplicated Column\" = Table.DuplicateColumn(#\"Renamed Columns\", \"Value_Date\", \"Value_Date - Copy\"),",
+                    "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Duplicated Column\",{{\"Value_Date - Copy\", type date}}),",
+                    "    #\"Changed Type1\" = Table.TransformColumnTypes(#\"Changed Type\",{{\"Value_Date - Copy\", type datetime}})",
+                    "in",
+                    "    #\"Changed Type1\""
+                  ]
+                }
+              }
+            ],
+            "measures": [
+              {
+                "name": "Not Charged",
+                "expression": " CALCULATE([Revenue Total],FILTER('FACT_TXN_FEE_CALCULATED',[Fee Type] = \"Transaction Fee\" && [Fee Status]= \"Not Charged\"))",
+                "formatString": "0"
+              },
+              {
+                "name": "TransactionPeriodicFee Revenue",
+                "expression": " CALCULATE([Revenue Total],FACT_TXN_FEE_CALCULATED[FEE TYPE]=\"Transaction Periodic Fee\")",
+                "formatString": "0"
+              },
+              {
+                "name": "Revenue Total",
+                "expression": "SUM([Revenue(Base Currency)])",
+                "formatString": "0"
+              },
+              {
+                "name": "Transaction Count",
+                "expression": "DISTINCTCOUNT(FACT_TXN_FEE_CALCULATED[FEE_REF_NO])",
+                "formatString": "0"
+              },
+              {
+                "name": "PeriodicFee TransactionCount",
+                "expression": "CALCULATE([Transaction Count],FACT_TXN_FEE_CALCULATED[Fee Type]= \"Periodic Fee\")",
+                "formatString": "0"
+              },
+              {
+                "name": "PeriodicFee Revenue",
+                "expression": " CALCULATE([Revenue Total],FACT_TXN_FEE_CALCULATED[Fee Type]=\"Periodic Fee\")",
+                "formatString": "0"
+              },
+              {
+                "name": "Revenue Per Transaction",
+                "expression": " [Revenue Total]/[Transaction Count]",
+                "formatString": "0"
+              },
+              {
+                "name": "Charged Revenue",
+                "expression": "CALCULATE([Revenue Total],FACT_TXN_FEE_CALCULATED[Fee Status]=\"Charged\" , FACT_TXN_FEE_CALCULATED[Fee Type]=\"Transaction Fee\")",
+                "formatString": "0"
+              },
+              {
+                "name": "Charged TransactionCount",
+                "expression": "CALCULATE([Transaction Count],FACT_TXN_FEE_CALCULATED[Fee Status]=\"Charged\",FACT_TXN_FEE_CALCULATED[FEE TYPE]=\"Transaction Fee\")",
+                "formatString": "0"
+              },
+              {
+                "name": "PreviousYear",
+                "expression": " Year(TODAY())-1"
+              },
+              {
+                "name": "Total TransactionFee",
+                "expression": "CALCULATE([Revenue Total],FACT_TXN_FEE_CALCULATED[Fee Type] =\"Transaction Fee\")",
+                "formatString": "0"
+              },
+              {
+                "name": "TransactionPeriodicFee TransactionCount",
+                "expression": "CALCULATE([Transaction Count],FACT_TXN_FEE_CALCULATED[Fee Type]=\"Transaction Periodic Fee\")",
+                "formatString": "0"
+              },
+              {
+                "name": "Periodic and TransactionFee TransactionCount",
+                "expression": " [PeriodicFee TransactionCount]+[TransactionPeriodicFee TransactionCount]",
+                "formatString": "0"
+              },
+              {
+                "name": "TransactionFee Revenue",
+                "expression": "CALCULATE([Revenue Total],FACT_TXN_FEE_CALCULATED[Fee Type]=\"Transaction Fee\")",
+                "formatString": "0"
+              },
+              {
+                "name": "Revenue Current Quarter",
+                "expression": " CALCULATE(SUM(FACT_TXN_FEE_CALCULATED[Revenue(Base Currency)]),FILTER(FACT_TXN_FEE_CALCULATED,ROUNDUP(MONTH(TODAY())/3,0)=ROUNDUP(MONTH(FACT_TXN_FEE_CALCULATED[TransDate])/3,0)))",
+                "formatString": "0.00"
+              },
+              {
+                "name": "Growth Factor for Quarter",
+                "expression": " SWITCH(TRUE(), [Revenue Previous Quarter]=0 && [Revenue Current Quarter]=0, 0,[Revenue Current Quarter]>0 && [Revenue Previous Quarter]=0,100, DIVIDE([Revenue Current Quarter]-[Revenue Previous Quarter],[Revenue Previous Quarter])*100)",
+                "formatString": "0.00"
+              },
+              {
+                "name": "Previous Quarter",
+                "expression": "If(ROUNDUP(MONTH(TODAY())/3,0)=1,4,ROUNDUP(MONTH(TODAY())/3,0))",
+                "formatString": "0"
+              },
+              {
+                "name": "Revenue Previous Quarter",
+                "expression": " CALCULATE(SUM(FACT_TXN_FEE_CALCULATED[Revenue(Base Currency)]),FILTER(Fact_TXN_Fee_Calculated,(ROUNDUP(MONTH(FACT_TXN_FEE_CALCULATED[TransDate])/3,0)=[Previous Quarter]) && (YEAR(FACT_TXN_FEE_CALCULATED[TransDate])=[PreviousYear])))"
+              },
+              {
+                "name": "TransactionFee TransactionCount",
+                "expression": "CALCULATE(DISTINCTCOUNT([FEE_REF_NO]),FACT_TXN_FEE_CALCULATED[Fee Type]=\"Transaction Fee\")"
+              },
+              {
+                "name": "Average Product Usage",
+                "expression": "IF([Customer Count]=0,0, DIVIDE([Product Count],[Customer Count]))"
+              },
+              {
+                "name": "Customer Count",
+                "expression": "CALCULATE(DISTINCTCOUNT(FACT_TXN_FEE_CALCULATED[Customer Name]))"
+              },
+              {
+                "name": "Product Count",
+                "expression": "CALCULATE(DISTINCTCOUNT(FACT_TXN_FEE_CALCULATED[Product Name]))"
+              },
+              {
+                "name": "Revenue YTD",
+                "expression": " CALCULATE((sum(FACT_TXN_FEE_CALCULATED[Revenue(Base Currency)])))"
+              },
+              {
+                "name": "HoldingCompany Label",
+                "expression": "\"Holding Company : \" & SELECTEDVALUE(FACT_TXN_FEE_CALCULATED[Holding Company]) "
+              },
+              {
+                "name": "CustomerGroup Label",
+                "expression": "\"Customer Group : \" & SELECTEDVALUE(FACT_TXN_FEE_CALCULATED[Customer Group])"
+              },
+              {
+                "name": "BaseCurrency Label",
+                "expression": " \"   Base Currency : \" & SELECTEDVALUE(FACT_TXN_FEE_CALCULATED[Base Currency])"
+              },
+              {
+                "name": "Product Label",
+                "expression": " \"Product : \" & SELECTEDVALUE(FACT_TXN_FEE_CALCULATED[Product Name]) "
+              },
+              {
+                "name": "Customer Label",
+                "expression": " \"Customer : \" & SELECTEDVALUE(FACT_TXN_FEE_CALCULATED[Customer Name])"
+              },
+              {
+                "name": "SubProduct Label",
+                "expression": " \"Sub Product : \" & SELECTEDVALUE(FACT_TXN_FEE_CALCULATED[Sub-Product])"
+              },
+              {
+                "name": "Periodic and TransactionPeriodic Fee Revenue",
+                "expression": " [PeriodicFee Revenue]+[TransactionPeriodicFee Revenue]",
+                "formatString": "0"
+              },
+              {
+                "name": "Periodic TransactionPeriodic Fee TransactionCount",
+                "expression": " [PeriodicFee TransactionCount]+[TransactionPeriodicFee TransactionCount]",
+                "formatString": "0"
+              },
+              {
+                "name": "Actual Revenue",
+                "expression": "CALCULATE(SUM(FACT_TXN_FEE_CALCULATED[Revenue(Base Currency)]),ALL(KPI_TargetTable[CCY]))"
+              },
+              {
+                "name": "Average Product Usage YTD",
+                "expression": "IF([Customer Count YTD]=0,0, DIVIDE([Product Count YTD],[Customer Count YTD]))"
+              },
+              {
+                "name": "Customer Count YTD",
+                "expression": "CALCULATE(DISTINCTCOUNT(FACT_TXN_FEE_CALCULATED[Customer Name]),YEAR(FACT_TXN_FEE_CALCULATED[TransDate])=Year(Now()))"
+              },
+              {
+                "name": "Product Count YTD",
+                "expression": "CALCULATE(DISTINCTCOUNT(FACT_TXN_FEE_CALCULATED[Product Name]),YEAR(FACT_TXN_FEE_CALCULATED[TransDate])=Year(Now()))"
+              },
+              {
+                "name": "ProductLabelKPI",
+                "expression": " \"Product : \" & SELECTEDVALUE(Revenue_KPI[PROD_TYPE_DESC]) "
+              },
+              {
+                "name": "Actual Prod Usage",
+                "expression": " CALCULATE([Average Product Usage],FILTER(FACT_TXN_FEE_CALCULATED,FACT_TXN_FEE_CALCULATED[Base Currency] = [Header CCYLabel]))"
+              }
+            ]
+          },
+          {
+            "name": "USR_BASECURRENCY",
+            "columns": [
+              {
+                "name": "Base Currency",
+                "dataType": "string",
+                "sourceColumn": "BaseCurrency"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = Value.NativeQuery(#\"SQL/p21d18102583001 database windows net;p21d18102583002\", \"select Base_ccy BaseCurrency From [dbo].[Bank_base_currency]",
+                    "Where Base_ccy<>'NA'\")",
+                    "in",
+                    "    Source"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "USR_Security",
+            "columns": [
+              {
+                "name": "HoldingCompanyRM",
+                "dataType": "string",
+                "sourceColumn": "HoldingCompanyRM"
+              },
+              {
+                "name": "LoginId",
+                "dataType": "string",
+                "sourceColumn": "LoginId"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = #\"SQL/p21d18102583001 database windows net;p21d18102583002\",",
+                    "    dbo_TAFB_Security = Source{[Schema=\"dbo\",Item=\"TAFB_Security\"]}[Data]",
+                    "in",
+                    "    dbo_TAFB_Security"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "DIM_CALENDARDATE",
+            "columns": [
+              {
+                "name": "Date",
+                "dataType": "dateTime",
+                "sourceColumn": "Date",
+                "formatString": "General Date"
+              },
+              {
+                "name": "MonthSort",
+                "dataType": "string",
+                "sourceColumn": "MonthSort"
+              },
+              {
+                "name": "Months",
+                "dataType": "string",
+                "sourceColumn": "Months",
+                "sortByColumn": "MonthSort"
+              },
+              {
+                "name": "Quarters",
+                "dataType": "string",
+                "sourceColumn": "Quarters",
+                "sortByColumn": "Years"
+              },
+              {
+                "name": "Years",
+                "dataType": "int64",
+                "sourceColumn": "Years"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = #\"SQL/p21d18102583001 database windows net;p21d18102583002\",",
+                    "    dbo_TAFB_CalendarDate = Source{[Schema=\"dbo\",Item=\"TAFB_CalendarDate\"]}[Data],",
+                    "    #\"Removed Other Columns\" = Table.SelectColumns(dbo_TAFB_CalendarDate,{\"Date\"}),",
+                    "    #\"Inserted Year\" = Table.AddColumn(#\"Removed Other Columns\", \"Year\", each Date.Year([Date]), Int64.Type),",
+                    "    #\"Renamed Columns\" = Table.RenameColumns(#\"Inserted Year\",{{\"Year\", \"Years\"}}),",
+                    "    #\"Duplicated Column\" = Table.DuplicateColumn(#\"Renamed Columns\", \"Years\", \"Years - Copy\"),",
+                    "    #\"Duplicated Column1\" = Table.DuplicateColumn(#\"Duplicated Column\", \"Years\", \"Years - Copy.1\"),",
+                    "    #\"Inserted Month\" = Table.AddColumn(#\"Duplicated Column1\", \"Month\", each Date.Month([Date]), Int64.Type),",
+                    "    #\"Inserted Month Name\" = Table.AddColumn(#\"Inserted Month\", \"Month Name\", each Date.MonthName([Date]), type text),",
+                    "    #\"Inserted Quarter\" = Table.AddColumn(#\"Inserted Month Name\", \"Quarter\", each Date.QuarterOfYear([Date]), Int64.Type),",
+                    "    #\"Added Prefix\" = Table.TransformColumns(#\"Inserted Quarter\", {{\"Quarter\", each \"Qtr \" & Text.From(_, \"en-US\"), type text}}),",
+                    "    #\"Merged Columns\" = Table.CombineColumns(Table.TransformColumnTypes(#\"Added Prefix\", {{\"Years - Copy.1\", type text}}, \"en-US\"),{\"Quarter\", \"Years - Copy.1\"},Combiner.CombineTextByDelimiter(\" \", QuoteStyle.None),\"Quarters\"),",
+                    "    #\"Extracted First Characters\" = Table.TransformColumns(#\"Merged Columns\", {{\"Month Name\", each Text.Start(_, 3), type text}}),",
+                    "    #\"Merged Columns1\" = Table.CombineColumns(Table.TransformColumnTypes(#\"Extracted First Characters\", {{\"Years - Copy\", type text}}, \"en-US\"),{\"Month Name\", \"Years - Copy\"},Combiner.CombineTextByDelimiter(\" \", QuoteStyle.None),\"Months\"),",
+                    "    #\"Added Custom\" = Table.AddColumn(#\"Merged Columns1\", \"Custom\", each [Years]*100+[Month]),",
+                    "    #\"Removed Columns\" = Table.RemoveColumns(#\"Added Custom\",{\"Month\"}),",
+                    "    #\"Renamed Columns1\" = Table.RenameColumns(#\"Removed Columns\",{{\"Custom\", \"MonthSort\"}})",
+                    "in",
+                    "    #\"Renamed Columns1\""
+                  ]
+                }
+              }
+            ],
+            "hierarchies": [
+              {
+                "name": "DateHier",
+                "levels": [
+                  {
+                    "name": "Months",
+                    "ordinal": 2,
+                    "column": "Months"
+                  },
+                  {
+                    "name": "Quarters",
+                    "ordinal": 1,
+                    "column": "Quarters"
+                  },
+                  {
+                    "name": "Years",
+                    "ordinal": 0,
+                    "column": "Years"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "KPI_TargetTable",
+            "columns": [
+              {
+                "name": "KPI",
+                "dataType": "int64",
+                "sourceColumn": "KPI"
+              },
+              {
+                "name": "MODULE",
+                "dataType": "string",
+                "sourceColumn": "MODULE"
+              },
+              {
+                "name": "VALUE",
+                "dataType": "double",
+                "sourceColumn": "VALUE"
+              },
+              {
+                "name": "RM_IDENTIFIER",
+                "dataType": "string",
+                "sourceColumn": "RM_IDENTIFIER"
+              },
+              {
+                "name": "STARTDATE",
+                "dataType": "dateTime",
+                "sourceColumn": "STARTDATE",
+                "formatString": "General Date"
+              },
+              {
+                "name": "ENDDATE",
+                "dataType": "dateTime",
+                "sourceColumn": "ENDDATE",
+                "formatString": "General Date"
+              },
+              {
+                "name": "FREQUENCY",
+                "dataType": "string",
+                "sourceColumn": "FREQUENCY"
+              },
+              {
+                "name": "UPDATED_DATE",
+                "dataType": "dateTime",
+                "sourceColumn": "UPDATED_DATE"
+              },
+              {
+                "name": "CCY",
+                "dataType": "string",
+                "sourceColumn": "CCY"
+              },
+              {
+                "name": "Category",
+                "dataType": "string",
+                "sourceColumn": "Category"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = #\"SQL/p21d18102583001 database windows net;p21d18102583002\",",
+                    "    dbo_KPI_TargetTable = Source{[Schema=\"dbo\",Item=\"KPI_TargetTable\"]}[Data]",
+                    "in",
+                    "    dbo_KPI_TargetTable"
+                  ]
+                }
+              }
+            ],
+            "measures": [
+              {
+                "name": "TargetRevenue",
+                "expression": "CALCULATE(sum(KPI_TargetTable[Value]),KPI_TargetTable[MODULE] = \"REVENUE\")"
+              },
+              {
+                "name": "AverageProdUseTarget",
+                "expression": " CALCULATE(AVERAGE([VALUE]),FILTER(KPI_TargetTable,KPI_TargetTable[MODULE] = \"ProdUse\"))"
+              },
+              {
+                "name": "TargetProdUse",
+                "expression": "CALCULATE(sum(KPI_TargetTable[Value]),KPI_TargetTable[MODULE] = \"ProdUse\")"
+              },
+              {
+                "name": "TargetProdUseYTD",
+                "expression": "CALCULATE(sum(KPI_TARGETtable[Value]),KPI_TARGETtable[MODULE] = \"ProdUse\",KPI_TARGETtable[FREQUENCY]=\"Y\")"
+              },
+              {
+                "name": "Month_Year",
+                "expression": "FORMAT(NOW(),\"mmmm yyyy\")"
+              },
+              {
+                "name": "CCY Label",
+                "expression": " \"   Base Currency : \" & SELECTEDVALUE(Revenue_KPI[to_ccy])"
+              },
+              {
+                "name": "Header CCYLabel",
+                "expression": " SELECTEDVALUE(Revenue_KPI[to_ccy])"
+              },
+              {
+                "name": "Overall",
+                "expression": "CALCULATE([TargetRevenue],USERELATIONSHIP(KPI_TargetTable[STARTDATE],DIM_CALENDARDATE[Date]))"
+              }
+            ]
+          },
+          {
+            "name": "Revenue_KPI",
+            "columns": [
+              {
+                "name": "revenue",
+                "dataType": "double",
+                "sourceColumn": "revenue"
+              },
+              {
+                "name": "crt_tmstmp",
+                "dataType": "dateTime",
+                "sourceColumn": "crt_tmstmp"
+              },
+              {
+                "name": "to_ccy",
+                "dataType": "string",
+                "sourceColumn": "to_ccy"
+              },
+              {
+                "name": "parent_group_rm",
+                "dataType": "string",
+                "sourceColumn": "PARENT_GROUP_RM"
+              },
+              {
+                "name": "UPD_TMSTMP",
+                "dataType": "dateTime",
+                "sourceColumn": "UPD_TMSTMP"
+              },
+              {
+                "name": "APPRV_TMSTMP",
+                "dataType": "dateTime",
+                "sourceColumn": "APPRV_TMSTMP"
+              },
+              {
+                "name": "OPTIMIZATION_DATE",
+                "dataType": "dateTime",
+                "sourceColumn": "OPTIMIZATION_DATE"
+              },
+              {
+                "name": "Opt_val",
+                "dataType": "string",
+                "sourceColumn": "Opt_val"
+              },
+              {
+                "name": "App_val",
+                "dataType": "string",
+                "sourceColumn": "App_val"
+              },
+              {
+                "name": "Upd_val",
+                "dataType": "string",
+                "sourceColumn": "Upd_val"
+              },
+              {
+                "name": "Value_date",
+                "dataType": "dateTime",
+                "sourceColumn": "Value_date",
+                "formatString": "General Date"
+              },
+              {
+                "type": "calculated",
+                "name": "Transaction Date",
+                "dataType": "dateTime",
+                "isDataTypeInferred": false,
+                "isHidden": true,
+                "expression": "FORMAT([Value_date],\"mm/dd/yyyy\")",
+                "formatString": "MM/dd/yyyy",
+                "annotations": [
+                  {
+                    "name": "Format",
+                    "value": "<Format Format=\"DateTimeCustom\"><DateTimes><DateTime LCID=\"1033\" Group=\"ShortDate\" FormatString=\"MM/dd/yyyy\" /></DateTimes></Format>"
+                  }
+                ]
+              },
+              {
+                "name": "fee_ref_no",
+                "dataType": "double",
+                "sourceColumn": "fee_ref_no"
+              },
+              {
+                "type": "calculated",
+                "name": "Calculated Column 1",
+                "dataType": "string",
+                "isDataTypeInferred": true,
+                "isHidden": true,
+                "expression": "FORMAT([Value_date],\"mm/dd/yyyy\")"
+              },
+              {
+                "name": "PARENT_GROUP_NAME",
+                "dataType": "string",
+                "sourceColumn": "PARENT_GROUP_NAME"
+              },
+              {
+                "name": "CUST_NAME",
+                "dataType": "string",
+                "sourceColumn": "CUST_NAME"
+              },
+              {
+                "name": "GROUP_NAME",
+                "dataType": "string",
+                "sourceColumn": "GROUP_NAME"
+              },
+              {
+                "name": "PROD_SUB_TYPE_DESC",
+                "dataType": "string",
+                "sourceColumn": "PROD_SUB_TYPE_DESC"
+              },
+              {
+                "name": "PROD_TYPE_DESC",
+                "dataType": "string",
+                "sourceColumn": "PROD_TYPE_DESC"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = Value.NativeQuery(#\"SQL/p21d18102583001 database windows net;p21d18102583002\", ",
+                    "\"Select b.fee_ref_no",
+                    ",b.PARENT_GROUP_NAME",
+                    ",b.revenue",
+                    ",b.crt_tmstmp",
+                    ",b.UPD_TMSTMP",
+                    ",b.APPRV_TMSTMP",
+                    ",b.OPTIMIZATION_DATE",
+                    ",b.to_ccy",
+                    ",b.PARENT_GROUP_RM",
+                    ",b.CUST_NAME",
+                    ",B.GROUP_NAME",
+                    ",b.PROD_SUB_TYPE_DESC,b.PROD_TYPE_DESC",
+                    "from [TAFB_TXN_FEE_CALCULATED] b ",
+                    " inner join [dbo].[Revenue_target] a",
+                    "on  a.rm_identifier  =  b.parent_group_rm and ",
+                    "a.ccy=b.to_ccy order by b.fee_ref_no",
+                    "\"),",
+                    "    #\"Added Conditional Column\" = Table.AddColumn(Source, \"Opt_val\", each if [OPTIMIZATION_DATE] = null then 0 else 1),",
+                    "    #\"Added Conditional Column1\" = Table.AddColumn(#\"Added Conditional Column\", \"App_val\", each if [APPRV_TMSTMP] = null then 0 else 1),",
+                    "    #\"Added Conditional Column2\" = Table.AddColumn(#\"Added Conditional Column1\", \"Upd_val\", each if [UPD_TMSTMP] = null then 0 else 1),",
+                    "    #\"Added Conditional Column3\" = Table.AddColumn(#\"Added Conditional Column2\", \"Value_date\", each if [Opt_val] = 1 then [OPTIMIZATION_DATE] else if [App_val] = 1 then [APPRV_TMSTMP] else if [Upd_val] = 1 then [UPD_TMSTMP] else [crt_tmstmp]),",
+                    "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Added Conditional Column3\",{{\"Value_date\", type date}})",
+                    "in",
+                    "    #\"Changed Type\""
+                  ]
+                }
+              }
+            ],
+            "measures": [
+              {
+                "name": "CustomerCountKPI",
+                "expression": "CALCULATE(DISTINCTCOUNT(Revenue_KPI[CUST_NAME]))"
+              }
+            ]
+          },
+          {
+            "name": "DIM_INVOICE_HEADER_CALC",
+            "columns": [
+              {
+                "name": "INV_ID",
+                "dataType": "int64",
+                "sourceColumn": "INV_ID"
+              },
+              {
+                "name": "INV_REF_NO",
+                "dataType": "string",
+                "sourceColumn": "INV_REF_NO"
+              },
+              {
+                "name": "INV_GEN_DT",
+                "dataType": "dateTime",
+                "sourceColumn": "INV_GEN_DT"
+              },
+              {
+                "name": "INV_DUE_DT",
+                "dataType": "dateTime",
+                "sourceColumn": "INV_DUE_DT"
+              },
+              {
+                "name": "From_CCY",
+                "dataType": "string",
+                "sourceColumn": "From_CCY"
+              },
+              {
+                "name": "To_CCY",
+                "dataType": "string",
+                "sourceColumn": "To_CCY"
+              },
+              {
+                "name": "CUSTOMER_RM",
+                "dataType": "string",
+                "sourceColumn": "CUSTOMER_RM"
+              },
+              {
+                "name": "CUST_GROUP_RM",
+                "dataType": "string",
+                "sourceColumn": "CUST_GROUP_RM"
+              },
+              {
+                "name": "PARENT_GROUP_RM",
+                "dataType": "string",
+                "sourceColumn": "PARENT_GROUP_RM"
+              },
+              {
+                "name": "BRANCH_CODE",
+                "dataType": "string",
+                "sourceColumn": "BRANCH_CODE"
+              },
+              {
+                "name": "PAYMENT_STATUS",
+                "dataType": "string",
+                "sourceColumn": "PAYMENT_STATUS"
+              },
+              {
+                "name": "OUTSTAND_SINCE",
+                "dataType": "int64",
+                "sourceColumn": "OUTSTAND_SINCE"
+              },
+              {
+                "name": "DISPATCH_STATUS",
+                "dataType": "string",
+                "sourceColumn": "DISPATCH_STATUS"
+              },
+              {
+                "name": "CUST_ID",
+                "dataType": "string",
+                "sourceColumn": "CUST_ID"
+              },
+              {
+                "name": "CUST_NO",
+                "dataType": "string",
+                "sourceColumn": "CUST_NO"
+              },
+              {
+                "name": "CUST_NAME",
+                "dataType": "string",
+                "sourceColumn": "CUST_NAME"
+              },
+              {
+                "name": "GROUP_ID",
+                "dataType": "int64",
+                "sourceColumn": "GROUP_ID"
+              },
+              {
+                "name": "GROUP_NO",
+                "dataType": "string",
+                "sourceColumn": "GROUP_NO"
+              },
+              {
+                "name": "GROUP_NAME",
+                "dataType": "string",
+                "sourceColumn": "GROUP_NAME"
+              },
+              {
+                "name": "PARENT_GROUP_ID",
+                "dataType": "int64",
+                "sourceColumn": "PARENT_GROUP_ID"
+              },
+              {
+                "name": "PARENT_GROUP_NO",
+                "dataType": "string",
+                "sourceColumn": "PARENT_GROUP_NO"
+              },
+              {
+                "name": "PARENT_GROUP_NAME",
+                "dataType": "string",
+                "sourceColumn": "PARENT_GROUP_NAME"
+              },
+              {
+                "name": "LOB_NAME",
+                "dataType": "string",
+                "sourceColumn": "LOB_NAME"
+              },
+              {
+                "name": "LOB_CODE",
+                "dataType": "string",
+                "sourceColumn": "LOB_CODE"
+              },
+              {
+                "name": "LOB_ID",
+                "dataType": "int64",
+                "sourceColumn": "LOB_ID"
+              },
+              {
+                "name": "Revenue_INVOICEAMOUNT",
+                "dataType": "double",
+                "sourceColumn": "Revenue_INVOICEAMOUNT"
+              },
+              {
+                "name": "INVOICE_STATUS",
+                "dataType": "string",
+                "sourceColumn": "INVOICE_STATUS"
+              },
+              {
+                "name": "Revenue_DUEAMT",
+                "dataType": "double",
+                "sourceColumn": "Revenue_DUEAMT"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = #\"SQL/p21d18102583001 database windows net;p21d18102583002\",",
+                    "    dbo_TAFB_INVOICEHDR_Calculated = Source{[Schema=\"dbo\",Item=\"TAFB_INVOICEHDR_Calculated\"]}[Data]",
+                    "in",
+                    "    dbo_TAFB_INVOICEHDR_Calculated"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "DIM_INVOICE_DTL_CALC",
+            "columns": [
+              {
+                "name": "inv_id",
+                "dataType": "int64",
+                "sourceColumn": "inv_id"
+              },
+              {
+                "name": "Count_Invoice",
+                "dataType": "int64",
+                "sourceColumn": "Count_Invoice"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = Value.NativeQuery(#\"SQL/p21d18102583001 database windows net;p21d18102583002\",\"",
+                    "SELECT inv_id,count(*) Count_Invoice FROM dbo.TAFB_INVOICE_DTL GROUP BY inv_id\")",
+                    "in",
+                    "    Source"
+                  ]
+                }
+              }
+            ]
+          }
+        ],
+        "relationships": [
+          {
+            "name": "5dc9f397-0da4-4bbf-ac51-cdd054d886ba",
+            "fromTable": "FACT_TXN_FEE_CALCULATED",
+            "fromColumn": "Holding Company RM",
+            "toTable": "USR_Security",
+            "toColumn": "HoldingCompanyRM"
+          },
+          {
+            "name": "9f2327b6-a6d5-44ae-bcbf-074d0efbfc70",
+            "fromTable": "FACT_TXN_FEE_CALCULATED",
+            "fromColumn": "Transaction Currency",
+            "toTable": "DIM_CURRENCY",
+            "toColumn": "Currency Code",
+            "crossFilteringBehavior": "bothDirections"
+          },
+          {
+            "name": "366764a0-6bb1-4781-9dff-91d026313242",
+            "fromTable": "FACT_TXN_FEE_CALCULATED",
+            "fromColumn": "Base Currency",
+            "toTable": "USR_BASECURRENCY",
+            "toColumn": "Base Currency"
+          },
+          {
+            "name": "0f805525-3ea5-46b7-b6bd-a1cc7a24955f",
+            "fromTable": "KPI_TargetTable",
+            "fromColumn": "CCY",
+            "toTable": "USR_BASECURRENCY",
+            "toColumn": "Base Currency"
+          },
+          {
+            "name": "169b3d20-84ba-431c-9909-ace69c434438",
+            "fromTable": "KPI_TargetTable",
+            "fromColumn": "RM_IDENTIFIER",
+            "toTable": "USR_Security",
+            "toColumn": "HoldingCompanyRM"
+          },
+          {
+            "name": "a6da7d46-89a4-4b82-bfc5-186aabb2d749",
+            "fromTable": "KPI_TargetTable",
+            "fromColumn": "ENDDATE",
+            "toTable": "DIM_CALENDARDATE",
+            "toColumn": "Date"
+          },
+          {
+            "name": "a0489ffa-c64f-4ec3-b853-099d93ceaf3e",
+            "fromTable": "Revenue_KPI",
+            "fromColumn": "parent_group_rm",
+            "toTable": "USR_Security",
+            "toColumn": "HoldingCompanyRM"
+          },
+          {
+            "name": "92ef641a-7aee-44b7-9be4-990b504eca18",
+            "fromTable": "Revenue_KPI",
+            "fromColumn": "Value_date",
+            "toTable": "DIM_CALENDARDATE",
+            "toColumn": "Date"
+          },
+          {
+            "name": "11dec5e8-f9b2-49a3-9a3c-828d39d9e3f0",
+            "fromTable": "DIM_INVOICE_HEADER_CALC",
+            "fromColumn": "To_CCY",
+            "toTable": "USR_BASECURRENCY",
+            "toColumn": "Base Currency"
+          },
+          {
+            "name": "8cae90d8-bab8-4dcf-8173-19f0d1d49e2c",
+            "fromTable": "DIM_INVOICE_HEADER_CALC",
+            "fromColumn": "INV_ID",
+            "toTable": "DIM_INVOICE_DTL_CALC",
+            "toColumn": "inv_id"
+          },
+          {
+            "name": "fc68c085-947e-401f-b2d7-ab168e0e7f0b",
+            "fromTable": "KPI_TargetTable",
+            "fromColumn": "STARTDATE",
+            "toTable": "DIM_CALENDARDATE",
+            "toColumn": "Date",
+            "isActive": false
+          },
+          {
+            "name": "4b8aa0db-acb8-4551-8ab2-d8cf4b78c097",
+            "fromTable": "FACT_TXN_FEE_CALCULATED",
+            "fromColumn": "TransDate",
+            "toTable": "DIM_CALENDARDATE",
+            "toColumn": "Date"
+          }
+        ],
+        "roles": [
+          {
+            "name": "SeniorRelationshipManager",
+            "modelPermission": "read",
+            "members": [
+              {
+                "memberName": "ArjunKumar.Singh@finastra.com",
+                "memberId": "ArjunKumar.Singh@finastra.com#AzureAD",
+                "identityProvider": "AzureAD"
+              },
+              {
+                "memberName": "w21d18102617002\\RLS",
+                "memberId": "S-1-5-21-258246151-1506809371-4214967294-1013"
+              }
+            ],
+            "tablePermissions": [
+              {
+                "name": "USR_Security",
+                "filterExpression": "USERNAME()=USR_Security[LoginId]"
+              }
+            ]
+          }
+        ],
+        "annotations": [
+          {
+            "name": "ClientCompatibilityLevel",
+            "value": "500"
+          }
+        ]
+      }
+    }
+  }
+}
+

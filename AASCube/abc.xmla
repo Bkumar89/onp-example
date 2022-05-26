@@ -1,0 +1,3008 @@
+{
+  "create": {
+    "database": {
+      "name": "FCC",
+      "compatibilityLevel": 1400,
+      "model": {
+        "culture": "en-US",
+        "dataSources": [
+          {
+            "type": "structured",
+            "name": "SQL/p21d18102583001 database windows net;p21d18102583002",
+            "connectionDetails": {
+              "protocol": "tds",
+              "address": {
+                "server": "w21d18102617002",
+                "database": "Insights"
+              },
+              "authentication": null,
+              "query": null
+            },
+            "credential": {
+              "AuthenticationKind": "UsernamePassword",
+              "kind": "SQL",
+              "path": "w21d18102617002;Insights",
+              "Username": "sa",
+              "EncryptConnection": false
+            }
+          }
+        ],
+        "tables": [
+          {
+            "name": "FACT_CONFIG_DERIVED_GTP_PRODUCT",
+            "columns": [
+              {
+                "name": "TNX_ID",
+                "dataType": "string",
+                "sourceColumn": "TNX_ID"
+              },
+              {
+                "name": "AMT",
+                "dataType": "double",
+                "sourceColumn": "AMT"
+              },
+              {
+                "name": "PRODUCT_CODE",
+                "dataType": "string",
+                "sourceColumn": "PRODUCT_CODE"
+              },
+              {
+                "name": "PROD_STAT_CODE",
+                "dataType": "string",
+                "sourceColumn": "PROD_STAT_CODE"
+              },
+              {
+                "name": "SUB_PRODUCT_CODE",
+                "dataType": "string",
+                "sourceColumn": "SUB_PRODUCT_CODE"
+              },
+              {
+                "name": "TNX_TYPE_CODE",
+                "dataType": "int64",
+                "sourceColumn": "TNX_TYPE_CODE"
+              },
+              {
+                "name": "BA_ID",
+                "dataType": "int64",
+                "sourceColumn": "BA_ID"
+              },
+              {
+                "name": "TNX_STAT_CODE",
+                "dataType": "int64",
+                "sourceColumn": "TNX_STAT_CODE"
+              },
+              {
+                "name": "COMPANY_NAME",
+                "dataType": "string",
+                "sourceColumn": "COMPANY_NAME"
+              },
+              {
+                "name": "REF_ID",
+                "dataType": "string",
+                "sourceColumn": "REF_ID"
+              },
+              {
+                "name": "INP_DTTM",
+                "dataType": "dateTime",
+                "sourceColumn": "INP_DTTM"
+              },
+              {
+                "name": "APPL_DATE",
+                "dataType": "dateTime",
+                "sourceColumn": "APPL_DATE"
+              },
+              {
+                "name": "DAteDifference",
+                "dataType": "int64",
+                "sourceColumn": "DAteDifference"
+              },
+              {
+                "name": "TNX_VAL_DATE",
+                "dataType": "dateTime",
+                "sourceColumn": "TNX_VAL_DATE"
+              },
+              {
+                "name": "TNX_DATE",
+                "dataType": "dateTime",
+                "sourceColumn": "TNX_DATE"
+              },
+              {
+                "name": "INP_USER_ID",
+                "dataType": "int64",
+                "sourceColumn": "INP_USER_ID"
+              },
+              {
+                "name": "TYPE",
+                "dataType": "int64",
+                "sourceColumn": "TYPE"
+              },
+              {
+                "name": "TYPE_BK",
+                "dataType": "string",
+                "sourceColumn": "TYPE_BK"
+              },
+              {
+                "name": "BULK_REF_ID",
+                "dataType": "string",
+                "sourceColumn": "BULK_REF_ID"
+              },
+              {
+                "name": "Frm_CCY",
+                "dataType": "string",
+                "sourceColumn": "Frm_CCY"
+              },
+              {
+                "name": "LastUpdate_Date",
+                "dataType": "dateTime",
+                "sourceColumn": "LastUpdate_Date"
+              },
+              {
+                "name": "Amount",
+                "dataType": "double",
+                "sourceColumn": "Amount"
+              },
+              {
+                "name": "Hour-Range",
+                "dataType": "string",
+                "sourceColumn": "Hour-Range"
+              },
+              {
+                "name": "APPL_DATE - Copy",
+                "dataType": "int64",
+                "sourceColumn": "APPL_DATE - Copy"
+              },
+              {
+                "name": "Base Currency",
+                "dataType": "string",
+                "sourceColumn": "Base Currency"
+              },
+              {
+                "name": "Range",
+                "dataType": "string",
+                "sourceColumn": "Range"
+              },
+              {
+                "name": "SUB_TNX_TYPE_CODE",
+                "dataType": "string",
+                "sourceColumn": "SUB_TNX_TYPE_CODE"
+              },
+              {
+                "name": "SCF_Grouping",
+                "dataType": "string",
+                "sourceColumn": "SCF_Grouping"
+              },
+              {
+                "name": "SUB_TNX_TYPE_CODE1",
+                "dataType": "int64",
+                "sourceColumn": "SUB_TNX_TYPE_CODE - Copy"
+              },
+              {
+                "type": "calculated",
+                "name": "Lending_Type",
+                "dataType": "string",
+                "isDataTypeInferred": true,
+                "expression": [
+                  " if([Sub_TNX_TYPE_CODE1] = 40 && [TNX_TYPE_CODE]=01,\"Drawdown",
+                  "\", if ([SUB_TNX_TYPE_CODE1] = 16 && [TNX_TYPE_CODE]=13,\"Payment",
+                  "\" ,if ([SUB_TNX_TYPE_CODE1] = 97 ,\"Repricing",
+                  "\",if ([TNX_TYPE_CODE] = 03 ,\"Increase",
+                  "\")",
+                  ")))"
+                ]
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = #\"SQL/p21d18102583001 database windows net;p21d18102583002\",",
+                    "    dbo_Xchange = Source{[Schema=\"dbo\",Item=\"Xchange\"]}[Data],",
+                    "    #\"Added Conditional Column\" = Table.AddColumn(dbo_Xchange, \"Range\", each if [Amount] <= 50000 then \"0-50K\" else if [Amount] <= 100000 then \"50-100K\" else if [Amount] > 100001 then \"Above 100K\" else if [Amount] = null then null else if [Amount] < 0 then null else null),",
+                    "    #\"Duplicated Column\" = Table.DuplicateColumn(#\"Added Conditional Column\", \"APPL_DATE\", \"APPL_DATE - Copy\"),",
+                    "    #\"Extracted Hour\" = Table.TransformColumns(#\"Duplicated Column\",{{\"APPL_DATE - Copy\", Time.Hour, Int64.Type}}),",
+                    "    #\"Added Conditional Column1\" = Table.AddColumn(#\"Extracted Hour\", \"Custom\", each if [#\"APPL_DATE - Copy\"] = 0 then \"6PM-6AM\" else if [#\"APPL_DATE - Copy\"] = 1 then \"6PM-6AM\" else if [#\"APPL_DATE - Copy\"] = 2 then \"6PM-6AM\" else if [#\"APPL_DATE - Copy\"] = 3 then \"6PM-6AM\" else if [#\"APPL_DATE - Copy\"] = 4 then \"6PM-6AM\" else if [#\"APPL_DATE - Copy\"] = 5 then \"6PM-6AM\" else if [#\"APPL_DATE - Copy\"] = 6 then \"6AM-9AM\" else if [#\"APPL_DATE - Copy\"] = 18 then \"6PM-6AM\" else if [#\"APPL_DATE - Copy\"] = 19 then \"6PM-6AM\" else if [#\"APPL_DATE - Copy\"] = 20 then \"6PM-6AM\" else if [#\"APPL_DATE - Copy\"] = 21 then \"6PM-6AM\" else if [#\"APPL_DATE - Copy\"] = 22 then \"6PM-6AM\" else if [#\"APPL_DATE - Copy\"] = 23 then \"6PM-6AM\" else if [#\"APPL_DATE - Copy\"] = 7 then \"6AM-9AM\" else if [#\"APPL_DATE - Copy\"] = 8 then \"6AM-9AM\" else if [#\"APPL_DATE - Copy\"] = 9 then \"9AM-12PM\" else if [#\"APPL_DATE - Copy\"] = 10 then \"9AM-12PM\" else if [#\"APPL_DATE - Copy\"] = 11 then \"9AM-12PM\" else if [#\"APPL_DATE - Copy\"] = 12 then \"12PM-3PM\" else if [#\"APPL_DATE - Copy\"] = 13 then \"12PM-3PM\" else if [#\"APPL_DATE - Copy\"] = 14 then \"12PM-3PM\" else if [#\"APPL_DATE - Copy\"] = 15 then \"3PM-6PM\" else if [#\"APPL_DATE - Copy\"] = 16 then \"3PM-6PM\" else if [#\"APPL_DATE - Copy\"] = 17 then \"3PM-6PM\" else null),",
+                    "    #\"Renamed Columns\" = Table.RenameColumns(#\"Added Conditional Column1\",{{\"Custom\", \"Hour\"}}),",
+                    "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Renamed Columns\",{{\"TNX_TYPE_CODE\", Int64.Type}, {\"TNX_STAT_CODE\", Int64.Type}, {\"INP_USER_ID\", Int64.Type}, {\"TYPE\", Int64.Type}}),",
+                    "    #\"Renamed Columns1\" = Table.RenameColumns(#\"Changed Type\",{{\"Hour\", \"Hour-Range\"}, {\"To_CCY\", \"Base Currency\"}}),",
+                    "    #\"Added Conditional Column2\" = Table.AddColumn(#\"Renamed Columns1\", \"SCF_Grouping\", each if [PRODUCT_CODE] = \"PO\" then \"Orders\" else if [PRODUCT_CODE] = \"SO\" then \"Orders\" else if [PRODUCT_CODE] = \"IN\" then \"Receivables\" else if [PRODUCT_CODE] = \"IP\" then \"Payables\" else null),",
+                    "    #\"Duplicated Column1\" = Table.DuplicateColumn(#\"Added Conditional Column2\", \"SUB_TNX_TYPE_CODE\", \"SUB_TNX_TYPE_CODE - Copy\"),",
+                    "    #\"Changed Type1\" = Table.TransformColumnTypes(#\"Duplicated Column1\",{{\"SUB_TNX_TYPE_CODE - Copy\", Int64.Type}})",
+                    "in",
+                    "    #\"Changed Type1\""
+                  ]
+                }
+              }
+            ],
+            "measures": [
+              {
+                "name": "Total Party Customers",
+                "expression": [
+                  " \t",
+                  "CALCULATE (\t",
+                  "    DISTINCTCOUNT( 'DIM_PARTY_Details'[PARTY_ID]),\t",
+                  "    FILTER (\t",
+                  "        ALLSELECTED( 'DIM_Calender_Party'),\t",
+                  "        'DIM_Calender_Party'[created_timestamp] <= MAX ( 'DIM_Calender_Party'[created_timestamp] )\t",
+                  "    ),FILTER(ALLSELECTED(DIM_PARTY_Details),DIM_PARTY_Details[IS_ACTIVE] = 1)",
+                  ")"
+                ]
+              },
+              {
+                "name": "Total Channel Customers",
+                "expression": [
+                  " \t",
+                  "CALCULATE (\t",
+                  "    DISTINCTCOUNT( 'DIM_PARTY_Details'[PARTY_ID]),\t",
+                  "    FILTER (ALLSELECTED( 'DIM_PARTY_DETAILS'), 'DIM_PARTY_DETAILS'[LOB] = [LOB_NAME_PARTY]),\t",
+                  "       Filter(ALLSELECTED('DIM_Calender_Party'),'DIM_Calender_Party'[CREATED_TIMESTAMP] <= MAX ( 'DIM_Calender_Party'[CREATED_TIMESTAMP] )),",
+                  "FILTER(ALLSELECTED('DIM_PARTY_Details'),'DIM_PARTY_Details'[IS_ACTIVE] = 1",
+                  "))"
+                ]
+              },
+              {
+                "name": "Digital Penetration",
+                "expression": " [Total Channel Customers]/[Total Party Customers]",
+                "formatString": "0.00%;-0.00%;0.00%"
+              },
+              {
+                "name": "Newly Added Channel Customers",
+                "expression": [
+                  " CALCULATE(distinctCOUNT('DIM_PARTY_DETAILS'[Party_ID]),FILTER('DIM_PARTY_DETAILS','DIM_PARTY_DETAILS'[LOB] =[LOB_NAME_PARTY])",
+                  ",FILTER(ALLSELECTED(DIM_PARTY_Details),DIM_PARTY_Details[IS_ACTIVE] = 1))"
+                ]
+              },
+              {
+                "name": "Newly Added Total Customers",
+                "expression": [
+                  " CALCULATE(distinctCOUNT('DIM_PARTY_DETAILS'[Party_ID]),FILTER(ALLSELECTED(DIM_PARTY_Details),DIM_PARTY_Details[IS_ACTIVE]=1))",
+                  ""
+                ]
+              },
+              {
+                "name": "Fee Amount FRM",
+                "expression": [
+                  " CALCULATE(sum(DIM_TAFB_TXN_FEE_CALCULATED[Revenue]),",
+                  "FILTER(DIM_TAFB_TXN_FEE_CALCULATED,DIM_TAFB_TXN_FEE_CALCULATED[FEE_STAT]=\"Charged\"))",
+                  ""
+                ],
+                "formatString": "#,0.00"
+              },
+              {
+                "name": "FCC Amt in FRM",
+                "expression": [
+                  " CALCULATE(SUM(DIM_TAFB_TXN_FEE_CALCULATED[Revenue]),",
+                  "FILTER(DIM_TAFB_TXN_FEE_CALCULATED,DIM_TAFB_TXN_FEE_CALCULATED[LOB_ID]=[LOB_ID_FRM_para]&& DIM_TAFB_TXN_FEE_CALCULATED[FEE_STAT]=\"Charged\"))"
+                ],
+                "formatString": "#,0.00"
+              },
+              {
+                "name": "User Count",
+                "expression": " DISTINCTCOUNT(DIM_GTP_USER[USER_ID])"
+              },
+              {
+                "name": "Completed Transaction Amt",
+                "expression": " CALCULATE(SUM('FACT_CONFIG_DERIVED_GTP_PRODUCT'[AMOUNT]),FILTER(FACT_CONFIG_DERIVED_GTP_PRODUCT,FACT_CONFIG_DERIVED_GTP_PRODUCT[TNX_STAT_CODE]=4 && FACT_CONFIG_DERIVED_GTP_PRODUCT[Frm_CCY]<>\"\"))",
+                "formatString": "#,0.00"
+              },
+              {
+                "name": "Completed Transaction Count",
+                "expression": " CALCULATE(COUNT('FACT_CONFIG_DERIVED_GTP_PRODUCT'[TNX_ID]),FILTER(VALUES (FACT_CONFIG_DERIVED_GTP_PRODUCT),FACT_CONFIG_DERIVED_GTP_PRODUCT[TNX_STAT_CODE]=4 && FACT_CONFIG_DERIVED_GTP_PRODUCT[Frm_CCY]<>\"\"))",
+                "formatString": "0"
+              },
+              {
+                "name": "TOP company For FT",
+                "expression": " CALCULATE([Completed Transaction Amt],FACT_CONFIG_DERIVED_GTP_PRODUCT[PRODUCT_CODE] = \"FT\")"
+              },
+              {
+                "name": "TOP company Count FT",
+                "expression": " CALCULATE([Completed Transaction Count],FACT_CONFIG_DERIVED_GTP_PRODUCT[PRODUCT_CODE] = \"FT\")"
+              },
+              {
+                "name": "TOP company For BK",
+                "expression": " CALCULATE([Completed Transaction Amt],FACT_CONFIG_DERIVED_GTP_PRODUCT[PRODUCT_CODE] = \"BK\")"
+              },
+              {
+                "name": "TOP company Count BK",
+                "expression": " CALCULATE([Completed Transaction Count],FACT_CONFIG_DERIVED_GTP_PRODUCT[PRODUCT_CODE] = \"BK\")"
+              },
+              {
+                "name": "TOP Remittance Count",
+                "expression": " CALCULATE([Completed Transaction Count],FACT_CONFIG_DERIVED_GTP_PRODUCT[TYPE] =9)"
+              },
+              {
+                "name": "TOP Remittance Amount",
+                "expression": " CALCULATE([Completed Transaction Amt],FACT_CONFIG_DERIVED_GTP_PRODUCT[TYPE] =9)"
+              },
+              {
+                "name": "Completed Transaction Amt cur",
+                "expression": [
+                  " CALCULATE([Completed Transaction Amt],GROUPBY(FACT_CONFIG_DERIVED_GTP_PRODUCT,FACT_CONFIG_DERIVED_GTP_PRODUCT[Frm_CCY])",
+                  ")"
+                ]
+              },
+              {
+                "name": "Completed Revenue By Bank in Trade",
+                "expression": [
+                  " CALCULATE([Completed Transaction Amt],filter (FACT_CONFIG_DERIVED_GTP_PRODUCT,",
+                  "'FACT_CONFIG_DERIVED_GTP_PRODUCT'[BA_ID] = 1 ))"
+                ]
+              },
+              {
+                "name": "Completed Transaction By Bank in Trade",
+                "expression": [
+                  " CALCULATE([Completed Transaction Count],filter (FACT_CONFIG_DERIVED_GTP_PRODUCT,",
+                  "'FACT_CONFIG_DERIVED_GTP_PRODUCT'[BA_ID] = 1))"
+                ]
+              },
+              {
+                "name": "Completed Revenue For Trend",
+                "expression": [
+                  " CALCULATE([Completed Transaction Amt],",
+                  "Filter(ALLSELECTED(DIM_Calender_FCC),DIM_Calender_FCC[Date] <=max(DIM_Calender_FCC[Date] )))"
+                ]
+              },
+              {
+                "name": "Completed Transaction For Trend",
+                "expression": [
+                  " CALCULATE([Completed Transaction Count],",
+                  "Filter(ALLSELECTED(DIM_Calender_FCC),DIM_Calender_FCC[Date] <=max(DIM_Calender_FCC[Date] )))"
+                ]
+              },
+              {
+                "name": "Completed Revenue By Bank in Cash",
+                "expression": [
+                  " CALCULATE([Completed Transaction Amt],filter (FACT_CONFIG_DERIVED_GTP_PRODUCT,",
+                  "'FACT_CONFIG_DERIVED_GTP_PRODUCT'[BA_ID] = 2 )",
+                  ")"
+                ]
+              },
+              {
+                "name": "Completed Transaction By Bank in Cash",
+                "expression": [
+                  " CALCULATE([Completed Transaction Count],filter (FACT_CONFIG_DERIVED_GTP_PRODUCT,",
+                  "'FACT_CONFIG_DERIVED_GTP_PRODUCT'[BA_ID] = 2))"
+                ]
+              },
+              {
+                "name": "Completed Amount For Fund Transfer",
+                "expression": [
+                  " CALCULATE([Completed Transaction Amt], FILTER(ALLSELECTED(FACT_CONFIG_DERIVED_GTP_PRODUCT),FACT_CONFIG_DERIVED_GTP_PRODUCT[PRODUCT_CODE] IN {\"FT\", \"BK\"}))",
+                  "",
+                  ""
+                ],
+                "formatString": "0"
+              },
+              {
+                "name": "Completed Count For Fund Transfer",
+                "expression": [
+                  " CALCULATE([Completed Transaction Count], FILTER(ALLSELECTED(FACT_CONFIG_DERIVED_GTP_PRODUCT),FACT_CONFIG_DERIVED_GTP_PRODUCT[PRODUCT_CODE] =\"FT\" ||",
+                  "FACT_CONFIG_DERIVED_GTP_PRODUCT[PRODUCT_CODE] =\"BK\" ))"
+                ],
+                "formatString": "0"
+              },
+              {
+                "name": "Completed Count For Fund Transfer trend",
+                "expression": [
+                  " CALCULATE([Completed Count For Fund Transfer], ",
+                  "Filter(ALLSELECTED(DIM_Calender_FCC),DIM_Calender_FCC[Date] <=max(DIM_Calender_FCC[Date] )))"
+                ]
+              },
+              {
+                "name": "Completed Amount For Fund Transfer trend",
+                "expression": [
+                  " CALCULATE([Completed Amount For Fund Transfer],",
+                  "Filter(ALLSELECTED(DIM_Calender_FCC),DIM_Calender_FCC[Date] <=max(DIM_Calender_FCC[Date] )))"
+                ]
+              },
+              {
+                "name": "Completed Revenue By Bank in Cash trend",
+                "expression": "CALCULATE([Completed Revenue By Bank in Cash],Filter(ALLSELECTED(DIM_Calender_FCC),DIM_Calender_FCC[Date] <=max(DIM_Calender_FCC[Date] )))"
+              },
+              {
+                "name": "Completed transaction By Bank in Cash trend",
+                "expression": "CALCULATE([Completed Transaction By Bank in Cash],Filter(ALLSELECTED(DIM_Calender_FCC),DIM_Calender_FCC[Date] <=max(DIM_Calender_FCC[Date] )))"
+              },
+              {
+                "name": "Completed Revenue By Bank in Trade trend",
+                "expression": "CALCULATE([Completed Revenue By Bank in Trade],Filter(ALLSELECTED(DIM_Calender_FCC),DIM_Calender_FCC[Date] <=max(DIM_Calender_FCC[Date] )))"
+              },
+              {
+                "name": "Completed transaction By Bank in Trade trend",
+                "expression": "CALCULATE([Completed Transaction By Bank in Trade],Filter(ALLSELECTED(DIM_Calender_FCC),DIM_Calender_FCC[Date] <=max(DIM_Calender_FCC[Date] )))"
+              },
+              {
+                "name": "FCC_CompletedTransCnt",
+                "expression": " CALCULATE([Completed Transaction Count],FACT_CONFIG_DERIVED_GTP_PRODUCT[INP_USER_ID]>0)"
+              },
+              {
+                "name": "FCC_CompletedTransAmt",
+                "expression": " CALCULATE([Completed Transaction Amt],FACT_CONFIG_DERIVED_GTP_PRODUCT[INP_USER_ID]>0)"
+              },
+              {
+                "name": "CompletedTransAmt_9to12",
+                "expression": "CALCULATE([Completed Transaction Amt],FILTER(FACT_CONFIG_DERIVED_GTP_PRODUCT,FACT_CONFIG_DERIVED_GTP_PRODUCT[Hour-Range] =\"9AM-12PM\"))"
+              },
+              {
+                "name": "CompletedTransAmt_12to3",
+                "expression": "CALCULATE([Completed Transaction Amt],FILTER(FACT_CONFIG_DERIVED_GTP_PRODUCT,FACT_CONFIG_DERIVED_GTP_PRODUCT[Hour-Range] =\"12PM-3PM\"))"
+              },
+              {
+                "name": "CompletedTransAmt_3to6",
+                "expression": "CALCULATE([Completed Transaction Amt],FILTER(FACT_CONFIG_DERIVED_GTP_PRODUCT,FACT_CONFIG_DERIVED_GTP_PRODUCT[Hour-Range] =\"3PM-6PM\"))"
+              },
+              {
+                "name": "CompletedTransAmt_6to6",
+                "expression": "CALCULATE([Completed Transaction Amt],FILTER(FACT_CONFIG_DERIVED_GTP_PRODUCT,FACT_CONFIG_DERIVED_GTP_PRODUCT[Hour-Range] =\"6Pm-6Am\"))"
+              },
+              {
+                "name": "CompletedTransAmt_6to9",
+                "expression": " CALCULATE([Completed Transaction Amt],FILTER(FACT_CONFIG_DERIVED_GTP_PRODUCT,FACT_CONFIG_DERIVED_GTP_PRODUCT[Hour-Range] =\"6Am-9Am\"))"
+              },
+              {
+                "name": "CompletedTranscnt_9to12",
+                "expression": " CALCULATE([Completed Transaction Count],FILTER(FACT_CONFIG_DERIVED_GTP_PRODUCT,FACT_CONFIG_DERIVED_GTP_PRODUCT[Hour-Range] =\"9AM-12Pm\"))"
+              },
+              {
+                "name": "CompletedTranscnt_12to3",
+                "expression": "CALCULATE([Completed Transaction Count],FILTER(FACT_CONFIG_DERIVED_GTP_PRODUCT,FACT_CONFIG_DERIVED_GTP_PRODUCT[Hour-Range] =\"12PM-3PM\"))"
+              },
+              {
+                "name": "CompletedTranscnt_3to6",
+                "expression": " CALCULATE([Completed Transaction Count],FILTER(FACT_CONFIG_DERIVED_GTP_PRODUCT,FACT_CONFIG_DERIVED_GTP_PRODUCT[Hour-Range] =\"3PM-6PM\"))"
+              },
+              {
+                "name": "CompletedTranscnt_6to6",
+                "expression": "CALCULATE([Completed Transaction Count],FILTER(FACT_CONFIG_DERIVED_GTP_PRODUCT,FACT_CONFIG_DERIVED_GTP_PRODUCT[Hour-Range] =\"6Pm-6Am\"))"
+              },
+              {
+                "name": "CompletedTranscnt_6to9",
+                "expression": "CALCULATE([Completed Transaction Count],FILTER(FACT_CONFIG_DERIVED_GTP_PRODUCT,FACT_CONFIG_DERIVED_GTP_PRODUCT[Hour-Range] =\"6Am-9Am\"))"
+              },
+              {
+                "name": "FCC_CompletedTransCnt Trend",
+                "expression": " CALCULATE([FCC_CompletedTransCnt],filter(ALLSELECTED(DIM_Calender_FCC),DIM_Calender_FCC[Date]<=max(DIM_Calender_FCC[Date])))"
+              },
+              {
+                "name": "FCC_CompletedTransAmt Trend",
+                "expression": " CALCULATE([FCC_CompletedTransAmt],filter(ALLSELECTED(DIM_Calender_FCC),DIM_Calender_FCC[Date]<=max(DIM_Calender_FCC[Date])))"
+              },
+              {
+                "name": "Growth",
+                "expression": " if ([Previous Period Count] =0,1,divide ( [Total Channel Customers]-[Previous Period Count],[Previous Period Count]))",
+                "formatString": "0.00%;-0.00%;0.00%"
+              },
+              {
+                "name": "Previous Period Count",
+                "expression": "([Total Channel Customers]-[Newly Added Channel Customers])"
+              },
+              {
+                "name": "Completed Amount For FT",
+                "expression": " IF(ISBLANK([Completed Amount For Fund Transfer]),0,[Completed Amount For Fund Transfer])"
+              },
+              {
+                "name": "Completed Count for FT",
+                "expression": "IF(ISBLANK([Completed Count For Fund Transfer]),0,[Completed Count For Fund Transfer])"
+              },
+              {
+                "name": "LastDateCurrentYear",
+                "expression": " TODAY()"
+              },
+              {
+                "name": "EndofPreviousMonth",
+                "expression": " EOMONTH([LastDateCurrentYear],-1)"
+              },
+              {
+                "name": "LOB_NAME_PARTY",
+                "expression": " calculate(DISTINCT(Configuration_table[Configuration_Value]),Configuration_table[Configuration_Column]=\"FCC_LOB_NAME\")"
+              },
+              {
+                "name": "LOB_ID_FRM_para",
+                "expression": "VALUE(CALCULATE(DISTINCT(Configuration_table[Configuration_value]), FILTER(Configuration_table,Configuration_table[Configuration_Column]=\"FCC_LOB_ID\")))"
+              },
+              {
+                "name": "Completed Transaction By Bank in SCF Orders",
+                "expression": "CALCULATE([Completed Transaction Count],FILTER(FACT_CONFIG_DERIVED_GTP_PRODUCT,'FACT_CONFIG_DERIVED_GTP_PRODUCT'[SCF_Grouping]=\"Orders\"))"
+              },
+              {
+                "name": "Completed Transaction By Bank in SCF Receivables",
+                "expression": "CALCULATE([Completed Transaction Count],FILTER(FACT_CONFIG_DERIVED_GTP_PRODUCT,'FACT_CONFIG_DERIVED_GTP_PRODUCT'[SCF_Grouping]=\"Receivables\"))"
+              },
+              {
+                "name": "Completed Transaction By Bank in SCF Payables",
+                "expression": "CALCULATE([Completed Transaction Count],FILTER(FACT_CONFIG_DERIVED_GTP_PRODUCT,'FACT_CONFIG_DERIVED_GTP_PRODUCT'[SCF_Grouping]=\"Payables\"))"
+              },
+              {
+                "name": "FCC_AMT_Lending",
+                "expression": " CALCULATE([Completed Transaction Amt],filter (FACT_CONFIG_DERIVED_GTP_PRODUCT,FACT_CONFIG_DERIVED_GTP_PRODUCT[BA_ID]=3))"
+              },
+              {
+                "name": "FCC_Count_Lending",
+                "expression": " CALCULATE([Completed Transaction Count],filter (FACT_CONFIG_DERIVED_GTP_PRODUCT,FACT_CONFIG_DERIVED_GTP_PRODUCT[BA_ID]=3))"
+              },
+              {
+                "name": "Completed Revenue By Bank in SCF Orders",
+                "expression": "CALCULATE([Completed Transaction Amt],FILTER(FACT_CONFIG_DERIVED_GTP_PRODUCT,'FACT_CONFIG_DERIVED_GTP_PRODUCT'[SCF_Grouping]=\"Orders\"))"
+              },
+              {
+                "name": "Completed Revenue By Bank in SCF Payables",
+                "expression": "CALCULATE([Completed Transaction Amt],FILTER(FACT_CONFIG_DERIVED_GTP_PRODUCT,'FACT_CONFIG_DERIVED_GTP_PRODUCT'[SCF_Grouping]=\"Payables\"))"
+              },
+              {
+                "name": "Completed Revenue By Bank in SCF Receivables",
+                "expression": "CALCULATE([Completed Transaction Amt],FILTER(FACT_CONFIG_DERIVED_GTP_PRODUCT,'FACT_CONFIG_DERIVED_GTP_PRODUCT'[SCF_Grouping]=\"Receivables\"))"
+              }
+            ]
+          },
+          {
+            "name": "USR_BULK_TRANSFER_DESCRIPTION",
+            "columns": [
+              {
+                "name": "Bulk Transfer Type",
+                "dataType": "string",
+                "sourceColumn": "Bulk Transfer Type"
+              },
+              {
+                "name": "Bulk Transfer Type Description",
+                "dataType": "string",
+                "sourceColumn": "Bulk Transfer Type Description"
+              },
+              {
+                "name": "Sub Product Code",
+                "dataType": "string",
+                "sourceColumn": "Sub Product Code"
+              },
+              {
+                "name": "Sub Product Code Description",
+                "dataType": "string",
+                "sourceColumn": "Sub Product Code Description"
+              },
+              {
+                "name": "Child_Sub_product_code",
+                "dataType": "string",
+                "sourceColumn": "Child_Sub_product_code"
+              },
+              {
+                "name": "Child _Sub_product_code Description",
+                "dataType": "string",
+                "sourceColumn": "Child _Sub_product_code Description"
+              },
+              {
+                "name": "LOB Name",
+                "dataType": "string",
+                "sourceColumn": "LOB Name"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText(\"rZTfbsIgFMZfhfR6F1t8gvmnmRlU0tDExXjB2qM2q9S01c232bPsyQalrtWwDoeJkQY+zu+c7wCLhTeaYTzx7rzhPntDozzLIK7SXMgZMhrPiBq52PMMRbss5wla5QU612nVON9CWaUxYgUX5QoKOTfi5cZb3vVBogbipxk4IejjS4hPCMqPhdyvksfj2dxYxOQD4n2VHqCjduKQmRzlbxow9S8qKIRE+nuRXJux2fbJVn4f4TYJR5hRZjDeANFCtkmLRM4W1fE6jvbDguNonKpobiIZGu1UEsHkyRbkfBgYtT4MjkVp9+wuiqt/A3sUYQ/3AzVCWfI1IHbcAdJTNiBr9xw4UfPI2BwIlxtrfipv/CxoyywgloYR1qFsQVSKQs2PT6uwPmCm8IQSNjD2vaP5f/aE6lvdF/6Ke29GaAP6EE4WRdT8LP9kXLWxHGuJqPnctgq742qOrTv9e2ybPk+DkF7EVkkkUBc/DOvqD3kaA6o1Bew6je6sBvCuWlJvrQNT/zLpNjAd+nJAp71ynb9mDcFPBRdxKta1sENoVBeUnvTpWfpnkLBbxp+QoKeUoC6l69HX53kNfS6FFAeXoTGIRG/FsjlqWSmeW2EjaILhnAtvufwG\", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type text) meta [Serialized.Text = true]) in type table [#\"Bulk Transfer Type\" = _t, #\"Bulk Transfer Type Description\" = _t, #\"Sub Product Code\" = _t, #\"Sub Product Code Description\" = _t, Child_Sub_product_code = _t, #\"Child _Sub_product_code Description\" = _t, #\"LOB Name\" = _t]),",
+                    "    #\"Changed Type\" = Table.TransformColumnTypes(Source,{{\"Bulk Transfer Type\", type text}, {\"Bulk Transfer Type Description\", type text}, {\"Sub Product Code\", type text}, {\"Sub Product Code Description\", type text}, {\"Child_Sub_product_code\", type text}, {\"Child _Sub_product_code Description\", type text}, {\"LOB Name\", type text}})",
+                    "in",
+                    "    #\"Changed Type\""
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "USR_FT_DESCRIPTION",
+            "columns": [
+              {
+                "name": "Fund Transfer Type",
+                "dataType": "int64",
+                "sourceColumn": "Fund Transfer Type"
+              },
+              {
+                "name": "Fund Transfer Type Description",
+                "dataType": "string",
+                "sourceColumn": "Fund Transfer Type Description"
+              },
+              {
+                "name": "Sub Product Code",
+                "dataType": "string",
+                "sourceColumn": "Sub Product Code"
+              },
+              {
+                "name": "Sub Product Code Description",
+                "dataType": "string",
+                "sourceColumn": "Sub Product Code Description"
+              },
+              {
+                "name": "LOB Name",
+                "dataType": "string",
+                "sourceColumn": "LOB Name"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText(\"jZNNa4QwEIb/SvC8BbWH0mtXBGGtQdPT4iHobDeg2SWJBf9986Gw1Wj3Ep3JPDPDzJvzOYiCQ0AE5fICQv9mn8ScXIHgtEPpwFv0cH2k8hrUhxWWFLk5bz1IxZqnMYJNNXJlokUvmAo1eqk3bXywrkOYjj1wZczsdMJr939INbsrED+sAfnIvGujhJ4pRXkD2shJFL6aL0hJvwGR8Q7IufagOIyXkHNtQ2nmIlLGtYfpyWdcT1INit34E7Rryk8vGo5CbWF6B2GjxGDGY+aAs2PhuUKGZNpViHaxzO1MSeLLlEBPtTASQS9/lrVUhROh9rSANqVory0e21rzmskkKktbaU3K8sPL2uVcHKgcxLhX30X4WijnHqYkTuErge+kyL9wZR9iyyjafFdzfF3/Ag==\", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type text) meta [Serialized.Text = true]) in type table [#\"Fund Transfer Type\" = _t, #\"Fund Transfer Type Description\" = _t, #\"Sub Product Code\" = _t, #\"Sub Product Code Description\" = _t, #\"LOB Name\" = _t]),",
+                    "    #\"Changed Type\" = Table.TransformColumnTypes(Source,{{\"Fund Transfer Type\", Int64.Type}, {\"Fund Transfer Type Description\", type text}, {\"Sub Product Code\", type text}, {\"Sub Product Code Description\", type text}, {\"LOB Name\", type text}})",
+                    "in",
+                    "    #\"Changed Type\""
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "USR_TRANSACTION_STATUS_DESCRIPTION",
+            "columns": [
+              {
+                "name": "Transaction Staus Description",
+                "dataType": "string",
+                "sourceColumn": "Transaction Staus Description"
+              },
+              {
+                "name": "TNX_STAT_CODE",
+                "dataType": "int64",
+                "sourceColumn": "TNX_STAT_CODE"
+              },
+              {
+                "name": "Bank Customer",
+                "dataType": "string",
+                "sourceColumn": "Bank Customer"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText(\"i45WCkjNS8nMS1fSUTICYufS4pL83NQipVgdZCljIHZKzMsGCzvn5xbkpJakpgAFTZAlEOpNsQubYRc2RLE4FgA=\", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type text) meta [Serialized.Text = true]) in type table [#\"Transaction Staus Description\" = _t, TNX_STAT_CODE = _t, #\"Bank Customer\" = _t]),",
+                    "    #\"Changed Type\" = Table.TransformColumnTypes(Source,{{\"Transaction Staus Description\", type text}, {\"TNX_STAT_CODE\", Int64.Type}, {\"Bank Customer\", type text}})",
+                    "in",
+                    "    #\"Changed Type\""
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "USR_TRANSACTION_TYPE_DESCRIPTION",
+            "columns": [
+              {
+                "name": "Transaction Type Description ",
+                "dataType": "string",
+                "sourceColumn": "Transaction Type Description "
+              },
+              {
+                "name": "TNX_TYPE_CODE",
+                "dataType": "int64",
+                "sourceColumn": "TNX_TYPE_CODE"
+              },
+              {
+                "name": "Transaction Type Grouping",
+                "dataType": "string",
+                "sourceColumn": "Transaction Type Grouping"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText(\"ZVC9CsIwEH6VkrmL1IqOKggdRKhuIUOoZw3Gq+ZSn9+7KMXW4Qv5/u5ItFYVuuhsBJWrGWOgJtdqfQc8s1gwPndR90BkW8hqePZAUYoSmMoSreHRhZQo+TjEKwRKxilYpAsEVleMgaatRK5FKYn1ZWLsHFpsHLY/qxfFePCWE+ClPB8bm97fWCkncoWvzjWQHSFGD/xGGbos00/8Oca8AQ==\", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [#\"Transaction Type Description \" = _t, TNX_TYPE_CODE = _t, #\"Transaction Type Grouping\" = _t]),",
+                    "    #\"Changed Type\" = Table.TransformColumnTypes(Source,{{\"Transaction Type Description \", type text}, {\"TNX_TYPE_CODE\", Int64.Type}, {\"Transaction Type Grouping\", type text}})",
+                    "in",
+                    "    #\"Changed Type\""
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "USR_Full Country Name",
+            "columns": [
+              {
+                "name": "Country",
+                "dataType": "string",
+                "sourceColumn": "Country"
+              },
+              {
+                "name": "Code",
+                "dataType": "string",
+                "sourceColumn": "Code"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText(\"bVjBkuJGEv0VxZzsiLHD4cueQYCgkdRqJOjttn0oRA3UIKmYktRtuPtbNnzfP5gf28x6KUazuxci8lVJynz5MiuL3377MPl0PKnGtJ1qPnz8MFl8+OMjgdWeMMVALMBROw/MXgHUZJeqCXJVW78xB94crHMemAlwtJW3Hwe7NxWQlSCdcmVHb2PsacDMsVeBag7BVLl9f/CLERbdUdN646GNQLUWhxMB+r03n2H2bedUhR3bbxCAAsBNu70yn0EEwpyqk6pVS8A0HwCnDO+YLgVojpU66PbE2EwwetHB+semQHSlXO+BlwE4mr5mYD4A5qbZli9TPP4zD2K6GiRMEeD01CNlU3g/tZV58+FMHwVolHH6Y5CbpgvmFK3qTN96SnPlyZk+yc6WuPMLS+1u+mjfQO50Iutd+66APAvSv+kuWLUVPcTwDrBTN1OxvRHbdKY9BavmYEgqj6Wm30I7gq270r6VuOr6RptgxhS1qlKelhRLfXVUSNM0EsSdyb1goVrL6GJAe/oKA1BVqPY22Gl3YE7DnWD13h78y9bLAdHOWuYxTARplOc5nIh9rclrhMoJXCOBIUmQFBVMPqEONvrS7ytT8pNwKTwp5qaYiWUq70o8mJ7QMBXTUQmS0r5xGv4TK7a0bfDDWpM+muOPI0fCUDZUtt77oMJHQWrrvPrWEpOlIuT12fdmJKY9j1+7FpQEE2xQlSHyGTpLGmJgKQCKLNyK5dTXfyn/augkvF6g+lBIu+nyBFeh8vDrvzsdHH7vf/nl13+s3iwJlheRwpluauXO3HTg0+yz2du+4yzPUBYzW5sGPs6S75DvMjIDMfOyp7J0BMzB3fx4vXRsgol5RZVRvcmeHKKZf+kVydVQrqPeNJq/FaFw5iRk54E5+Ji3nUUbms8FeCfGGvY4R8Tz7mTsBXtQuQtVnZn8UQ4Wa1lxVo9hhLEwn/mFiwexGlHMArQtnGpKpnGxEVs35YmdRw1HizGc2era6NY7lH23khPVJ+2+VazR7ESBTRHVF5dNNBFTNBghDZG27ghgLoCjOuKinwlwEndQiZHZUznRScAQAomc1j6QaHO3h1ijeICkXCNoO6IM68r2F/9cNmDcUaLtYHW6Vv4EigqBKMxWs3NRJMiQ6XRk/zQ11J96hp8FvkoQ0PdSGa/OJd671MoNafXtNSln1JWrcaqX4GtJaQhyzV7vJoI0ByoovycdkGOwph+GoJBl31B7ZMeXiG5VamFohQPL914208G0Q7pXoGzl/Dmy2gzWF7aexLq/Dlkjx3VgPwUJnkkEdEpz318hK6tOVb69g4YHOkJRow+JABf/+APy86AdyH/ANx6sO2Adel+rmzqfZEJZo4zWurn6Po5H1saZvfLcryGetUVlrrPvTUS57t8pVWwjkeurO15vwyeggVjZINP2Umm0J85EPJGlDmdtjB4Ra5qXfDnEUwFa2524E8ZIQ2z2MkDFmwHwAcQvYlJn7HTTdtof+/FK4O7UyygWg824/1PTMdY7lkGMrCeq9G03eRTzoI6qLX0xJZFglXpnfpLnu32FDpKXATmYN1/jyW5A/BPxYHV+eyGma0+qqkZaTpbDCve8Lz2rOXkSrKceIpEkmxFm/AGRDIFcbdfxcy/yFf2nKX1oOA4TU7q7gBeQU2Krg33zL54J0Cg8FA42DaH4dDogRLY+Or9rfsdaanWKdZHkgjlb4lUTAW7c6SQ2aDGhJlCDaziUqtqgG6YTAWg8YROBp/qiuFzSTEzuswOJaSzgexCqSh/kQEnDO/yqlRRlCgdSqi6naF5maCUQDexszr+ZeE8kgI8gBe2pdZ9sdf42fKSLAccRkPAMRkPXKNfZsONdce2mkN5j7UvoEURk6jzcLLK1IJVvoNnzYOqWxMJjKs2n3Fp4MZfFhjoH2xOxL3QlYAbu7TmLZMWHz35kEHOmPeEZws9o+DKXCz3ErmeQaWa6kiZk7xxUQWchws9isV3XH32qMsgxo5OiszwWsSYypPNJ4dh6gpvD3MFt0hNI7JX3PCbgYWNrKYYNiNvQ6MtD8kIfNEnQ+G6yQXo2NH37Q24D1jZf/+4b2YEAc8VDPt07utPXvytdMxPTeLS01BWdlB+DSVtSk8Gz+XK0YW26DpeDVL8ZPzymo+W4L9GEwhGIQuegFiM0M1REGucdF0rlP5Yloy07QxNKw3W2G96HW+RzLiYk1zDL+fCkDQpb48UZrZXGH/J5Icv9wQQTp1B4OXKRc5H7BOYSDd3xQLt8SV/Lk64qL4xcnOEAVBBrajSMCo80fquL9QNqHg0Qk0AsaM8nWlReUTM6w4v1HZHraY7yzHlot+NrRT6VhVquqfmjADSFyS2D0NfJCB0NWfkIznscn7mAF1xY52I6E8SqOftsin/DAzMxiV26GDEChedvqtrzLMPcP/jkXBEyZtD8nVTrbZHju+luaGkEhqKzK/cQn6LxbJ6jYAtl3r0TxbPYn829eRQPgjU3qZoCna84KSNfKfCVwtDl5yc6f/0pUiB3hfUXniIS66zRhYq1AJRaNkF5QeGbg0K0hd0rPAydFVR5OH2KVAB39tNLsbnb/GfE4HpyR1FeIc1Cth1lvghlB5HsncLhuz1K0W/h9fbMfzxwUFtoYNuYTh/A57w21DS8iCfz8eqaVHuwfvydjnHfbVsq0Ma64LHvqittHDm1Tf53N8PQ0Nb10m63yN72ttf3bG2Rm51qaNTmiHZoYzsqxhv1Aw5qBy93RndB6sfzXSoISfpeGMEP8h/Cj7wj+r87tj/nP/tllNYzzSQGVC/6rvfj+TP60zOrwvF/Vifl/6OaQzMvuvbqfYFTr8Nd5hUkvJp6r/bvTP0rxPn1r/+6sE2o9P/4Dw==\", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type text) meta [Serialized.Text = true]) in type table [Country = _t, Code = _t]),",
+                    "    #\"Changed Type\" = Table.TransformColumnTypes(Source,{{\"Country\", type text}, {\"Code\", type text}})",
+                    "in",
+                    "    #\"Changed Type\""
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "DIM_TAFB_TXN_FEE_CALCULATED",
+            "columns": [
+              {
+                "name": "FEE_REF_NO",
+                "dataType": "double",
+                "sourceColumn": "FEE_REF_NO",
+                "formatString": "0"
+              },
+              {
+                "name": "ASSO_REF_NO",
+                "dataType": "int64",
+                "sourceColumn": "ASSO_REF_NO"
+              },
+              {
+                "name": "CUST_ID",
+                "dataType": "string",
+                "sourceColumn": "CUST_ID"
+              },
+              {
+                "name": "From_CCY",
+                "dataType": "string",
+                "sourceColumn": "From_CCY"
+              },
+              {
+                "name": "FEE_STAT",
+                "dataType": "string",
+                "sourceColumn": "FEE_STAT"
+              },
+              {
+                "name": "CUST_CAT_ID",
+                "dataType": "string",
+                "sourceColumn": "CUST_CAT_ID"
+              },
+              {
+                "name": "FEE_TYPE",
+                "dataType": "string",
+                "sourceColumn": "FEE_TYPE"
+              },
+              {
+                "name": "CUST_CAT_NAME",
+                "dataType": "string",
+                "sourceColumn": "CUST_CAT_NAME"
+              },
+              {
+                "name": "PROD_TYPE_DESC",
+                "dataType": "string",
+                "sourceColumn": "PROD_TYPE_DESC"
+              },
+              {
+                "name": "PROD_TYPE",
+                "dataType": "string",
+                "sourceColumn": "PROD_TYPE"
+              },
+              {
+                "name": "PROD_SUB_TYPE_ID",
+                "dataType": "string",
+                "sourceColumn": "PROD_SUB_TYPE_ID"
+              },
+              {
+                "name": "CRT_TMSTMP",
+                "dataType": "dateTime",
+                "sourceColumn": "CRT_TMSTMP"
+              },
+              {
+                "name": "STATUS",
+                "dataType": "string",
+                "sourceColumn": "STATUS"
+              },
+              {
+                "name": "DR_CR_STATUS",
+                "dataType": "string",
+                "sourceColumn": "DR_CR_STATUS"
+              },
+              {
+                "name": "UPD_TMSTMP",
+                "dataType": "dateTime",
+                "sourceColumn": "UPD_TMSTMP"
+              },
+              {
+                "name": "APPRV_TMSTMP",
+                "dataType": "dateTime",
+                "sourceColumn": "APPRV_TMSTMP"
+              },
+              {
+                "name": "REQ_TYPE",
+                "dataType": "string",
+                "sourceColumn": "REQ_TYPE"
+              },
+              {
+                "name": "APPRV_STAT",
+                "dataType": "string",
+                "sourceColumn": "APPRV_STAT"
+              },
+              {
+                "name": "CUST_NAME",
+                "dataType": "string",
+                "sourceColumn": "CUST_NAME"
+              },
+              {
+                "name": "PROD_SUB_TYPE_DESC",
+                "dataType": "string",
+                "sourceColumn": "PROD_SUB_TYPE_DESC"
+              },
+              {
+                "name": "LOB_ID",
+                "dataType": "int64",
+                "sourceColumn": "LOB_ID"
+              },
+              {
+                "name": "LOB_NAME",
+                "dataType": "string",
+                "sourceColumn": "LOB_NAME"
+              },
+              {
+                "name": "PARENT_GROUP_CODE",
+                "dataType": "string",
+                "sourceColumn": "PARENT_GROUP_CODE"
+              },
+              {
+                "name": "CUSTOMER_RM",
+                "dataType": "string",
+                "sourceColumn": "CUSTOMER_RM"
+              },
+              {
+                "name": "CUST_GROUP_RM",
+                "dataType": "string",
+                "sourceColumn": "CUST_GROUP_RM"
+              },
+              {
+                "name": "PARENT_GROUP_RM",
+                "dataType": "string",
+                "sourceColumn": "PARENT_GROUP_RM"
+              },
+              {
+                "name": "GROUP_NAME",
+                "dataType": "string",
+                "sourceColumn": "GROUP_NAME"
+              },
+              {
+                "name": "Fee_Amount_After_Tax",
+                "dataType": "double",
+                "sourceColumn": "Fee_Amount_After_Tax"
+              },
+              {
+                "name": "OPTIMIZATION_DATE",
+                "dataType": "dateTime",
+                "sourceColumn": "OPTIMIZATION_DATE"
+              },
+              {
+                "name": "NO_OF_TXNS",
+                "dataType": "int64",
+                "sourceColumn": "NO_OF_TXNS"
+              },
+              {
+                "name": "PARENT_GROUP_NAME",
+                "dataType": "string",
+                "sourceColumn": "PARENT_GROUP_NAME"
+              },
+              {
+                "name": "ExchangeRate_LastModifiedDate",
+                "dataType": "dateTime",
+                "sourceColumn": "ExchangeRate_LastModifiedDate"
+              },
+              {
+                "name": "LastModifiedDate",
+                "dataType": "dateTime",
+                "sourceColumn": "LastModifiedDate"
+              },
+              {
+                "name": "Revenue",
+                "dataType": "double",
+                "sourceColumn": "Revenue"
+              },
+              {
+                "name": "Base Currency",
+                "dataType": "string",
+                "sourceColumn": "Base Currency"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = #\"SQL/p21d18102583001 database windows net;p21d18102583002\",",
+                    "    dbo_TAFB_TXN_FEE_CALCULATED = Source{[Schema=\"dbo\",Item=\"TAFB_TXN_FEE_CALCULATED\"]}[Data],",
+                    "    #\"Renamed Columns\" = Table.RenameColumns(dbo_TAFB_TXN_FEE_CALCULATED,{{\"To_CCY\", \"Base Currency\"}})",
+                    "in",
+                    "    #\"Renamed Columns\""
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "DIM_Calender_FCC",
+            "dataCategory": "Time",
+            "columns": [
+              {
+                "name": "Date",
+                "dataType": "dateTime",
+                "isKey": true,
+                "sourceColumn": "Date"
+              },
+              {
+                "name": "Year",
+                "dataType": "int64",
+                "sourceColumn": "Year"
+              },
+              {
+                "name": "Quarter",
+                "dataType": "string",
+                "sourceColumn": "Quarter",
+                "sortByColumn": "Year"
+              },
+              {
+                "name": "Month",
+                "dataType": "string",
+                "sourceColumn": "Month",
+                "sortByColumn": "Month_sort"
+              },
+              {
+                "name": "Month_sort",
+                "dataType": "string",
+                "sourceColumn": "Month_sort"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = Value.NativeQuery(#\"SQL/p21d18102583001 database windows net;p21d18102583002\",\"",
+                    "SELECT distinct [APPL_DATE] FROM [dbo].[Xchange]\"),",
+                    "    #\"Renamed Columns\" = Table.RenameColumns(Source,{{\"APPL_DATE\", \"Date\"}}),",
+                    "    #\"Duplicated Column\" = Table.DuplicateColumn(#\"Renamed Columns\", \"Date\", \"Date - Copy\"),",
+                    "    #\"Duplicated Column1\" = Table.DuplicateColumn(#\"Duplicated Column\", \"Date\", \"Date - Copy.1\"),",
+                    "    #\"Duplicated Column2\" = Table.DuplicateColumn(#\"Duplicated Column1\", \"Date\", \"Date - Copy.2\"),",
+                    "    #\"Duplicated Column3\" = Table.DuplicateColumn(#\"Duplicated Column2\", \"Date\", \"Date - Copy.3\"),",
+                    "    #\"Duplicated Column4\" = Table.DuplicateColumn(#\"Duplicated Column3\", \"Date\", \"Date - Copy.4\"),",
+                    "    #\"Extracted Year\" = Table.TransformColumns(#\"Duplicated Column4\",{{\"Date - Copy\", Date.Year, Int64.Type}}),",
+                    "    #\"Duplicated Column5\" = Table.DuplicateColumn(#\"Extracted Year\", \"Date - Copy\", \"Date - Copy - Copy\"),",
+                    "    #\"Extracted Month\" = Table.TransformColumns(#\"Duplicated Column5\",{{\"Date - Copy.1\", Date.Month, Int64.Type}}),",
+                    "    #\"Extracted Month Name\" = Table.TransformColumns(#\"Extracted Month\", {{\"Date - Copy.2\", each Date.MonthName(_), type text}}),",
+                    "    #\"Calculated Quarter\" = Table.TransformColumns(#\"Extracted Month Name\",{{\"Date - Copy.3\", Date.QuarterOfYear, Int64.Type}}),",
+                    "    #\"Extracted First Characters\" = Table.TransformColumns(#\"Calculated Quarter\", {{\"Date - Copy.2\", each Text.Start(_, 3), type text}}),",
+                    "    #\"Added Prefix\" = Table.TransformColumns(#\"Extracted First Characters\", {{\"Date - Copy.3\", each \"Qtr \" & Text.From(_, \"en-US\"), type text}}),",
+                    "    #\"Merged Columns\" = Table.CombineColumns(Table.TransformColumnTypes(#\"Added Prefix\", {{\"Date - Copy - Copy\", type text}}, \"en-US\"),{\"Date - Copy.3\", \"Date - Copy - Copy\"},Combiner.CombineTextByDelimiter(\" \", QuoteStyle.None),\"Merged\"),",
+                    "    #\"Renamed Columns1\" = Table.RenameColumns(#\"Merged Columns\",{{\"Merged\", \"Quarter\"}}),",
+                    "    #\"Duplicated Column6\" = Table.DuplicateColumn(#\"Renamed Columns1\", \"Date - Copy\", \"Date - Copy - Copy\"),",
+                    "    #\"Merged Columns1\" = Table.CombineColumns(Table.TransformColumnTypes(#\"Duplicated Column6\", {{\"Date - Copy - Copy\", type text}}, \"en-US\"),{\"Date - Copy.2\", \"Date - Copy - Copy\"},Combiner.CombineTextByDelimiter(\" \", QuoteStyle.None),\"Merged\"),",
+                    "    #\"Renamed Columns2\" = Table.RenameColumns(#\"Merged Columns1\",{{\"Merged\", \"Month\"}}),",
+                    "    #\"Added Custom\" = Table.AddColumn(#\"Renamed Columns2\", \"Custom\", each [#\"Date - Copy\"]*100+[#\"Date - Copy.1\"]),",
+                    "    #\"Removed Columns\" = Table.RemoveColumns(#\"Added Custom\",{\"Date - Copy.1\"}),",
+                    "    #\"Renamed Columns3\" = Table.RenameColumns(#\"Removed Columns\",{{\"Custom\", \"Month_sort\"}}),",
+                    "    #\"Removed Columns1\" = Table.RemoveColumns(#\"Renamed Columns3\",{\"Date - Copy.4\"}),",
+                    "    #\"Renamed Columns4\" = Table.RenameColumns(#\"Removed Columns1\",{{\"Date - Copy\", \"Year\"}}),",
+                    "    #\"Filtered Rows\" = Table.SelectRows(#\"Renamed Columns4\", each ([Date] <> null))",
+                    "in",
+                    "    #\"Filtered Rows\""
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "DIM_Calender_FRM",
+            "dataCategory": "Time",
+            "columns": [
+              {
+                "name": "CRT_TMSTMP",
+                "dataType": "dateTime",
+                "isKey": true,
+                "sourceColumn": "CRT_TMSTMP"
+              },
+              {
+                "name": "Year",
+                "dataType": "int64",
+                "sourceColumn": "Year"
+              },
+              {
+                "name": "Quarter",
+                "dataType": "string",
+                "sourceColumn": "Quarter",
+                "sortByColumn": "Year"
+              },
+              {
+                "name": "Month",
+                "dataType": "string",
+                "sourceColumn": "Month",
+                "sortByColumn": "Month_sort"
+              },
+              {
+                "name": "Month_sort",
+                "dataType": "string",
+                "sourceColumn": "Month_sort"
+              },
+              {
+                "type": "calculated",
+                "name": "Months",
+                "dataType": "string",
+                "isDataTypeInferred": true,
+                "expression": "Format([CRT_TMSTMP],\"MMM yyyy\")",
+                "sortByColumn": "Month_sort"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = Value.NativeQuery(#\"SQL/p21d18102583001 database windows net;p21d18102583002\",\"",
+                    "Select distinct CRT_TMSTMP from [dbo].[TAFB_TXN_FEE_CALCULATED]\"),",
+                    "    #\"Duplicated Column\" = Table.DuplicateColumn(Source, \"CRT_TMSTMP\", \"CRT_TMSTMP - Copy\"),",
+                    "    #\"Duplicated Column1\" = Table.DuplicateColumn(#\"Duplicated Column\", \"CRT_TMSTMP\", \"CRT_TMSTMP - Copy.1\"),",
+                    "    #\"Duplicated Column2\" = Table.DuplicateColumn(#\"Duplicated Column1\", \"CRT_TMSTMP\", \"CRT_TMSTMP - Copy.2\"),",
+                    "    #\"Duplicated Column3\" = Table.DuplicateColumn(#\"Duplicated Column2\", \"CRT_TMSTMP\", \"CRT_TMSTMP - Copy.3\"),",
+                    "    #\"Extracted Year\" = Table.TransformColumns(#\"Duplicated Column3\",{{\"CRT_TMSTMP - Copy\", Date.Year, Int64.Type}}),",
+                    "    #\"Duplicated Column4\" = Table.DuplicateColumn(#\"Extracted Year\", \"CRT_TMSTMP - Copy\", \"CRT_TMSTMP - Copy - Copy\"),",
+                    "    #\"Duplicated Column5\" = Table.DuplicateColumn(#\"Duplicated Column4\", \"CRT_TMSTMP - Copy\", \"CRT_TMSTMP - Copy - Copy.1\"),",
+                    "    #\"Extracted Month\" = Table.TransformColumns(#\"Duplicated Column5\",{{\"CRT_TMSTMP - Copy.1\", Date.Month, Int64.Type}}),",
+                    "    #\"Extracted Month Name\" = Table.TransformColumns(#\"Extracted Month\", {{\"CRT_TMSTMP - Copy.2\", each Date.MonthName(_), type text}}),",
+                    "    #\"Calculated Quarter\" = Table.TransformColumns(#\"Extracted Month Name\",{{\"CRT_TMSTMP - Copy.3\", Date.QuarterOfYear, Int64.Type}}),",
+                    "    #\"Added Prefix\" = Table.TransformColumns(#\"Calculated Quarter\", {{\"CRT_TMSTMP - Copy.3\", each \"Qtr \" & Text.From(_, \"en-US\"), type text}}),",
+                    "    #\"Merged Columns\" = Table.CombineColumns(Table.TransformColumnTypes(#\"Added Prefix\", {{\"CRT_TMSTMP - Copy - Copy\", type text}}, \"en-US\"),{\"CRT_TMSTMP - Copy.3\", \"CRT_TMSTMP - Copy - Copy\"},Combiner.CombineTextByDelimiter(\" \", QuoteStyle.None),\"Merged\"),",
+                    "    #\"Merged Columns1\" = Table.CombineColumns(Table.TransformColumnTypes(#\"Merged Columns\", {{\"CRT_TMSTMP - Copy - Copy.1\", type text}}, \"en-US\"),{\"CRT_TMSTMP - Copy.2\", \"CRT_TMSTMP - Copy - Copy.1\"},Combiner.CombineTextByDelimiter(\" \", QuoteStyle.None),\"Merged.1\"),",
+                    "    #\"Renamed Columns\" = Table.RenameColumns(#\"Merged Columns1\",{{\"Merged\", \"Quarter\"}, {\"Merged.1\", \"Month\"}}),",
+                    "    #\"Added Custom\" = Table.AddColumn(#\"Renamed Columns\", \"Custom\", each [#\"CRT_TMSTMP - Copy\"]*100+[#\"CRT_TMSTMP - Copy.1\"]),",
+                    "    #\"Removed Columns\" = Table.RemoveColumns(#\"Added Custom\",{\"CRT_TMSTMP - Copy.1\"}),",
+                    "    #\"Renamed Columns1\" = Table.RenameColumns(#\"Removed Columns\",{{\"Custom\", \"Month_sort\"}, {\"CRT_TMSTMP - Copy\", \"Year\"}}),",
+                    "    #\"Filtered Rows\" = Table.SelectRows(#\"Renamed Columns1\", each ([CRT_TMSTMP] <> null))",
+                    "in",
+                    "    #\"Filtered Rows\""
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "DIM_GTP_USER",
+            "columns": [
+              {
+                "name": "USER_ID",
+                "dataType": "double",
+                "sourceColumn": "USER_ID"
+              },
+              {
+                "name": "COMPANY_ABBV_NAME",
+                "dataType": "string",
+                "sourceColumn": "COMPANY_ABBV_NAME"
+              },
+              {
+                "name": "CREATED",
+                "dataType": "dateTime",
+                "sourceColumn": "CREATED"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = #\"SQL/p21d18102583001 database windows net;p21d18102583002\",",
+                    "    dbo_GTP_USER = Source{[Schema=\"dbo\",Item=\"GTP_USER\"]}[Data],",
+                    "    #\"Removed Other Columns\" = Table.SelectColumns(dbo_GTP_USER,{\"USER_ID\", \"COMPANY_ABBV_NAME\", \"CREATED\"})",
+                    "in",
+                    "    #\"Removed Other Columns\""
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "Measure",
+            "columns": [
+              {
+                "name": "measure",
+                "dataType": "int64",
+                "sourceColumn": "measure"
+              },
+              {
+                "type": "calculated",
+                "name": "Calculated Column 1",
+                "dataType": "int64",
+                "isDataTypeInferred": true,
+                "expression": "1"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText(\"i45WMlSKjQUA\", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type text) meta [Serialized.Text = true]) in type table [measure = _t]),",
+                    "    #\"Changed Type\" = Table.TransformColumnTypes(Source,{{\"measure\", Int64.Type}})",
+                    "in",
+                    "    #\"Changed Type\""
+                  ]
+                }
+              }
+            ],
+            "measures": [
+              {
+                "name": "AccountCount",
+                "expression": " CALCULATE(DISTINCTCOUNT(GTP_Acc_Exc[ACCOUNT_ID]))"
+              },
+              {
+                "name": "SumofWithdrawl",
+                "expression": "CALCULATE(SUM(GTP_Acc_Exc[WITHDRAWAL]))"
+              },
+              {
+                "name": "Total Amount",
+                "expression": "SUM(GTP_Acc_Exc[DEPOSIT])-[SumofWithdrawl]"
+              },
+              {
+                "name": "SumofDeposit",
+                "expression": "SUM(GTP_Acc_Exc[DEPOSIT])"
+              },
+              {
+                "name": "TradeAmount",
+                "expression": "CALCULATE(SUM(FCC_Exchange_Corp[Amount]),FILTER(FCC_Exchange_Corp,FCC_Exchange_Corp[PRODUCT_CODE]  in {\"BG\",\"BR\",\"LI\",\"SG\"}))"
+              },
+              {
+                "name": "NumberOfTranscation",
+                "expression": [
+                  "CALCULATE(COUNT(GTP_Acc_Exc[WITHDRAWAL]),FILTER(GTP_Acc_Exc,GTP_Acc_Exc[WITHDRAWAL]>0))+ CALCULATE(COUNT(GTP_Acc_Exc[DEPOSIT]),FILTER(GTP_Acc_Exc,GTP_Acc_Exc[DEPOSIT]>0))",
+                  ""
+                ]
+              },
+              {
+                "name": "MaturityAmount",
+                "expression": "CALCULATE(SUM(GTP_Acc_Exc[MATURITY_AMOUNT]),FILTER(GTP_Acc_Exc,GTP_Acc_Exc[ACCOUNT_TYPE]=5),FILTER(GTP_Acc_Exc,GTP_Acc_Exc[END_DATE]>TODAY()))"
+              },
+              {
+                "name": "PrincipalAmount",
+                "expression": "CALCULATE(SUM(GTP_Acc_Exc[PRINCIPAL_AMOUNT]),FILTER(GTP_Acc_Exc,GTP_Acc_Exc[ACCOUNT_TYPE]=5),FILTER(GTP_Acc_Exc,GTP_Acc_Exc[END_DATE]>TODAY()))"
+              },
+              {
+                "name": "ExportReceivedAvailableAmount",
+                "expression": "CALCULATE(SUM(FCC_Exchange_Corp[Available_Amount]),'FCC_Exchange_Corp'[Product_Code] in {\"BR\",\"SR\",\"EC\",\"EL\"})"
+              },
+              {
+                "name": "ExportReceivedAmount",
+                "expression": "CALCULATE(SUM(FCC_Exchange_Corp[Amount]),'FCC_Exchange_Corp'[PRODUCT_CODE] in {\"BR\",\"SR\",\"EL\"})",
+                "formatString": "#,0.00"
+              },
+              {
+                "name": "ImportIssuedAmount",
+                "expression": "CALCULATE(SUM(FCC_Exchange_Corp[Amount])+sum(FCC_Exchange_Corp[Collection_Amount]),'FCC_Exchange_Corp'[Product_Code] in {\"BG\",\"SG\",\"LC\",\"LI\",\"SI\"})",
+                "formatString": "#,0.00"
+              },
+              {
+                "name": "IssuedCollectionAmount",
+                "expression": "CALCULATE(SUM(FCC_Exchange_Corp[Collection_Amount]),'FCC_Exchange_Corp'[Product_Code] = \"IC\")",
+                "formatString": "#,0.00"
+              },
+              {
+                "name": "TotalReceivedAmount",
+                "expression": "[ExportReceivedAmount]+[ReceivedCollectionAmount]",
+                "formatString": "#,0.00"
+              },
+              {
+                "name": "ImportIssuedUtilizedAmount",
+                "expression": "CALCULATE(SUM(FCC_Exchange_Corp[Utilized_Amount]),'FCC_Exchange_Corp'[Product_Code] in {\"BG\",\"SG\",\"LC\",\"LI\",\"SI\"})",
+                "formatString": "#,0.00"
+              },
+              {
+                "name": "CountWithdrawal",
+                "expression": "COUNT(GTP_Acc_Exc[WITHDRAWAL])"
+              },
+              {
+                "name": "ImportIssuedAvailableAmount",
+                "expression": "CALCULATE(SUM(FCC_Exchange_Corp[Available_Amount]),'FCC_Exchange_Corp'[Product_Code] in {\"BG\",\"SG\",\"LC\",\"LI\",\"SI\"})",
+                "formatString": "#,0.00"
+              },
+              {
+                "name": "CountDeposit",
+                "expression": "COUNT(GTP_Acc_Exc[DEPOSIT])"
+              },
+              {
+                "name": "TotalIssuedAmount",
+                "expression": "[ImportIssuedAmount]+[IssuedCollectionAmount]",
+                "formatString": "#,0.00"
+              },
+              {
+                "name": "ExportReceivedUtilizedAmount",
+                "expression": "CALCULATE(SUM(FCC_Exchange_Corp[Utilized_Amount]),'FCC_Exchange_Corp'[Product_Code] in {\"BR\",\"SR\",\"EC\",\"EL\"})"
+              },
+              {
+                "name": "InvoiceReceivableAmount",
+                "expression": "CALCULATE(SUM(FCC_Exchange_Corp[Amount]),'FCC_Exchange_Corp'[Product_Code] in {\"IN\",\"SO\"})",
+                "formatString": "#,0.00"
+              },
+              {
+                "name": "InvoicePayableAmount",
+                "expression": "CALCULATE(SUM(FCC_Exchange_Corp[Amount]),'FCC_Exchange_Corp'[Product_Code] in {\"IP\",\"PO\"})",
+                "formatString": "#,0.00"
+              },
+              {
+                "name": "ReceivedCollectionAmount",
+                "expression": "CALCULATE(SUM(FCC_Exchange_Corp[Collection_Amount]),'FCC_Exchange_Corp'[Product_Code] = \"EC\")"
+              }
+            ]
+          },
+          {
+            "name": "Security",
+            "columns": [
+              {
+                "name": "Company",
+                "dataType": "string",
+                "sourceColumn": "Company"
+              },
+              {
+                "name": "ID",
+                "dataType": "double",
+                "sourceColumn": "ID"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = Value.NativeQuery(#\"SQL/p21d18102583001 database windows net;p21d18102583002\",",
+                    "\"Select  distinct(COMPANY_ABBV_NAME),COMPANY_ID from [dbo].[GTP_ENTITY]\"),",
+                    "    #\"Renamed Columns\" = Table.RenameColumns(Source,{{\"COMPANY_ID\", \"ID\"}, {\"COMPANY_ABBV_NAME\", \"Company\"}})",
+                    "in",
+                    "    #\"Renamed Columns\""
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "Prod Status Code desc",
+            "columns": [
+              {
+                "name": "Code",
+                "dataType": "string",
+                "sourceColumn": "Code"
+              },
+              {
+                "name": "Description",
+                "dataType": "string",
+                "sourceColumn": "Description"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText(\"hVdNc6M4EP0rVM5zMBgMHI1xtlKVyaSyyc5hag4Klh1tMLBCJJv99dutb2Eyc/TrlujX/bpb/vHjahVffbl6oH/TRtBDdPXzC0AJQPe0O7DupJE1IHf0Xf9K4de2aejgjmQA/UmFaC2yAWRHuoa2DssBexoOxJ0r8KozfMsiJSD7f4UHxSuMZ+InC6iYW0pGC2HMNRsbTgfSCQ1i2PeEiygILU4tzE4vIronzFiQxvXUtpcWpHPXC3ZkDRGs76Jvx2j3QiCoUXsgub8oH9FY9x3VMDK86QbenzgdjS+SfOSkoVwBycpL+a7vRmo4JMj1SbCW/WfiTxKZooFx/Y1E8TSxJqlMzz8THUV03XPN/uzuzEwCtgME9mYvRpIVA/o7yG2nQeR100cP9MRGQbl1lqUz56uPWdilK1EUamWNXGsKlVqwxUYPMtrtO2ECU1LRjkLmGeEfOmbS6hNJcOKBHicrirXKy8eCBVP0B1zK4R6TKmXJZODNxDl+GIrUjUdTpjUm6JaMeNsnHvkvPMI2W2MC73twrWVDBB23LoMwAlsqxQK4vSqNJdIfpkbMvpI6sRgEs3LNOtIym4/Ul4wqCbauNkq5gHqp90XMxL5lJ/bcGrdctUg0g1UDvPWsmVc7LT1TGHaGHPeEtx+RK6BXpkyNADHxzh5JLo5sm1dtW1/Y7og1pjohXYM5hu9oXElhnJ7PTLjINjNvkJURY5brkqoR5+o3HwBZMXMMuIe1x5RKRX2io81SqrygNrHMMjSSRUz/AwKnvhLRvNjbZGFHQZ5BHg7NlcCG3kpmU8goSSPYG5Aw5bHm0lOUiUta8pW0hNMkl2Ou43NYrqI+uggox4LeNhdTKcdaSkL6N1L9ysazB238waUgpLdrHbkcyX3vuWy6J1hFmPQ3ZjZgXpoWioyTxAtFraPv5qIitmvQTbNdP0En8QEq8AH3jgNOTu2fOP9gYhWpDJGwc6RbUa0hZcyscT7ri43dp1gGDebWP+zIorCGUGQFMrYE6r6Z8BNazeVKPghACJpFGTvglnWv5pZSsuu7I+Nnjahh5N4IZSrVCumBGIK5VWbejsQjGg7KGbSxGxdl/pmT1yhloUT+xnCHWxSZfxMvZsJvkWw1jazDbg6ztEU2Vd+/wuvgqKFNsIO8mLb27aNnlV+I7VanASyPvavctlSzONoeIEwaVTYP1cqW7qYDjfjjpoq9dWfK64VSJfbsdyZeDpy8a2VVazWiYVkcoiVhVJ4u/SVVYbUwSBjt8FSSTWFSWm0CWw1rXa4ilwzlJocOCKE/sEY/tgxv5eDU6jdv5a8VE9R8qe1iF4MCEi+zFlxrrxEHHK5X+fTjkGL9flFuan1+bs/Ue0+Nb5/CTqn3CH0LPcCjp6HtySEKl6J2zRddlZhpWNBd8RtfT/a7UvtW08dvrq1Xv3b1bq1jT/d2AKsqaI9kycNnXK+XPB7PJLwnvWiV2fdc1etMNm/7Grn1F66CemM8Qp3X+WztD6Yl62LBEnZzXS64hPfvV55og78r+9iX88W/mX1ycdCfNdZt7XgtfF12MYxaJvC9QXF+NDA+rD37LAbvkB42+80CkwW3XP4NaKnQtdnLh+JwsdL3pVzp+NxVOluYBNex32D749Hjdp34NrdUf/4P\", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type text) meta [Serialized.Text = true]) in type table [Code = _t, Description = _t]),",
+                    "    #\"Changed Type\" = Table.TransformColumnTypes(Source,{{\"Code\", type text}, {\"Description\", type text}})",
+                    "in",
+                    "    #\"Changed Type\""
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "DIM_GTP_COMPANY",
+            "columns": [
+              {
+                "name": "COMPANY_ID",
+                "dataType": "double",
+                "sourceColumn": "COMPANY_ID"
+              },
+              {
+                "name": "ABBV_NAME",
+                "dataType": "string",
+                "sourceColumn": "ABBV_NAME"
+              },
+              {
+                "name": "COUNTRY",
+                "dataType": "string",
+                "sourceColumn": "COUNTRY"
+              },
+              {
+                "type": "calculated",
+                "name": "Country Full Name",
+                "dataType": "string",
+                "isDataTypeInferred": true,
+                "expression": "RELATED('USR_Full Country Name'[Country])"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = #\"SQL/p21d18102583001 database windows net;p21d18102583002\",",
+                    "    dbo_GTP_COMPANY = Source{[Schema=\"dbo\",Item=\"GTP_COMPANY\"]}[Data],",
+                    "    #\"Removed Other Columns\" = Table.SelectColumns(dbo_GTP_COMPANY,{\"COMPANY_ID\", \"ABBV_NAME\", \"COUNTRY\"})",
+                    "in",
+                    "    #\"Removed Other Columns\""
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "USR_ACCOUNT_DESCRIPTION_FACT_CORP",
+            "columns": [
+              {
+                "name": "Account_Type",
+                "dataType": "int64",
+                "sourceColumn": "Account_Type"
+              },
+              {
+                "name": "Description",
+                "dataType": "string",
+                "sourceColumn": "Description"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText(\"ZdA9DsMgDAXgqyDmDKT/GSk4LSoxkSGtqij3v0ZNO0RO1/dhnuV51sboRl8BoQ8uWHor61yasOilYWwZ3UQEWCTsGDyMKYcN7BmyfQa8ZQkHhpgsyvTIaQEa1OYz9eNT7SfwDM6Sl7PnijZGZdErTCU4kA8u3116UA+AkTeS2rH2Mb1E2pq1UeTtmv8P1WtkKCXCsL1UV2tSuQPpZfkA\", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type text) meta [Serialized.Text = true]) in type table [Account_Type = _t, Description = _t]),",
+                    "    #\"Changed Type\" = Table.TransformColumnTypes(Source,{{\"Account_Type\", Int64.Type}, {\"Description\", type text}}),",
+                    "    #\"Capitalized Each Word\" = Table.TransformColumns(#\"Changed Type\",{{\"Description\", Text.Proper, type text}})",
+                    "in",
+                    "    #\"Capitalized Each Word\""
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "FACT_Range-Amount",
+            "columns": [
+              {
+                "type": "calculatedTableColumn",
+                "name": "COMPANY_NAME",
+                "dataType": "string",
+                "isNameInferred": true,
+                "isDataTypeInferred": true,
+                "sourceColumn": "FACT_CONFIG_DERIVED_GTP_PRODUCT[COMPANY_NAME]"
+              },
+              {
+                "type": "calculatedTableColumn",
+                "name": "SUM",
+                "dataType": "double",
+                "isNameInferred": true,
+                "isDataTypeInferred": true,
+                "sourceColumn": "[SUM]"
+              },
+              {
+                "type": "calculatedTableColumn",
+                "name": "RANGE",
+                "dataType": "string",
+                "isNameInferred": true,
+                "isDataTypeInferred": true,
+                "sourceColumn": "[RANGE]"
+              },
+              {
+                "type": "calculatedTableColumn",
+                "name": "Base Currency",
+                "dataType": "string",
+                "isNameInferred": true,
+                "isDataTypeInferred": true,
+                "sourceColumn": "FACT_CONFIG_DERIVED_GTP_PRODUCT[Base Currency]"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "CalculatedTable 1",
+                "source": {
+                  "type": "calculated",
+                  "expression": [
+                    "SUMMARIZE(FILTER('FACT_CONFIG_DERIVED_GTP_PRODUCT', 'FACT_CONFIG_DERIVED_GTP_PRODUCT'[INP_USER_ID]>0 ",
+                    "&& 'FACT_CONFIG_DERIVED_GTP_PRODUCT'[TNX_STAT_CODE]=4&&'FACT_CONFIG_DERIVED_GTP_PRODUCT'[PRODUCT_CODE]<>\"SE\"&& ",
+                    "'FACT_CONFIG_DERIVED_GTP_PRODUCT'[APPL_DATE]>DATE(YEAR(TODAY())-1, MONTH(TODAY()),1) &&'FACT_CONFIG_DERIVED_GTP_PRODUCT'[APPL_DATE]< EOMONTH([LastDateCurrentYear],-1)),'FACT_CONFIG_DERIVED_GTP_PRODUCT'[Base Currency],FACT_CONFIG_DERIVED_GTP_PRODUCT[COMPANY_NAME], \"SUM\", CALCULATE(SUM('FACT_CONFIG_DERIVED_GTP_PRODUCT'[AMOUNT])),\"RANGE\", VAR TT=CALCULATE(SUM('FACT_CONFIG_DERIVED_GTP_PRODUCT'[AMOUNT])) RETURN SWITCH(TRUE(), TT=50000 || TT < 50000, \"0-50K\", TT>50000 && TT<100000 || TT = 100000, \"50K-100K\",TT>100000,\"Above 100K\"))"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "Fact_Range-Count",
+            "columns": [
+              {
+                "type": "calculatedTableColumn",
+                "name": "COMPANY_NAME",
+                "dataType": "string",
+                "isNameInferred": true,
+                "isDataTypeInferred": true,
+                "sourceColumn": "FACT_CONFIG_DERIVED_GTP_PRODUCT[COMPANY_NAME]"
+              },
+              {
+                "type": "calculatedTableColumn",
+                "name": "Count",
+                "dataType": "int64",
+                "isNameInferred": true,
+                "isDataTypeInferred": true,
+                "sourceColumn": "[Count]"
+              },
+              {
+                "type": "calculatedTableColumn",
+                "name": "RANGE",
+                "dataType": "string",
+                "isNameInferred": true,
+                "isDataTypeInferred": true,
+                "sourceColumn": "[RANGE]"
+              },
+              {
+                "type": "calculatedTableColumn",
+                "name": "Base Currency",
+                "dataType": "string",
+                "isNameInferred": true,
+                "isDataTypeInferred": true,
+                "sourceColumn": "FACT_CONFIG_DERIVED_GTP_PRODUCT[Base Currency]"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "CalculatedTable 1",
+                "source": {
+                  "type": "calculated",
+                  "expression": [
+                    " SUMMARIZE(FILTER('FACT_CONFIG_DERIVED_GTP_PRODUCT', 'FACT_CONFIG_DERIVED_GTP_PRODUCT'[INP_USER_ID]>0 &&",
+                    "'FACT_CONFIG_DERIVED_GTP_PRODUCT'[PRODUCT_CODE]<>\"SE\"&& 'FACT_CONFIG_DERIVED_GTP_PRODUCT'[TNX_STAT_CODE]=4&&'FACT_CONFIG_DERIVED_GTP_PRODUCT'[APPL_DATE]>DATE(YEAR(TODAY())-1, MONTH(TODAY()),1) &&'FACT_CONFIG_DERIVED_GTP_PRODUCT'[APPL_DATE]< EOMONTH([LastDateCurrentYear],-1)),'FACT_CONFIG_DERIVED_GTP_PRODUCT'[Base Currency],FACT_CONFIG_DERIVED_GTP_PRODUCT[COMPANY_NAME],\"Count\", CALCULATE(Count('FACT_CONFIG_DERIVED_GTP_PRODUCT'[TNX_ID])),\"RANGE\", VAR TT=CALCULATE(Count('FACT_CONFIG_DERIVED_GTP_PRODUCT'[TNX_ID])) RETURN SWITCH(TRUE(), TT<500 || TT =500, \"0-500\",  TT>500 && TT=1000 || TT < 1000, \"500-1000\", TT>1000 && TT <1500 || TT = 1500 , \"1000-1500\", \"Above 1500\"))"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "GTP_Acc_Exc",
+            "columns": [
+              {
+                "name": "ACCOUNT_ID",
+                "dataType": "int64",
+                "sourceColumn": "ACCOUNT_ID"
+              },
+              {
+                "name": "ACCOUNT_NO",
+                "dataType": "string",
+                "sourceColumn": "ACCOUNT_NO"
+              },
+              {
+                "name": "ACCOUNT_TYPE",
+                "dataType": "int64",
+                "sourceColumn": "ACCOUNT_TYPE",
+                "formatString": "0"
+              },
+              {
+                "name": "FORMAT",
+                "dataType": "string",
+                "sourceColumn": "FORMAT"
+              },
+              {
+                "name": "COUNTRY",
+                "dataType": "string",
+                "sourceColumn": "COUNTRY"
+              },
+              {
+                "name": "ACC_CUR_CODE",
+                "dataType": "string",
+                "sourceColumn": "ACC_CUR_CODE"
+              },
+              {
+                "name": "PRINCIPAL_AMOUNT",
+                "dataType": "int64",
+                "sourceColumn": "PRINCIPAL_AMOUNT"
+              },
+              {
+                "name": "MATURITY_AMOUNT",
+                "dataType": "int64",
+                "sourceColumn": "MATURITY_AMOUNT"
+              },
+              {
+                "name": "START_DATE",
+                "dataType": "dateTime",
+                "sourceColumn": "START_DATE"
+              },
+              {
+                "name": "END_DATE",
+                "dataType": "dateTime",
+                "sourceColumn": "END_DATE"
+              },
+              {
+                "name": "ACTV_FLAG",
+                "dataType": "string",
+                "sourceColumn": "ACTV_FLAG"
+              },
+              {
+                "name": "ACCT_NAME",
+                "dataType": "string",
+                "sourceColumn": "ACCT_NAME"
+              },
+              {
+                "name": "STATEMENT_ID",
+                "dataType": "double",
+                "sourceColumn": "STATEMENT_ID"
+              },
+              {
+                "name": "LINE_ID",
+                "dataType": "double",
+                "sourceColumn": "LINE_ID"
+              },
+              {
+                "name": "VALUE_DATE",
+                "dataType": "dateTime",
+                "sourceColumn": "VALUE_DATE"
+              },
+              {
+                "name": "Line_CUR_CODE",
+                "dataType": "string",
+                "sourceColumn": "Line_CUR_CODE"
+              },
+              {
+                "name": "WITHDRAWAL",
+                "dataType": "double",
+                "sourceColumn": "WITHDRAWAL"
+              },
+              {
+                "name": "DEPOSIT",
+                "dataType": "double",
+                "sourceColumn": "DEPOSIT"
+              },
+              {
+                "name": "RUNBAL_BOOKED",
+                "dataType": "double",
+                "sourceColumn": "RUNBAL_BOOKED"
+              },
+              {
+                "name": "RUNBAL_CLEARED",
+                "dataType": "double",
+                "sourceColumn": "RUNBAL_CLEARED"
+              },
+              {
+                "name": "To_ccy",
+                "dataType": "string",
+                "sourceColumn": "To_ccy"
+              },
+              {
+                "name": "CCY_ID",
+                "dataType": "int64",
+                "sourceColumn": "CCY_ID"
+              },
+              {
+                "type": "calculated",
+                "name": "Ranking Group",
+                "dataType": "int64",
+                "isDataTypeInferred": true,
+                "expression": " RANKX(FILTER('GTP_ACC_EXC','GTP_ACC_EXC'[statement_id] = EARLIER('GTP_ACC_EXC'[statement_id])),'GTP_ACC_EXC'[line_id],,DESC,DENSE)"
+              },
+              {
+                "name": "Year",
+                "dataType": "int64",
+                "sourceColumn": "Year"
+              },
+              {
+                "name": "Month",
+                "dataType": "string",
+                "sourceColumn": "Month"
+              },
+              {
+                "name": "Quarter",
+                "dataType": "string",
+                "sourceColumn": "Quarter"
+              },
+              {
+                "name": "Month Sort",
+                "dataType": "string",
+                "sourceColumn": "Month Sort"
+              },
+              {
+                "name": "Month Number",
+                "dataType": "int64",
+                "sourceColumn": "Month Number"
+              },
+              {
+                "type": "calculated",
+                "name": "Cash_out_flow",
+                "dataType": "double",
+                "isDataTypeInferred": true,
+                "expression": "GTP_Acc_Exc[WITHDRAWAL]*-1"
+              },
+              {
+                "type": "calculated",
+                "name": "NetCashFlow",
+                "dataType": "double",
+                "isDataTypeInferred": true,
+                "expression": "GTP_Acc_Exc[DEPOSIT]-GTP_Acc_Exc[WITHDRAWAL]"
+              },
+              {
+                "name": "Year1",
+                "dataType": "int64",
+                "sourceColumn": "Year1"
+              },
+              {
+                "name": "Month1",
+                "dataType": "string",
+                "sourceColumn": "Month1"
+              },
+              {
+                "name": "Quarter1",
+                "dataType": "string",
+                "sourceColumn": "Quarter1"
+              },
+              {
+                "name": "Month Name",
+                "dataType": "string",
+                "sourceColumn": "Month Name"
+              },
+              {
+                "name": "Acct ID",
+                "dataType": "string",
+                "sourceColumn": "Acct ID"
+              },
+              {
+                "type": "calculated",
+                "name": "ACCT_NUM",
+                "dataType": "string",
+                "isDataTypeInferred": true,
+                "expression": [
+                  " [Account_no]",
+                  "    & REPT ( \" \", RANKX ( 'GTP_Acc_Exc', 'GTP_Acc_Exc'[Account_id],, ASC, DENSE ) )",
+                  "",
+                  ""
+                ]
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = #\"SQL/p21d18102583001 database windows net;p21d18102583002\",",
+                    "    dbo_GTP_Acc_Exc = Source{[Schema=\"dbo\",Item=\"GTP_Acc_Exc\"]}[Data],",
+                    "    #\"Inserted Year\" = Table.AddColumn(dbo_GTP_Acc_Exc, \"Year\", each Date.Year([VALUE_DATE]), Int64.Type),",
+                    "    #\"Inserted Month Name\" = Table.AddColumn(#\"Inserted Year\", \"Month Name\", each Date.MonthName([VALUE_DATE]), type text),",
+                    "    #\"Extracted First Characters\" = Table.TransformColumns(#\"Inserted Month Name\", {{\"Month Name\", each Text.Start(_, 3), type text}}),",
+                    "    #\"Duplicated Column\" = Table.DuplicateColumn(#\"Extracted First Characters\", \"Year\", \"Year - Copy\"),",
+                    "    #\"Duplicated Column1\" = Table.DuplicateColumn(#\"Duplicated Column\", \"Year\", \"Year - Copy.1\"),",
+                    "    #\"Merged Columns\" = Table.CombineColumns(Table.TransformColumnTypes(#\"Duplicated Column1\", {{\"Year - Copy\", type text}}, \"en-US\"),{\"Month Name\", \"Year - Copy\"},Combiner.CombineTextByDelimiter(\" \", QuoteStyle.None),\"Month\"),",
+                    "    #\"Inserted Quarter\" = Table.AddColumn(#\"Merged Columns\", \"Quarter\", each Date.QuarterOfYear([VALUE_DATE]), Int64.Type),",
+                    "    #\"Renamed Columns\" = Table.RenameColumns(#\"Inserted Quarter\",{{\"Quarter\", \"Quarter1\"}}),",
+                    "    #\"Added Prefix\" = Table.TransformColumns(#\"Renamed Columns\", {{\"Quarter1\", each \"Qtr \" & Text.From(_, \"en-US\"), type text}}),",
+                    "    #\"Merged Columns1\" = Table.CombineColumns(Table.TransformColumnTypes(#\"Added Prefix\", {{\"Year - Copy.1\", type text}}, \"en-US\"),{\"Quarter1\", \"Year - Copy.1\"},Combiner.CombineTextByDelimiter(\" \", QuoteStyle.None),\"Quarter\"),",
+                    "    #\"Inserted Month\" = Table.AddColumn(#\"Merged Columns1\", \"Month.1\", each Date.Month([VALUE_DATE]), Int64.Type),",
+                    "    #\"Added Custom\" = Table.AddColumn(#\"Inserted Month\", \"Month Sort\", each [Year]*100+[Month.1]),",
+                    "    #\"Renamed Columns1\" = Table.RenameColumns(#\"Added Custom\",{{\"Month.1\", \"Month Number\"}}),",
+                    "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Renamed Columns1\",{{\"PRINCIPAL_AMOUNT\", Int64.Type}, {\"MATURITY_AMOUNT\", Int64.Type}, {\"ACCOUNT_TYPE\", Int64.Type}}),",
+                    "    #\"Duplicated Column2\" = Table.DuplicateColumn(#\"Changed Type\", \"END_DATE\", \"END_DATE - Copy\"),",
+                    "    #\"Duplicated Column3\" = Table.DuplicateColumn(#\"Duplicated Column2\", \"END_DATE - Copy\", \"END_DATE - Copy - Copy\"),",
+                    "    #\"Duplicated Column4\" = Table.DuplicateColumn(#\"Duplicated Column3\", \"END_DATE - Copy\", \"END_DATE - Copy - Copy.1\"),",
+                    "    #\"Extracted Year\" = Table.TransformColumns(#\"Duplicated Column4\",{{\"END_DATE - Copy\", Date.Year, Int64.Type}}),",
+                    "    #\"Renamed Columns2\" = Table.RenameColumns(#\"Extracted Year\",{{\"END_DATE - Copy\", \"Year1\"}}),",
+                    "    #\"Extracted Month Name\" = Table.TransformColumns(#\"Renamed Columns2\", {{\"END_DATE - Copy - Copy\", each Date.MonthName(_), type text}}),",
+                    "    #\"Duplicated Column5\" = Table.DuplicateColumn(#\"Extracted Month Name\", \"END_DATE - Copy - Copy.1\", \"END_DATE - Copy - Copy.1 - Copy\"),",
+                    "    #\"Extracted Year1\" = Table.TransformColumns(#\"Duplicated Column5\",{{\"END_DATE - Copy - Copy.1\", Date.Year, Int64.Type}}),",
+                    "    #\"Merged Columns2\" = Table.CombineColumns(Table.TransformColumnTypes(#\"Extracted Year1\", {{\"END_DATE - Copy - Copy.1\", type text}}, \"en-US\"),{\"END_DATE - Copy - Copy\", \"END_DATE - Copy - Copy.1\"},Combiner.CombineTextByDelimiter(\" \", QuoteStyle.None),\"Month1\"),",
+                    "    #\"Duplicated Column6\" = Table.DuplicateColumn(#\"Merged Columns2\", \"END_DATE - Copy - Copy.1 - Copy\", \"END_DATE - Copy - Copy.1 - Copy - Copy\"),",
+                    "    #\"Calculated Quarter\" = Table.TransformColumns(#\"Duplicated Column6\",{{\"END_DATE - Copy - Copy.1 - Copy\", Date.QuarterOfYear, Int64.Type}}),",
+                    "    #\"Extracted Year2\" = Table.TransformColumns(#\"Calculated Quarter\",{{\"END_DATE - Copy - Copy.1 - Copy - Copy\", Date.Year, Int64.Type}}),",
+                    "    #\"Added Prefix1\" = Table.TransformColumns(#\"Extracted Year2\", {{\"END_DATE - Copy - Copy.1 - Copy\", each \"Qtr\" & Text.From(_, \"en-US\"), type text}}),",
+                    "    #\"Merged Columns3\" = Table.CombineColumns(Table.TransformColumnTypes(#\"Added Prefix1\", {{\"END_DATE - Copy - Copy.1 - Copy - Copy\", type text}}, \"en-US\"),{\"END_DATE - Copy - Copy.1 - Copy\", \"END_DATE - Copy - Copy.1 - Copy - Copy\"},Combiner.CombineTextByDelimiter(\" \", QuoteStyle.None),\"Quarter.1\"),",
+                    "    #\"Renamed Columns3\" = Table.RenameColumns(#\"Merged Columns3\",{{\"Quarter.1\", \"Quarter1\"}}),",
+                    "    #\"Extracted First Characters1\" = Table.TransformColumns(#\"Renamed Columns3\", {{\"Month1\", each Text.Start(_, 3), type text}}),",
+                    "    #\"Duplicated Column7\" = Table.DuplicateColumn(#\"Extracted First Characters1\", \"Year1\", \"Year1 - Copy\"),",
+                    "    #\"Reordered Columns\" = Table.ReorderColumns(#\"Duplicated Column7\",{\"ACCOUNT_ID\", \"ACCOUNT_NO\", \"ACCOUNT_TYPE\", \"FORMAT\", \"COUNTRY\", \"ACC_CUR_CODE\", \"PRINCIPAL_AMOUNT\", \"MATURITY_AMOUNT\", \"START_DATE\", \"END_DATE\", \"ACTV_FLAG\", \"ACCT_NAME\", \"STATEMENT_ID\", \"LINE_ID\", \"VALUE_DATE\", \"Line_CUR_CODE\", \"WITHDRAWAL\", \"DEPOSIT\", \"RUNBAL_BOOKED\", \"RUNBAL_CLEARED\", \"To_ccy\", \"CCY_ID\", \"Year\", \"Month\", \"Quarter\", \"Month Number\", \"Month Sort\", \"Year1\", \"Month1\", \"Year1 - Copy\", \"Quarter1\"}),",
+                    "    #\"Merged Columns4\" = Table.CombineColumns(Table.TransformColumnTypes(#\"Reordered Columns\", {{\"Year1 - Copy\", type text}}, \"en-US\"),{\"Month1\", \"Year1 - Copy\"},Combiner.CombineTextByDelimiter(\" \", QuoteStyle.None),\"Month2\"),",
+                    "    #\"Renamed Columns4\" = Table.RenameColumns(#\"Merged Columns4\",{{\"Month2\", \"Month1\"}}),",
+                    "    #\"Duplicated Column8\" = Table.DuplicateColumn(#\"Renamed Columns4\", \"VALUE_DATE\", \"VALUE_DATE - Copy\"),",
+                    "    #\"Extracted Month Name1\" = Table.TransformColumns(#\"Duplicated Column8\", {{\"VALUE_DATE - Copy\", each Date.MonthName(_), type text}}),",
+                    "    #\"Extracted First Characters2\" = Table.TransformColumns(#\"Extracted Month Name1\", {{\"VALUE_DATE - Copy\", each Text.Start(_, 3), type text}}),",
+                    "    #\"Renamed Columns5\" = Table.RenameColumns(#\"Extracted First Characters2\",{{\"VALUE_DATE - Copy\", \"Month Name\"}}),",
+                    "    #\"Extracted Last Characters\" = Table.TransformColumns(#\"Renamed Columns5\", {{\"ACCOUNT_NO\", each Text.End(_, 6), type text}}),",
+                    "    #\"Duplicated Column9\" = Table.DuplicateColumn(#\"Extracted Last Characters\", \"ACCOUNT_ID\", \"ACCOUNT_ID - Copy\"),",
+                    "    #\"Renamed Columns6\" = Table.RenameColumns(#\"Duplicated Column9\",{{\"ACCOUNT_ID - Copy\", \"Acct ID\"}}),",
+                    "    #\"Changed Type1\" = Table.TransformColumnTypes(#\"Renamed Columns6\",{{\"Acct ID\", Int64.Type}}),",
+                    "    #\"Changed Type2\" = Table.TransformColumnTypes(#\"Changed Type1\",{{\"Acct ID\", type text}})",
+                    "in",
+                    "    #\"Changed Type2\""
+                  ]
+                }
+              }
+            ],
+            "measures": [
+              {
+                "name": "AvailableBalance_Acc",
+                "expression": "CALCULATE(sum(GTP_Acc_Exc[runbal_cleared]),GTP_Acc_Exc[Ranking Group]=1)"
+              },
+              {
+                "name": "LedgerBalance_acc",
+                "expression": "CALCULATE(sum(GTP_Acc_Exc[runbal_booked]),GTP_Acc_Exc[Ranking Group]=1)"
+              },
+              {
+                "name": "Net_Cash_Flow",
+                "expression": " CALCULATE(SUM(GTP_Acc_Exc[DEPOSIT])-SUM(GTP_Acc_Exc[WITHDRAWAL]))"
+              }
+            ]
+          },
+          {
+            "name": "GTP_ENTITY_ACC",
+            "columns": [
+              {
+                "name": "ACCOUNT_ID",
+                "dataType": "double",
+                "sourceColumn": "ACCOUNT_ID"
+              },
+              {
+                "name": "COMPANY_ID",
+                "dataType": "double",
+                "sourceColumn": "COMPANY_ID"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = #\"SQL/p21d18102583001 database windows net;p21d18102583002\",",
+                    "    dbo_GTP_ENTITY_ACC = Source{[Schema=\"dbo\",Item=\"GTP_ENTITY_ACC\"]}[Data]",
+                    "in",
+                    "    dbo_GTP_ENTITY_ACC"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "Dim_GTP_ACCOUNT",
+            "columns": [
+              {
+                "name": "ACCOUNT_ID",
+                "dataType": "double",
+                "sourceColumn": "ACCOUNT_ID"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = #\"SQL/p21d18102583001 database windows net;p21d18102583002\",",
+                    "    dbo_GTP_ACCOUNT = Source{[Schema=\"dbo\",Item=\"GTP_ACCOUNT\"]}[Data],",
+                    "    #\"Removed Other Columns\" = Table.SelectColumns(dbo_GTP_ACCOUNT,{\"ACCOUNT_ID\"})",
+                    "in",
+                    "    #\"Removed Other Columns\""
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "USR_FULL_CountryName1",
+            "columns": [
+              {
+                "name": "Country",
+                "dataType": "string",
+                "sourceColumn": "Country"
+              },
+              {
+                "name": "Code",
+                "dataType": "string",
+                "sourceColumn": "Code"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText(\"bVjBkuJGEv0VxZzsiLHD4cueQYCgkdRqJOjttn0oRA3UIKmYktRtuPtbNnzfP5gf28x6KUazuxci8lVJynz5MiuL3377MPl0PKnGtJ1qPnz8MFl8+OMjgdWeMMVALMBROw/MXgHUZJeqCXJVW78xB94crHMemAlwtJW3Hwe7NxWQlSCdcmVHb2PsacDMsVeBag7BVLl9f/CLERbdUdN646GNQLUWhxMB+r03n2H2bedUhR3bbxCAAsBNu70yn0EEwpyqk6pVS8A0HwCnDO+YLgVojpU66PbE2EwwetHB+semQHSlXO+BlwE4mr5mYD4A5qbZli9TPP4zD2K6GiRMEeD01CNlU3g/tZV58+FMHwVolHH6Y5CbpgvmFK3qTN96SnPlyZk+yc6WuPMLS+1u+mjfQO50Iutd+66APAvSv+kuWLUVPcTwDrBTN1OxvRHbdKY9BavmYEgqj6Wm30I7gq270r6VuOr6RptgxhS1qlKelhRLfXVUSNM0EsSdyb1goVrL6GJAe/oKA1BVqPY22Gl3YE7DnWD13h78y9bLAdHOWuYxTARplOc5nIh9rclrhMoJXCOBIUmQFBVMPqEONvrS7ytT8pNwKTwp5qaYiWUq70o8mJ7QMBXTUQmS0r5xGv4TK7a0bfDDWpM+muOPI0fCUDZUtt77oMJHQWrrvPrWEpOlIuT12fdmJKY9j1+7FpQEE2xQlSHyGTpLGmJgKQCKLNyK5dTXfyn/augkvF6g+lBIu+nyBFeh8vDrvzsdHH7vf/nl13+s3iwJlheRwpluauXO3HTg0+yz2du+4yzPUBYzW5sGPs6S75DvMjIDMfOyp7J0BMzB3fx4vXRsgol5RZVRvcmeHKKZf+kVydVQrqPeNJq/FaFw5iRk54E5+Ji3nUUbms8FeCfGGvY4R8Tz7mTsBXtQuQtVnZn8UQ4Wa1lxVo9hhLEwn/mFiwexGlHMArQtnGpKpnGxEVs35YmdRw1HizGc2era6NY7lH23khPVJ+2+VazR7ESBTRHVF5dNNBFTNBghDZG27ghgLoCjOuKinwlwEndQiZHZUznRScAQAomc1j6QaHO3h1ijeICkXCNoO6IM68r2F/9cNmDcUaLtYHW6Vv4EigqBKMxWs3NRJMiQ6XRk/zQ11J96hp8FvkoQ0PdSGa/OJd671MoNafXtNSln1JWrcaqX4GtJaQhyzV7vJoI0ByoovycdkGOwph+GoJBl31B7ZMeXiG5VamFohQPL914208G0Q7pXoGzl/Dmy2gzWF7aexLq/Dlkjx3VgPwUJnkkEdEpz318hK6tOVb69g4YHOkJRow+JABf/+APy86AdyH/ANx6sO2Adel+rmzqfZEJZo4zWurn6Po5H1saZvfLcryGetUVlrrPvTUS57t8pVWwjkeurO15vwyeggVjZINP2Umm0J85EPJGlDmdtjB4Ra5qXfDnEUwFa2524E8ZIQ2z2MkDFmwHwAcQvYlJn7HTTdtof+/FK4O7UyygWg824/1PTMdY7lkGMrCeq9G03eRTzoI6qLX0xJZFglXpnfpLnu32FDpKXATmYN1/jyW5A/BPxYHV+eyGma0+qqkZaTpbDCve8Lz2rOXkSrKceIpEkmxFm/AGRDIFcbdfxcy/yFf2nKX1oOA4TU7q7gBeQU2Krg33zL54J0Cg8FA42DaH4dDogRLY+Or9rfsdaanWKdZHkgjlb4lUTAW7c6SQ2aDGhJlCDaziUqtqgG6YTAWg8YROBp/qiuFzSTEzuswOJaSzgexCqSh/kQEnDO/yqlRRlCgdSqi6naF5maCUQDexszr+ZeE8kgI8gBe2pdZ9sdf42fKSLAccRkPAMRkPXKNfZsONdce2mkN5j7UvoEURk6jzcLLK1IJVvoNnzYOqWxMJjKs2n3Fp4MZfFhjoH2xOxL3QlYAbu7TmLZMWHz35kEHOmPeEZws9o+DKXCz3ErmeQaWa6kiZk7xxUQWchws9isV3XH32qMsgxo5OiszwWsSYypPNJ4dh6gpvD3MFt0hNI7JX3PCbgYWNrKYYNiNvQ6MtD8kIfNEnQ+G6yQXo2NH37Q24D1jZf/+4b2YEAc8VDPt07utPXvytdMxPTeLS01BWdlB+DSVtSk8Gz+XK0YW26DpeDVL8ZPzymo+W4L9GEwhGIQuegFiM0M1REGucdF0rlP5Yloy07QxNKw3W2G96HW+RzLiYk1zDL+fCkDQpb48UZrZXGH/J5Icv9wQQTp1B4OXKRc5H7BOYSDd3xQLt8SV/Lk64qL4xcnOEAVBBrajSMCo80fquL9QNqHg0Qk0AsaM8nWlReUTM6w4v1HZHraY7yzHlot+NrRT6VhVquqfmjADSFyS2D0NfJCB0NWfkIznscn7mAF1xY52I6E8SqOftsin/DAzMxiV26GDEChedvqtrzLMPcP/jkXBEyZtD8nVTrbZHju+luaGkEhqKzK/cQn6LxbJ6jYAtl3r0TxbPYn829eRQPgjU3qZoCna84KSNfKfCVwtDl5yc6f/0pUiB3hfUXniIS66zRhYq1AJRaNkF5QeGbg0K0hd0rPAydFVR5OH2KVAB39tNLsbnb/GfE4HpyR1FeIc1Cth1lvghlB5HsncLhuz1K0W/h9fbMfzxwUFtoYNuYTh/A57w21DS8iCfz8eqaVHuwfvydjnHfbVsq0Ma64LHvqittHDm1Tf53N8PQ0Nb10m63yN72ttf3bG2Rm51qaNTmiHZoYzsqxhv1Aw5qBy93RndB6sfzXSoISfpeGMEP8h/Cj7wj+r87tj/nP/tllNYzzSQGVC/6rvfj+TP60zOrwvF/Vifl/6OaQzMvuvbqfYFTr8Nd5hUkvJp6r/bvTP0rxPn1r/+6sE2o9P/4Dw==\", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type text) meta [Serialized.Text = true]) in type table [Country = _t, Code = _t]),",
+                    "    #\"Changed Type\" = Table.TransformColumnTypes(Source,{{\"Country\", type text}, {\"Code\", type text}})",
+                    "in",
+                    "    #\"Changed Type\""
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "DIM_GTP_COMPANY1",
+            "columns": [
+              {
+                "name": "COMPANY_ID",
+                "dataType": "double",
+                "sourceColumn": "COMPANY_ID"
+              },
+              {
+                "name": "ABBV_NAME",
+                "dataType": "string",
+                "sourceColumn": "ABBV_NAME"
+              },
+              {
+                "name": "COUNTRY",
+                "dataType": "string",
+                "sourceColumn": "COUNTRY"
+              },
+              {
+                "type": "calculated",
+                "name": "Country Name",
+                "dataType": "string",
+                "isDataTypeInferred": true,
+                "expression": "RELATED(USR_FULL_CountryName1[Country])"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = #\"SQL/p21d18102583001 database windows net;p21d18102583002\",",
+                    "    dbo_GTP_COMPANY = Source{[Schema=\"dbo\",Item=\"GTP_COMPANY\"]}[Data],",
+                    "    #\"Removed Other Columns\" = Table.SelectColumns(dbo_GTP_COMPANY,{\"COMPANY_ID\", \"ABBV_NAME\", \"COUNTRY\"})",
+                    "in",
+                    "    #\"Removed Other Columns\""
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "DIM_Bank_base_currency",
+            "columns": [
+              {
+                "name": "Base_ccy",
+                "dataType": "string",
+                "sourceColumn": "Base_ccy"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = #\"SQL/p21d18102583001 database windows net;p21d18102583002\",",
+                    "    dbo_Bank_base_currency = Source{[Schema=\"dbo\",Item=\"Bank_base_currency\"]}[Data]",
+                    "in",
+                    "    dbo_Bank_base_currency"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "DIM_Bank_base_currency_CT",
+            "columns": [
+              {
+                "name": "Base_Ccy",
+                "dataType": "string",
+                "sourceColumn": "Base_Ccy"
+              },
+              {
+                "name": "CCY_ID",
+                "dataType": "int64",
+                "sourceColumn": "CCY_ID"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = #\"SQL/p21d18102583001 database windows net;p21d18102583002\",",
+                    "    dbo_Bank_base_currency = Source{[Schema=\"dbo\",Item=\"Bank_base_currency\"]}[Data]",
+                    "in",
+                    "    dbo_Bank_base_currency"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "Configuration_table",
+            "columns": [
+              {
+                "name": "Configuration_Column",
+                "dataType": "string",
+                "sourceColumn": "Configuration_Column"
+              },
+              {
+                "name": "Configuration_Value",
+                "dataType": "string",
+                "sourceColumn": "Configuration_Value"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = #\"SQL/p21d18102583001 database windows net;p21d18102583002\",",
+                    "    dbo_Configuration_table = Source{[Schema=\"dbo\",Item=\"Configuration_table\"]}[Data]",
+                    "in",
+                    "    dbo_Configuration_table"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "FCC_Exchange_Corp",
+            "columns": [
+              {
+                "name": "Company_ID",
+                "dataType": "double",
+                "sourceColumn": "Company_ID"
+              },
+              {
+                "name": "Ref_ID",
+                "dataType": "string",
+                "sourceColumn": "Ref_ID"
+              },
+              {
+                "name": "PRODUCT_CODE",
+                "dataType": "string",
+                "sourceColumn": "PRODUCT_CODE"
+              },
+              {
+                "name": "Amount",
+                "dataType": "double",
+                "sourceColumn": "Amount"
+              },
+              {
+                "name": "Available_Amount",
+                "dataType": "double",
+                "sourceColumn": "Available_Amount"
+              },
+              {
+                "name": "Utilized_Amount",
+                "dataType": "double",
+                "sourceColumn": "Utilized_Amount"
+              },
+              {
+                "name": "Collection_Amount",
+                "dataType": "double",
+                "sourceColumn": "Collection_Amount"
+              },
+              {
+                "name": "COUNTRY",
+                "dataType": "string",
+                "sourceColumn": "COUNTRY"
+              },
+              {
+                "name": "BENEFICIARY",
+                "dataType": "string",
+                "sourceColumn": "BENEFICIARY"
+              },
+              {
+                "name": "COMPANY",
+                "dataType": "string",
+                "sourceColumn": "COMPANY"
+              },
+              {
+                "name": "ENTITY",
+                "dataType": "string",
+                "sourceColumn": "ENTITY"
+              },
+              {
+                "name": "Drawee",
+                "dataType": "string",
+                "sourceColumn": "Drawee"
+              },
+              {
+                "name": "Drawee_Name",
+                "dataType": "string",
+                "sourceColumn": "Drawee_Name"
+              },
+              {
+                "name": "Type_code",
+                "dataType": "string",
+                "sourceColumn": "Type_code"
+              },
+              {
+                "name": "Currency",
+                "dataType": "string",
+                "sourceColumn": "Currency"
+              },
+              {
+                "name": "sub_product",
+                "dataType": "string",
+                "sourceColumn": "sub_product"
+              },
+              {
+                "name": "ISSUEDATE",
+                "dataType": "dateTime",
+                "sourceColumn": "ISSUEDATE"
+              },
+              {
+                "name": "To_CCY",
+                "dataType": "string",
+                "sourceColumn": "To_CCY"
+              },
+              {
+                "name": "CCY_ID",
+                "dataType": "string",
+                "sourceColumn": "CCY_ID"
+              },
+              {
+                "name": "Fin_Type",
+                "dataType": "int64",
+                "sourceColumn": "Fin_Type"
+              },
+              {
+                "name": "Product_status_code",
+                "dataType": "string",
+                "sourceColumn": "Product_status_code"
+              },
+              {
+                "name": "Tenor_type",
+                "dataType": "int64",
+                "sourceColumn": "Tenor_type"
+              },
+              {
+                "name": "Fin_Req_Amt",
+                "dataType": "double",
+                "sourceColumn": "Fin_Req_Amt"
+              },
+              {
+                "name": "Fin_Req_Cur",
+                "dataType": "string",
+                "sourceColumn": "Fin_Req_Cur"
+              },
+              {
+                "name": "Fin_Rep_Amt",
+                "dataType": "double",
+                "sourceColumn": "Fin_Rep_Amt"
+              },
+              {
+                "name": "Fin_Rep_Cur",
+                "dataType": "string",
+                "sourceColumn": "Fin_Rep_Cur"
+              },
+              {
+                "name": "Buyer_NAME",
+                "dataType": "string",
+                "sourceColumn": "Buyer_NAME"
+              },
+              {
+                "name": "Seller_NAME",
+                "dataType": "string",
+                "sourceColumn": "Seller_NAME"
+              },
+              {
+                "name": "Facility",
+                "dataType": "string",
+                "sourceColumn": "Facility"
+              },
+              {
+                "name": "Maturity_Date",
+                "dataType": "dateTime",
+                "sourceColumn": "Maturity_Date"
+              },
+              {
+                "name": "Status",
+                "dataType": "string",
+                "sourceColumn": "Status"
+              },
+              {
+                "name": "Buyer_Country",
+                "dataType": "string",
+                "sourceColumn": "Buyer_Country"
+              },
+              {
+                "name": "Seller_Country",
+                "dataType": "string",
+                "sourceColumn": "Seller_Country"
+              },
+              {
+                "name": "Risk_type",
+                "dataType": "string",
+                "sourceColumn": "Risk_type"
+              },
+              {
+                "name": "Repricing_date",
+                "dataType": "dateTime",
+                "sourceColumn": "Repricing_date"
+              },
+              {
+                "name": "BO_Deal_name",
+                "dataType": "string",
+                "sourceColumn": "BO_Deal_name"
+              },
+              {
+                "name": "Pricing_option",
+                "dataType": "string",
+                "sourceColumn": "Pricing_option"
+              },
+              {
+                "name": "Due_date",
+                "dataType": "dateTime",
+                "sourceColumn": "Due_date"
+              },
+              {
+                "name": "Last_ship_date",
+                "dataType": "dateTime",
+                "sourceColumn": "Last_ship_date"
+              },
+              {
+                "name": "FSCM_PROGRAMME_CODE",
+                "dataType": "string",
+                "sourceColumn": "FSCM_PROGRAMME_CODE"
+              },
+              {
+                "name": "PROGRAM_ID",
+                "dataType": "double",
+                "sourceColumn": "PROGRAM_ID"
+              },
+              {
+                "name": "SCF_Grouping",
+                "dataType": "string",
+                "sourceColumn": "SCF_Grouping"
+              },
+              {
+                "name": "PO_Beneficiary",
+                "dataType": "string",
+                "sourceColumn": "PO_Beneficiary"
+              },
+              {
+                "name": "Last_ship_year",
+                "dataType": "int64",
+                "sourceColumn": "Last_ship_year"
+              },
+              {
+                "name": "Last_ship_month",
+                "dataType": "string",
+                "sourceColumn": "Last_ship_month"
+              },
+              {
+                "name": "Last_ship_qtr",
+                "dataType": "string",
+                "sourceColumn": "Last_ship_qtr"
+              },
+              {
+                "name": "Due_month",
+                "dataType": "string",
+                "sourceColumn": "Due_month"
+              },
+              {
+                "name": "Due_qtr",
+                "dataType": "string",
+                "sourceColumn": "Due_qtr"
+              },
+              {
+                "name": "Loan Type",
+                "dataType": "string",
+                "sourceColumn": "Loan Type"
+              },
+              {
+                "name": "Last_ship_month_sort",
+                "dataType": "int64",
+                "sourceColumn": "Last_ship_month_sort"
+              },
+              {
+                "name": "Due_year",
+                "dataType": "int64",
+                "sourceColumn": "Due_year"
+              },
+              {
+                "name": "Due_month_sort",
+                "dataType": "int64",
+                "sourceColumn": "Due_month_sort"
+              },
+              {
+                "name": "Rep_year",
+                "dataType": "int64",
+                "sourceColumn": "Rep_year"
+              },
+              {
+                "name": "Rep_month",
+                "dataType": "string",
+                "sourceColumn": "Rep_month"
+              },
+              {
+                "name": "Rep_Qtr",
+                "dataType": "string",
+                "sourceColumn": "Rep_Qtr"
+              },
+              {
+                "name": "Rep_sort",
+                "dataType": "int64",
+                "sourceColumn": "Rep_sort"
+              },
+              {
+                "name": "FinType Description",
+                "dataType": "string",
+                "sourceColumn": "FinType Description"
+              },
+              {
+                "name": "TenorType Description",
+                "dataType": "string",
+                "sourceColumn": "TenorType Description"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = #\"SQL/p21d18102583001 database windows net;p21d18102583002\",",
+                    "    dbo_FCC_Exchange_Corp = Source{[Schema=\"dbo\",Item=\"FCC_Exchange_Corp\"]}[Data],",
+                    "    #\"Added Conditional Column\" = Table.AddColumn(dbo_FCC_Exchange_Corp, \"SCF_Grouping\", each if [PRODUCT_CODE] = \"IN\" then \"Receivables\" else if [PRODUCT_CODE] = \"IP\" then \"Payables\" else if [PRODUCT_CODE] = \"PO\" then \"Orders\" else if [PRODUCT_CODE] = \"SO\" then \"Orders\" else \"Null\"),",
+                    "    #\"Filtered Rows\" = Table.SelectRows(#\"Added Conditional Column\", each true),",
+                    "    #\"Added Conditional Column1\" = Table.AddColumn(#\"Filtered Rows\", \"PO_Beneficiary\", each if [PRODUCT_CODE] = \"IN\" then [Buyer_NAME] else if [PRODUCT_CODE] = \"IP\" then [Seller_NAME] else if [PRODUCT_CODE] = \"SO\" then [Buyer_NAME] else if [PRODUCT_CODE] = \"PO\" then [Seller_NAME] else \"Null\"),",
+                    "    #\"Added Conditional Column2\" = Table.AddColumn(#\"Added Conditional Column1\", \"Loan Type\", each if [Risk_type] = \"LOANS\" then \"Loan\" else if [Risk_type] = \"SWNG\" then \"Swingline\" else null),",
+                    "    #\"Duplicated Column\" = Table.DuplicateColumn(#\"Added Conditional Column2\", \"Last_ship_date\", \"Last_ship_date - Copy\"),",
+                    "    #\"Duplicated Column1\" = Table.DuplicateColumn(#\"Duplicated Column\", \"Last_ship_date\", \"Last_ship_date - Copy.1\"),",
+                    "    #\"Extracted Year\" = Table.TransformColumns(#\"Duplicated Column1\",{{\"Last_ship_date - Copy\", Date.Year, Int64.Type}}),",
+                    "    #\"Renamed Columns\" = Table.RenameColumns(#\"Extracted Year\",{{\"Last_ship_date - Copy\", \"Last_ship_year\"}}),",
+                    "    #\"Extracted Month Name\" = Table.TransformColumns(#\"Renamed Columns\", {{\"Last_ship_date - Copy.1\", each Date.MonthName(_), type text}}),",
+                    "    #\"Extracted First Characters\" = Table.TransformColumns(#\"Extracted Month Name\", {{\"Last_ship_date - Copy.1\", each Text.Start(_, 3), type text}}),",
+                    "    #\"Renamed Columns1\" = Table.RenameColumns(#\"Extracted First Characters\",{{\"Last_ship_date - Copy.1\", \"Last_ship_month\"}}),",
+                    "    #\"Duplicated Column2\" = Table.DuplicateColumn(#\"Renamed Columns1\", \"Last_ship_year\", \"Last_ship_year - Copy\"),",
+                    "    #\"Merged Columns\" = Table.CombineColumns(Table.TransformColumnTypes(#\"Duplicated Column2\", {{\"Last_ship_year - Copy\", type text}}, \"en-US\"),{\"Last_ship_month\", \"Last_ship_year - Copy\"},Combiner.CombineTextByDelimiter(\" \", QuoteStyle.None),\"Last_ship_month.1\"),",
+                    "    #\"Renamed Columns2\" = Table.RenameColumns(#\"Merged Columns\",{{\"Last_ship_month.1\", \"Last_ship_month\"}}),",
+                    "    #\"Duplicated Column3\" = Table.DuplicateColumn(#\"Renamed Columns2\", \"Last_ship_date\", \"Last_ship_date - Copy\"),",
+                    "    #\"Calculated Quarter\" = Table.TransformColumns(#\"Duplicated Column3\",{{\"Last_ship_date - Copy\", Date.QuarterOfYear, Int64.Type}}),",
+                    "    #\"Added Prefix\" = Table.TransformColumns(#\"Calculated Quarter\", {{\"Last_ship_date - Copy\", each \"Qtr \" & Text.From(_, \"en-US\"), type text}}),",
+                    "    #\"Duplicated Column4\" = Table.DuplicateColumn(#\"Added Prefix\", \"Last_ship_year\", \"Last_ship_year - Copy\"),",
+                    "    #\"Merged Columns1\" = Table.CombineColumns(Table.TransformColumnTypes(#\"Duplicated Column4\", {{\"Last_ship_year - Copy\", type text}}, \"en-US\"),{\"Last_ship_date - Copy\", \"Last_ship_year - Copy\"},Combiner.CombineTextByDelimiter(\" \", QuoteStyle.None),\"Last_ship_qtr\"),",
+                    "    #\"Duplicated Column5\" = Table.DuplicateColumn(#\"Merged Columns1\", \"Last_ship_date\", \"Last_ship_date - Copy\"),",
+                    "    #\"Extracted Month\" = Table.TransformColumns(#\"Duplicated Column5\",{{\"Last_ship_date - Copy\", Date.Month, Int64.Type}}),",
+                    "    #\"Renamed Columns3\" = Table.RenameColumns(#\"Extracted Month\",{{\"Last_ship_date - Copy\", \"Last_ship_month_sort\"}}),",
+                    "    #\"Duplicated Column6\" = Table.DuplicateColumn(#\"Renamed Columns3\", \"Due_date\", \"Due_date - Copy\"),",
+                    "    #\"Duplicated Column7\" = Table.DuplicateColumn(#\"Duplicated Column6\", \"Due_date\", \"Due_date - Copy.1\"),",
+                    "    #\"Extracted Year1\" = Table.TransformColumns(#\"Duplicated Column7\",{{\"Due_date - Copy\", Date.Year, Int64.Type}}),",
+                    "    #\"Renamed Columns4\" = Table.RenameColumns(#\"Extracted Year1\",{{\"Due_date - Copy\", \"Due_year\"}}),",
+                    "    #\"Extracted Month Name1\" = Table.TransformColumns(#\"Renamed Columns4\", {{\"Due_date - Copy.1\", each Date.MonthName(_), type text}}),",
+                    "    #\"Extracted First Characters1\" = Table.TransformColumns(#\"Extracted Month Name1\", {{\"Due_date - Copy.1\", each Text.Start(_, 3), type text}}),",
+                    "    #\"Renamed Columns5\" = Table.RenameColumns(#\"Extracted First Characters1\",{{\"Due_date - Copy.1\", \"Due_month\"}}),",
+                    "    #\"Duplicated Column8\" = Table.DuplicateColumn(#\"Renamed Columns5\", \"Due_date\", \"Due_date - Copy\"),",
+                    "    #\"Calculated Quarter1\" = Table.TransformColumns(#\"Duplicated Column8\",{{\"Due_date - Copy\", Date.QuarterOfYear, Int64.Type}}),",
+                    "    #\"Added Prefix1\" = Table.TransformColumns(#\"Calculated Quarter1\", {{\"Due_date - Copy\", each \"Qtr \" & Text.From(_, \"en-US\"), type text}}),",
+                    "    #\"Duplicated Column9\" = Table.DuplicateColumn(#\"Added Prefix1\", \"Due_year\", \"Due_year - Copy\"),",
+                    "    #\"Merged Columns2\" = Table.CombineColumns(Table.TransformColumnTypes(#\"Duplicated Column9\", {{\"Due_year - Copy\", type text}}, \"en-US\"),{\"Due_date - Copy\", \"Due_year - Copy\"},Combiner.CombineTextByDelimiter(\" \", QuoteStyle.None),\"Due_qtr\"),",
+                    "    #\"Duplicated Column10\" = Table.DuplicateColumn(#\"Merged Columns2\", \"Due_date\", \"Due_date - Copy\"),",
+                    "    #\"Extracted Month1\" = Table.TransformColumns(#\"Duplicated Column10\",{{\"Due_date - Copy\", Date.Month, Int64.Type}}),",
+                    "    #\"Renamed Columns6\" = Table.RenameColumns(#\"Extracted Month1\",{{\"Due_date - Copy\", \"Due_month_sort\"}}),",
+                    "    #\"Duplicated Column11\" = Table.DuplicateColumn(#\"Renamed Columns6\", \"Due_year\", \"Due_year - Copy\"),",
+                    "    #\"Reordered Columns\" = Table.ReorderColumns(#\"Duplicated Column11\",{\"Company_ID\", \"Ref_ID\", \"PRODUCT_CODE\", \"Amount\", \"Available_Amount\", \"Utilized_Amount\", \"Collection_Amount\", \"COUNTRY\", \"BENEFICIARY\", \"COMPANY\", \"ENTITY\", \"Drawee\", \"Drawee_Name\", \"Type_code\", \"Currency\", \"sub_product\", \"ISSUEDATE\", \"To_CCY\", \"CCY_ID\", \"Fin_Type\", \"Product_status_code\", \"Tenor_type\", \"Fin_Req_Amt\", \"Fin_Req_Cur\", \"Fin_Rep_Amt\", \"Fin_Rep_Cur\", \"Buyer_NAME\", \"Seller_NAME\", \"Facility\", \"Maturity_Date\", \"Status\", \"Buyer_Country\", \"Seller_Country\", \"Risk_type\", \"Repricing_date\", \"BO_Deal_name\", \"Pricing_option\", \"Due_date\", \"Last_ship_date\", \"FSCM_PROGRAMME_CODE\", \"PROGRAM_ID\", \"SCF_Grouping\", \"PO_Beneficiary\", \"Loan Type\", \"Last_ship_year\", \"Last_ship_month\", \"Last_ship_qtr\", \"Last_ship_month_sort\", \"Due_year\", \"Due_month\", \"Due_year - Copy\", \"Due_qtr\", \"Due_month_sort\"}),",
+                    "    #\"Merged Columns3\" = Table.CombineColumns(Table.TransformColumnTypes(#\"Reordered Columns\", {{\"Due_year - Copy\", type text}}, \"en-US\"),{\"Due_month\", \"Due_year - Copy\"},Combiner.CombineTextByDelimiter(\" \", QuoteStyle.None),\"Due_month.1\"),",
+                    "    #\"Renamed Columns7\" = Table.RenameColumns(#\"Merged Columns3\",{{\"Due_month.1\", \"Due_month\"}}),",
+                    "    #\"Duplicated Column12\" = Table.DuplicateColumn(#\"Renamed Columns7\", \"Repricing_date\", \"Repricing_date - Copy\"),",
+                    "    #\"Duplicated Column13\" = Table.DuplicateColumn(#\"Duplicated Column12\", \"Repricing_date - Copy\", \"Repricing_date - Copy - Copy\"),",
+                    "    #\"Extracted Year2\" = Table.TransformColumns(#\"Duplicated Column13\",{{\"Repricing_date - Copy\", Date.Year, Int64.Type}}),",
+                    "    #\"Renamed Columns8\" = Table.RenameColumns(#\"Extracted Year2\",{{\"Repricing_date - Copy\", \"Rep_year\"}}),",
+                    "    #\"Extracted Month Name2\" = Table.TransformColumns(#\"Renamed Columns8\", {{\"Repricing_date - Copy - Copy\", each Date.MonthName(_), type text}}),",
+                    "    #\"Extracted First Characters2\" = Table.TransformColumns(#\"Extracted Month Name2\", {{\"Repricing_date - Copy - Copy\", each Text.Start(_, 3), type text}}),",
+                    "    #\"Duplicated Column14\" = Table.DuplicateColumn(#\"Extracted First Characters2\", \"Rep_year\", \"Rep_year - Copy\"),",
+                    "    #\"Merged Columns4\" = Table.CombineColumns(Table.TransformColumnTypes(#\"Duplicated Column14\", {{\"Rep_year - Copy\", type text}}, \"en-US\"),{\"Repricing_date - Copy - Copy\", \"Rep_year - Copy\"},Combiner.CombineTextByDelimiter(\" \", QuoteStyle.None),\"Rep_month\"),",
+                    "    #\"Duplicated Column15\" = Table.DuplicateColumn(#\"Merged Columns4\", \"Repricing_date\", \"Repricing_date - Copy\"),",
+                    "    #\"Calculated Quarter2\" = Table.TransformColumns(#\"Duplicated Column15\",{{\"Repricing_date - Copy\", Date.QuarterOfYear, Int64.Type}}),",
+                    "    #\"Added Prefix2\" = Table.TransformColumns(#\"Calculated Quarter2\", {{\"Repricing_date - Copy\", each \"Qtr \" & Text.From(_, \"en-US\"), type text}}),",
+                    "    #\"Duplicated Column16\" = Table.DuplicateColumn(#\"Added Prefix2\", \"Rep_year\", \"Rep_year - Copy\"),",
+                    "    #\"Merged Columns5\" = Table.CombineColumns(Table.TransformColumnTypes(#\"Duplicated Column16\", {{\"Rep_year - Copy\", type text}}, \"en-US\"),{\"Repricing_date - Copy\", \"Rep_year - Copy\"},Combiner.CombineTextByDelimiter(\" \", QuoteStyle.None),\"Rep_Qtr\"),",
+                    "    #\"Duplicated Column17\" = Table.DuplicateColumn(#\"Merged Columns5\", \"Repricing_date\", \"Repricing_date - Copy\"),",
+                    "    #\"Extracted Month2\" = Table.TransformColumns(#\"Duplicated Column17\",{{\"Repricing_date - Copy\", Date.Month, Int64.Type}}),",
+                    "    #\"Renamed Columns9\" = Table.RenameColumns(#\"Extracted Month2\",{{\"Repricing_date - Copy\", \"Rep_sort\"}}),",
+                    "    #\"Added Conditional Column3\" = Table.AddColumn(#\"Renamed Columns9\", \"FinType Description\", each if [Fin_Type] = 1 then \"Import Financing\" else if [Fin_Type] = 2 then \"Export Financing\" else if [Fin_Type] = 99 then \"Other\" else \"Null\"),",
+                    "    #\"Added Conditional Column4\" = Table.AddColumn(#\"Added Conditional Column3\", \"TenorType Description\", each if [Tenor_type] = 1 then \"Sight\" else if [Tenor_type] = 2 then \"Acceptance\" else if [Tenor_type] = 3 then \"Pour Aval\" else \"Null\")",
+                    "in",
+                    "    #\"Added Conditional Column4\""
+                  ]
+                }
+              }
+            ],
+            "measures": [
+              {
+                "name": "Completed",
+                "expression": " CALCULATE(sum(FCC_Exchange_Corp[Amount]),FCC_Exchange_Corp[Product_Status_Code] in {\"E0\",\"E6\"})"
+              },
+              {
+                "name": "In Progress",
+                "expression": " CALCULATE(sum(FCC_Exchange_Corp[Amount]),not  FCC_Exchange_Corp[Product_Status_Code] in{\"E0\",\"E6\"})"
+              },
+              {
+                "name": "Number of Loan",
+                "expression": " CALCULATE(DISTINCTCOUNT(FCC_Exchange_Corp[Ref_ID]),filter(FCC_Exchange_Corp,FCC_Exchange_Corp[PRODUCT_CODE]=\"LN\"))"
+              }
+            ]
+          },
+          {
+            "name": "USR_ACCOUNT_DESCRIPTION_FACT_CORP 1",
+            "columns": [
+              {
+                "name": "Account_Type",
+                "dataType": "int64",
+                "sourceColumn": "Account_Type"
+              },
+              {
+                "name": "Description",
+                "dataType": "string",
+                "sourceColumn": "Description"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText(\"ZdA9DsMgDAXgqyDmDKT/GSk4LSoxkSGtqij3v0ZNO0RO1/dhnuV51sboRl8BoQ8uWHor61yasOilYWwZ3UQEWCTsGDyMKYcN7BmyfQa8ZQkHhpgsyvTIaQEa1OYz9eNT7SfwDM6Sl7PnijZGZdErTCU4kA8u3116UA+AkTeS2rH2Mb1E2pq1UeTtmv8P1WtkKCXCsL1UV2tSuQPpZfkA\", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type text) meta [Serialized.Text = true]) in type table [Account_Type = _t, Description = _t]),",
+                    "    #\"Changed Type\" = Table.TransformColumnTypes(Source,{{\"Account_Type\", Int64.Type}, {\"Description\", type text}}),",
+                    "    #\"Capitalized Each Word\" = Table.TransformColumns(#\"Changed Type\",{{\"Description\", Text.Proper, type text}})",
+                    "in",
+                    "    #\"Capitalized Each Word\""
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "USR_CORP_PROD_DESC",
+            "columns": [
+              {
+                "name": "Product Code",
+                "dataType": "string",
+                "sourceColumn": "Product Code"
+              },
+              {
+                "name": "Product Description",
+                "dataType": "string",
+                "sourceColumn": "Product Description"
+              },
+              {
+                "name": "Product Grouping",
+                "dataType": "string",
+                "sourceColumn": "Product Grouping"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText(\"jVLLbsIwEPyVVc4cUC89l5CgqFGJMDfKwcRLsUjWkR+0+fvapBBc0YrjPLSeHe9mk8wWySSZcTqifnfT6dOzgYXjmpNF9Mpac4HJduKNr8HomiMstUDtQcrNYZBWf8+AFdYoTyiiYVnqYfbVKW1hrmrXIlmue0hV02BtpaLYXo72Eq1FDWoPqUYhbWTM1x7mjgR4jsz+nHOUi/Bs0T76bPEW7HRSsg5dsDQf6GqkoeI93zWRvDrLn1wLv3wrreVUx12WNzn+3acsPBwdBQlsSdr+zJKQ9DHYQtBScfrNs0D4mGTiANXSw8rp+sANDh8KL13X9Dd7sCwArJ1GyFoum2gCC3fDDrLr/GPRyVzPgoXwhTEOBTBfgtj1l22Xd7dl91KJU9w+C/Vejuqxuet5gKhbmGOnzI+K3DjdD4b84odckv+uUOB1wvYb\", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [#\"Product Code\" = _t, #\"Product Description\" = _t, #\"Product Grouping\" = _t]),",
+                    "    #\"Changed Type\" = Table.TransformColumnTypes(Source,{{\"Product Code\", type text}, {\"Product Description\", type text}, {\"Product Grouping\", type text}})",
+                    "in",
+                    "    #\"Changed Type\""
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "USR_PRODUCT_DESCRIPTION",
+            "columns": [
+              {
+                "name": "Product Code",
+                "dataType": "string",
+                "sourceColumn": "Product Code"
+              },
+              {
+                "name": "Product Description",
+                "dataType": "string",
+                "sourceColumn": "Product Description"
+              },
+              {
+                "name": "Product Grouping",
+                "dataType": "string",
+                "sourceColumn": "Product Grouping"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText(\"jVLLbsIwEPyVVc4cUC89l5CgqFGJMDfKwcRLsUjWkR+0+fvapBBc0YrjPLSeHe9mk8wWySSZcTqifnfT6dOzgYXjmpNF9Mpac4HJduKNr8HomiMstUDtQcrNYZBWf8+AFdYoTyiiYVnqYfbVKW1hrmrXIlmue0hV02BtpaLYXo72Eq1FDWoPqUYhbWTM1x7mjgR4jsz+nHOUi/Bs0T76bPEW7HRSsg5dsDQf6GqkoeI93zWRvDrLn1wLv3wrreVUx12WNzn+3acsPBwdBQlsSdr+zJKQ9DHYQtBScfrNs0D4mGTiANXSw8rp+sANDh8KL13X9Dd7sCwArJ1GyFoum2gCC3fDDrLr/GPRyVzPgoXwhTEOBTBfgtj1l22Xd7dl91KJU9w+C/Vejuqxuet5gKhbmGOnzI+K3DjdD4b84odckv+uUOB1wvYb\", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [#\"Product Code\" = _t, #\"Product Description\" = _t, #\"Product Grouping\" = _t]),",
+                    "    #\"Changed Type\" = Table.TransformColumnTypes(Source,{{\"Product Code\", type text}, {\"Product Description\", type text}, {\"Product Grouping\", type text}})",
+                    "in",
+                    "    #\"Changed Type\""
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "USR_PRODUCT_DESCRIPTION_GROUPING",
+            "columns": [
+              {
+                "name": "Product Code",
+                "dataType": "string",
+                "sourceColumn": "Product Code"
+              },
+              {
+                "name": "Sub-Product Code",
+                "dataType": "string",
+                "sourceColumn": "Sub-Product Code"
+              },
+              {
+                "name": "Product Description",
+                "dataType": "string",
+                "sourceColumn": "Product Description"
+              },
+              {
+                "name": "Product Grouping",
+                "dataType": "string",
+                "sourceColumn": "Product Grouping"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText(\"jZPLbsIwEEV/xcqaBeqm65IHihpBFGdHWZh4KBaJHflBm7+vg02KW0BIkSznnhmP74w3m2ixjGaR/RaEH0F+mPn85VWhpSGScA1glVoSCtF2Ztl3z5r2iNaSgrSbmKiDU6uHmVAFDbAT0CBlGrug9LsXUqNENKYDrokcUCzaFhrNBA8jiiCiAK1BIrFHsQTKdMBm9bity3HJDKfISlztz3X/pfLVM1R1DwOijByuyTp5jrwBTZ7m3p68e9aefOUj+EmwZuwfjjOnlIGCSjKQXRsQ1YX4IpLahnVMa8KbcAqKsKaHDShyx/5COafQcaaH819OGf90pK+7EIT/lbCXbNVchcWUa6eVRjYHosCNJXrr+3a4uhlOHYahMRJQ2hHWBnmwfwb4wPreHhy8gKkd2F8nV8oARdiaQ3fDxYL1TQvwnQrpKWwP9uZfnslz2evEz9q4gOxQAr1QHrqatDPwn5luVmdeHzOjjHHb9tH/6aztDw==\", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [#\"Product Code\" = _t, #\"Sub-Product Code\" = _t, #\"Product Description\" = _t, #\"Product Grouping\" = _t]),",
+                    "    #\"Changed Type\" = Table.TransformColumnTypes(Source,{{\"Product Code\", type text}, {\"Sub-Product Code\", type text}, {\"Product Description\", type text}, {\"Product Grouping\", type text}})",
+                    "in",
+                    "    #\"Changed Type\""
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "USR_BUSINESS_AREA_DESCRIPTION",
+            "columns": [
+              {
+                "name": "Business Area Description",
+                "dataType": "string",
+                "sourceColumn": "Business Area Description"
+              },
+              {
+                "name": "BA ID",
+                "dataType": "int64",
+                "sourceColumn": "BA ID"
+              },
+              {
+                "name": "Business Area Description (groups)",
+                "dataType": "string",
+                "sourceColumn": "Business Area Description (groups)"
+              },
+              {
+                "name": "BA_Sort",
+                "dataType": "int64",
+                "sourceColumn": "BA_Sort"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText(\"i45WCilKTElV0lEyBGIEO1YnWsk5sTgDyDECYjgTJO6TmpeSmZcO5BsDsX9JRmoRmA2SCylKTSwuLaoECphgSIJ5xUCuKYZUsLMbkG2GKh4LAA==\", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [#\"Business Area Description\" = _t, #\"BA ID\" = _t, #\"Business Area Description (groups)\" = _t, BA_Sort = _t]),",
+                    "    #\"Changed Type\" = Table.TransformColumnTypes(Source,{{\"Business Area Description\", type text}, {\"BA ID\", Int64.Type}, {\"Business Area Description (groups)\", type text}, {\"BA_Sort\", Int64.Type}})",
+                    "in",
+                    "    #\"Changed Type\""
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "DIM_PARTY_Details",
+            "columns": [
+              {
+                "name": "STATUS",
+                "dataType": "string",
+                "sourceColumn": "STATUS"
+              },
+              {
+                "name": "PARTY_ID",
+                "dataType": "string",
+                "sourceColumn": "PARTY_ID"
+              },
+              {
+                "name": "LOB",
+                "dataType": "string",
+                "sourceColumn": "LOB"
+              },
+              {
+                "name": "CREATED_TIMESTAMP",
+                "dataType": "dateTime",
+                "sourceColumn": "CREATED_TIMESTAMP",
+                "formatString": "yyyy-MM-dd",
+                "annotations": [
+                  {
+                    "name": "Format",
+                    "value": "<Format Format=\"DateTimeCustom\"><DateTimes><DateTime LCID=\"1033\" Group=\"ShortDate\" FormatString=\"yyyy-MM-dd\" /></DateTimes></Format>"
+                  }
+                ]
+              },
+              {
+                "name": "IS_ACTIVE",
+                "dataType": "int64",
+                "sourceColumn": "IS_ACTIVE"
+              },
+              {
+                "name": "PARTY_SUBSCRIPTION_ID",
+                "dataType": "string",
+                "sourceColumn": "PARTY_SUBSCRIPTION_ID"
+              },
+              {
+                "name": "UPDATED_TIMESTAMP",
+                "dataType": "dateTime",
+                "sourceColumn": "UPDATED_TIMESTAMP"
+              },
+              {
+                "name": "PARTY_PARTY_ID",
+                "dataType": "string",
+                "sourceColumn": "PARTY_PARTY_ID"
+              },
+              {
+                "name": "Year",
+                "dataType": "int64",
+                "sourceColumn": "Year"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = Value.NativeQuery(#\"SQL/p21d18102583001 database windows net;p21d18102583002\",\"SELECT * FROM PARTY_CROSS_REFERENCE WHERE CREATED_TIMESTAMP IS NOT NULL\"),",
+                    "    #\"Inserted Year\" = Table.AddColumn(Source, \"Year\", each Date.Year([CREATED_TIMESTAMP]), Int64.Type)",
+                    "in",
+                    "    #\"Inserted Year\""
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "DIM_Calender_Party",
+            "columns": [
+              {
+                "name": "CREATED_TIMESTAMP",
+                "dataType": "dateTime",
+                "sourceColumn": "CREATED_TIMESTAMP",
+                "formatString": "yyyy-MM-dd",
+                "annotations": [
+                  {
+                    "name": "Format",
+                    "value": "<Format Format=\"DateTimeCustom\"><DateTimes><DateTime LCID=\"1033\" Group=\"ShortDate\" FormatString=\"yyyy-MM-dd\" /></DateTimes></Format>"
+                  }
+                ]
+              },
+              {
+                "name": "Month_Num",
+                "dataType": "int64",
+                "sourceColumn": "Month_Num"
+              },
+              {
+                "name": "Month_Sort",
+                "dataType": "string",
+                "sourceColumn": "Month_Sort"
+              },
+              {
+                "name": "Month_Year",
+                "dataType": "string",
+                "sourceColumn": "Month_Year",
+                "sortByColumn": "Month_Sort"
+              },
+              {
+                "name": "Qtr_Year",
+                "dataType": "string",
+                "sourceColumn": "Qtr_Year",
+                "sortByColumn": "Year"
+              },
+              {
+                "name": "Year",
+                "dataType": "int64",
+                "sourceColumn": "Year"
+              }
+            ],
+            "partitions": [
+              {
+                "name": "Partition",
+                "dataView": "full",
+                "source": {
+                  "type": "m",
+                  "expression": [
+                    "let",
+                    "    Source = Value.NativeQuery(#\"SQL/p21d18102583001 database windows net;p21d18102583002\",\"Select distinct CREATED_TIMESTAMP from PARTY_CROSS_REFERENCE WHERE CREATED_TIMESTAMP IS NOT NULL\"),",
+                    "    #\"Inserted Year\" = Table.AddColumn(Source, \"Year\", each Date.Year([CREATED_TIMESTAMP]), Int64.Type),",
+                    "    #\"Inserted Month\" = Table.AddColumn(#\"Inserted Year\", \"Month\", each Date.Month([CREATED_TIMESTAMP]), Int64.Type),",
+                    "    #\"Renamed Columns\" = Table.RenameColumns(#\"Inserted Month\",{{\"Month\", \"Month_Num\"}}),",
+                    "    #\"Inserted Month Name\" = Table.AddColumn(#\"Renamed Columns\", \"Month Name\", each Date.MonthName([CREATED_TIMESTAMP]), type text),",
+                    "    #\"Inserted Quarter\" = Table.AddColumn(#\"Inserted Month Name\", \"Quarter\", each Date.QuarterOfYear([CREATED_TIMESTAMP]), Int64.Type),",
+                    "    #\"Added Custom\" = Table.AddColumn(#\"Inserted Quarter\", \"Month_Sort\", each [Year]*100+[Month_Num]),",
+                    "    #\"Extracted Text Range\" = Table.TransformColumns(#\"Added Custom\", {{\"Month Name\", each Text.Middle(_, 0, 3), type text}}),",
+                    "    #\"Merged Columns\" = Table.CombineColumns(Table.TransformColumnTypes(#\"Extracted Text Range\", {{\"Year\", type text}}, \"en-US\"),{\"Month Name\", \"Year\"},Combiner.CombineTextByDelimiter(\" \", QuoteStyle.None),\"Month_Year\"),",
+                    "    #\"Added Prefix\" = Table.TransformColumns(#\"Merged Columns\", {{\"Quarter\", each \"Qtr \" & Text.From(_, \"en-US\"), type text}}),",
+                    "    #\"Inserted Year1\" = Table.AddColumn(#\"Added Prefix\", \"Year\", each Date.Year([CREATED_TIMESTAMP]), Int64.Type),",
+                    "    #\"Merged Columns1\" = Table.CombineColumns(Table.TransformColumnTypes(#\"Inserted Year1\", {{\"Year\", type text}}, \"en-US\"),{\"Quarter\", \"Year\"},Combiner.CombineTextByDelimiter(\" \", QuoteStyle.None),\"Qtr_Year\"),",
+                    "    #\"Inserted Year2\" = Table.AddColumn(#\"Merged Columns1\", \"Year\", each Date.Year([CREATED_TIMESTAMP]), Int64.Type)",
+                    "in",
+                    "    #\"Inserted Year2\""
+                  ]
+                }
+              }
+            ]
+          }
+        ],
+        "relationships": [
+          {
+            "name": "5527c735-a27f-41b0-915a-ebaf2d9e2095",
+            "fromTable": "FACT_CONFIG_DERIVED_GTP_PRODUCT",
+            "fromColumn": "APPL_DATE",
+            "toTable": "DIM_Calender_FCC",
+            "toColumn": "Date",
+            "crossFilteringBehavior": "bothDirections"
+          },
+          {
+            "name": "6ee1691b-65bb-4db8-ae50-ef5546992907",
+            "fromTable": "FACT_CONFIG_DERIVED_GTP_PRODUCT",
+            "fromColumn": "TNX_TYPE_CODE",
+            "toTable": "USR_TRANSACTION_TYPE_DESCRIPTION",
+            "toColumn": "TNX_TYPE_CODE",
+            "crossFilteringBehavior": "bothDirections"
+          },
+          {
+            "name": "7090b76f-6d78-43f2-b503-94da98b2f3a6",
+            "fromTable": "FACT_CONFIG_DERIVED_GTP_PRODUCT",
+            "fromColumn": "TNX_STAT_CODE",
+            "toTable": "USR_TRANSACTION_STATUS_DESCRIPTION",
+            "toColumn": "TNX_STAT_CODE",
+            "crossFilteringBehavior": "bothDirections"
+          },
+          {
+            "name": "f7f2e42f-af5a-4584-b73e-b812c81d7b55",
+            "fromTable": "FACT_CONFIG_DERIVED_GTP_PRODUCT",
+            "fromColumn": "SUB_PRODUCT_CODE",
+            "toTable": "USR_FT_DESCRIPTION",
+            "toColumn": "Sub Product Code",
+            "crossFilteringBehavior": "bothDirections"
+          },
+          {
+            "name": "f2198ff4-95c6-40fb-a010-e506373f5e7c",
+            "fromTable": "FACT_CONFIG_DERIVED_GTP_PRODUCT",
+            "fromColumn": "SUB_PRODUCT_CODE",
+            "toTable": "USR_BULK_TRANSFER_DESCRIPTION",
+            "toColumn": "Sub Product Code",
+            "crossFilteringBehavior": "bothDirections"
+          },
+          {
+            "name": "02a08fb6-813e-41b0-958a-977dd3f26951",
+            "fromTable": "DIM_GTP_USER",
+            "fromColumn": "CREATED",
+            "toTable": "DIM_Calender_FCC",
+            "toColumn": "Date",
+            "crossFilteringBehavior": "bothDirections"
+          },
+          {
+            "name": "23872a54-6a2e-4dad-8945-10f7cb0063c6",
+            "fromTable": "DIM_TAFB_TXN_FEE_CALCULATED",
+            "fromColumn": "CRT_TMSTMP",
+            "toTable": "DIM_Calender_FRM",
+            "toColumn": "CRT_TMSTMP"
+          },
+          {
+            "name": "383f6f9d-d944-4251-a988-53631f33a4fc",
+            "fromTable": "DIM_GTP_COMPANY",
+            "fromColumn": "COUNTRY",
+            "toTable": "USR_Full Country Name",
+            "toColumn": "Code",
+            "crossFilteringBehavior": "bothDirections"
+          },
+          {
+            "name": "07d1ba3c-6f60-43f7-b44f-c3d0b4c81586",
+            "fromTable": "FACT_CONFIG_DERIVED_GTP_PRODUCT",
+            "fromColumn": "Base Currency",
+            "toTable": "DIM_Bank_base_currency",
+            "toColumn": "Base_ccy",
+            "crossFilteringBehavior": "bothDirections"
+          },
+          {
+            "name": "448b84c5-2247-4858-ac7c-9d89c8315fe8",
+            "fromTable": "FACT_Range-Amount",
+            "fromColumn": "Base Currency",
+            "toTable": "DIM_Bank_base_currency",
+            "toColumn": "Base_ccy",
+            "crossFilteringBehavior": "bothDirections"
+          },
+          {
+            "name": "685e9226-0e4f-4266-90ee-a010fe7cb999",
+            "fromTable": "GTP_ENTITY_ACC",
+            "fromColumn": "COMPANY_ID",
+            "toTable": "Security",
+            "toColumn": "ID"
+          },
+          {
+            "name": "f4794a42-257f-4d70-8847-4f539f217a31",
+            "fromTable": "GTP_ENTITY_ACC",
+            "fromColumn": "COMPANY_ID",
+            "toTable": "DIM_GTP_COMPANY",
+            "toColumn": "COMPANY_ID",
+            "crossFilteringBehavior": "bothDirections"
+          },
+          {
+            "name": "aa403c11-be21-472e-95d6-e6b2849db277",
+            "fromTable": "GTP_Acc_Exc",
+            "fromColumn": "ACCOUNT_TYPE",
+            "toTable": "USR_ACCOUNT_DESCRIPTION_FACT_CORP",
+            "toColumn": "Account_Type",
+            "crossFilteringBehavior": "bothDirections"
+          },
+          {
+            "name": "eaec40c2-eed1-4b4a-8d54-6718d93e328f",
+            "fromTable": "GTP_ENTITY_ACC",
+            "fromColumn": "ACCOUNT_ID",
+            "toTable": "Dim_GTP_ACCOUNT",
+            "toColumn": "ACCOUNT_ID",
+            "crossFilteringBehavior": "bothDirections"
+          },
+          {
+            "name": "97355087-8e49-48d4-a3df-2c101c0c7af3",
+            "fromTable": "GTP_Acc_Exc",
+            "fromColumn": "ACCOUNT_ID",
+            "toTable": "Dim_GTP_ACCOUNT",
+            "toColumn": "ACCOUNT_ID",
+            "crossFilteringBehavior": "bothDirections"
+          },
+          {
+            "name": "fee18fa9-72cc-474a-8150-f3b965e17b0a",
+            "fromTable": "DIM_GTP_COMPANY1",
+            "fromColumn": "COUNTRY",
+            "toTable": "USR_FULL_CountryName1",
+            "toColumn": "Code",
+            "crossFilteringBehavior": "bothDirections"
+          },
+          {
+            "name": "7cba986b-2b0c-4cf5-adc9-b01ccedcd110",
+            "fromTable": "GTP_Acc_Exc",
+            "fromColumn": "CCY_ID",
+            "toTable": "DIM_Bank_base_currency_CT",
+            "toColumn": "CCY_ID"
+          },
+          {
+            "name": "0fa06867-bd4f-46f0-986d-3665730a3203",
+            "fromTable": "FCC_Exchange_Corp",
+            "fromColumn": "Company_ID",
+            "toTable": "Security",
+            "toColumn": "ID"
+          },
+          {
+            "name": "fbd1210d-0be8-4786-8df3-764a2d557b7f",
+            "fromTable": "FCC_Exchange_Corp",
+            "fromColumn": "CCY_ID",
+            "toTable": "DIM_Bank_base_currency_CT",
+            "toColumn": "CCY_ID"
+          },
+          {
+            "name": "d9d318d0-f536-43ea-bee9-ce5a7e886f3e",
+            "fromTable": "FCC_Exchange_Corp",
+            "fromColumn": "Product_status_code",
+            "toTable": "Prod Status Code desc",
+            "toColumn": "Code",
+            "crossFilteringBehavior": "bothDirections"
+          },
+          {
+            "name": "33a854c7-81b3-45eb-82cb-ec477e355947",
+            "fromTable": "FCC_Exchange_Corp",
+            "fromColumn": "Company_ID",
+            "toTable": "DIM_GTP_COMPANY1",
+            "toColumn": "COMPANY_ID",
+            "crossFilteringBehavior": "bothDirections"
+          },
+          {
+            "name": "613e058d-e554-45ed-89c3-6cd3fb84aab1",
+            "fromTable": "FCC_Exchange_Corp",
+            "fromColumn": "PRODUCT_CODE",
+            "toTable": "USR_CORP_PROD_DESC",
+            "toColumn": "Product Code"
+          },
+          {
+            "name": "c443d28c-2330-4612-bf54-33416c93012a",
+            "fromTable": "FACT_CONFIG_DERIVED_GTP_PRODUCT",
+            "fromColumn": "PRODUCT_CODE",
+            "toTable": "USR_PRODUCT_DESCRIPTION",
+            "toColumn": "Product Code",
+            "crossFilteringBehavior": "bothDirections"
+          },
+          {
+            "name": "d7d3ba2f-06d8-432e-b66e-c5cd965f6ccb",
+            "fromTable": "USR_PRODUCT_DESCRIPTION_GROUPING",
+            "fromColumn": "Product Code",
+            "toTable": "USR_PRODUCT_DESCRIPTION",
+            "toColumn": "Product Code",
+            "crossFilteringBehavior": "bothDirections"
+          },
+          {
+            "name": "59be9967-1fef-4027-b7b3-f499608f8285",
+            "fromTable": "FACT_CONFIG_DERIVED_GTP_PRODUCT",
+            "fromColumn": "BA_ID",
+            "toTable": "USR_BUSINESS_AREA_DESCRIPTION",
+            "toColumn": "BA ID",
+            "crossFilteringBehavior": "bothDirections"
+          },
+          {
+            "name": "208b45a7-e743-47dd-b9ce-8549c593bb89",
+            "fromTable": "DIM_TAFB_TXN_FEE_CALCULATED",
+            "fromColumn": "Base Currency",
+            "toTable": "DIM_Bank_base_currency",
+            "toColumn": "Base_ccy",
+            "crossFilteringBehavior": "bothDirections"
+          },
+          {
+            "name": "b3e9476e-2686-490f-a9ca-2fb17e970ce2",
+            "fromTable": "DIM_PARTY_Details",
+            "fromColumn": "CREATED_TIMESTAMP",
+            "toTable": "DIM_Calender_Party",
+            "toColumn": "CREATED_TIMESTAMP",
+            "crossFilteringBehavior": "bothDirections"
+          }
+        ],
+        "roles": [
+          {
+            "name": "CorporateTreasurer",
+            "modelPermission": "read",
+            "members": [
+              {
+                "memberName": "latha.guthi@dh.com",
+                "memberId": "latha.guthi@dh.com#AzureAD",
+                "identityProvider": "AzureAD"
+              },
+              {
+                "memberName": "Avilash.Ghosh@dh.com",
+                "memberId": "Avilash.Ghosh@dh.com#AzureAD",
+                "identityProvider": "AzureAD"
+              },
+              {
+                "memberName": "app:be498069-20dc-423b-9df7-b8960570e677@e17e2402-2a40-42ce-ad75-5848b8d4f6b6",
+                "memberId": "app:be498069-20dc-423b-9df7-b8960570e677@e17e2402-2a40-42ce-ad75-5848b8d4f6b6#AzureAD",
+                "identityProvider": "AzureAD"
+              },
+              {
+                "memberName": "BikashKumar.Sharma@finastra.com",
+                "memberId": "BikashKumar.Sharma@finastra.com#AzureAD",
+                "identityProvider": "AzureAD"
+              },
+              {
+                "memberName": "srinath.raja@finastra.com",
+                "memberId": "srinath.raja@finastra.com#AzureAD",
+                "identityProvider": "AzureAD"
+              }
+            ],
+            "tablePermissions": [
+              {
+                "name": "Security",
+                "filterExpression": "[Company]=CUSTOMDATA()"
+              }
+            ]
+          }
+        ],
+        "expressions": [
+          {
+            "name": "USR_ACCOUNT_DESCRIPTION_FACT_CORP",
+            "kind": "m",
+            "expression": [
+              "let",
+              "    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText(\"ZdA9DsMgDAXgqyDmDKT/GSk4LSoxkSGtqij3v0ZNO0RO1/dhnuV51sboRl8BoQ8uWHor61yasOilYWwZ3UQEWCTsGDyMKYcN7BmyfQa8ZQkHhpgsyvTIaQEa1OYz9eNT7SfwDM6Sl7PnijZGZdErTCU4kA8u3116UA+AkTeS2rH2Mb1E2pq1UeTtmv8P1WtkKCXCsL1UV2tSuQPpZfkA\", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type text) meta [Serialized.Text = true]) in type table [Account_Type = _t, Description = _t]),",
+              "    #\"Changed Type\" = Table.TransformColumnTypes(Source,{{\"Account_Type\", Int64.Type}, {\"Description\", type text}}),",
+              "    #\"Capitalized Each Word\" = Table.TransformColumns(#\"Changed Type\",{{\"Description\", Text.Proper, type text}})",
+              "in",
+              "    #\"Capitalized Each Word\""
+            ]
+          },
+          {
+            "name": "USR_CORP_PROD_DESC1",
+            "kind": "m",
+            "expression": [
+              "let",
+              "    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText(\"jVLLbsIwEPyVVc4cUC89l5CgqFGJMDfKwcRLsUjWkR+0+fvapBBc0YrjPLSeHe9mk8wWySSZcTqifnfT6dOzgYXjmpNF9Mpac4HJduKNr8HomiMstUDtQcrNYZBWf8+AFdYoTyiiYVnqYfbVKW1hrmrXIlmue0hV02BtpaLYXo72Eq1FDWoPqUYhbWTM1x7mjgR4jsz+nHOUi/Bs0T76bPEW7HRSsg5dsDQf6GqkoeI93zWRvDrLn1wLv3wrreVUx12WNzn+3acsPBwdBQlsSdr+zJKQ9DHYQtBScfrNs0D4mGTiANXSw8rp+sANDh8KL13X9Dd7sCwArJ1GyFoum2gCC3fDDrLr/GPRyVzPgoXwhTEOBTBfgtj1l22Xd7dl91KJU9w+C/Vejuqxuet5gKhbmGOnzI+K3DjdD4b84odckv+uUOB1wvYb\", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [#\"Product Code\" = _t, #\"Product Description\" = _t, #\"Product Grouping\" = _t]),",
+              "    #\"Changed Type\" = Table.TransformColumnTypes(Source,{{\"Product Code\", type text}, {\"Product Description\", type text}, {\"Product Grouping\", type text}})",
+              "in",
+              "    #\"Changed Type\""
+            ]
+          },
+          {
+            "name": "USR_PRODUCT_DESCRIPTION",
+            "kind": "m",
+            "expression": [
+              "let",
+              "    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText(\"jVLLbsIwEPyVVc4cUC89l5CgqFGJMDfKwcRLsUjWkR+0+fvapBBc0YrjPLSeHe9mk8wWySSZcTqifnfT6dOzgYXjmpNF9Mpac4HJduKNr8HomiMstUDtQcrNYZBWf8+AFdYoTyiiYVnqYfbVKW1hrmrXIlmue0hV02BtpaLYXo72Eq1FDWoPqUYhbWTM1x7mjgR4jsz+nHOUi/Bs0T76bPEW7HRSsg5dsDQf6GqkoeI93zWRvDrLn1wLv3wrreVUx12WNzn+3acsPBwdBQlsSdr+zJKQ9DHYQtBScfrNs0D4mGTiANXSw8rp+sANDh8KL13X9Dd7sCwArJ1GyFoum2gCC3fDDrLr/GPRyVzPgoXwhTEOBTBfgtj1l22Xd7dl91KJU9w+C/Vejuqxuet5gKhbmGOnzI+K3DjdD4b84odckv+uUOB1wvYb\", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [#\"Product Code\" = _t, #\"Product Description\" = _t, #\"Product Grouping\" = _t]),",
+              "    #\"Changed Type\" = Table.TransformColumnTypes(Source,{{\"Product Code\", type text}, {\"Product Description\", type text}, {\"Product Grouping\", type text}})",
+              "in",
+              "    #\"Changed Type\""
+            ]
+          }
+        ],
+        "annotations": [
+          {
+            "name": "ClientCompatibilityLevel",
+            "value": "500"
+          }
+        ]
+      }
+    }
+  }
+}
+
