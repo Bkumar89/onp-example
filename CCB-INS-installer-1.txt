@@ -1,7 +1,7 @@
 cls
 @echo off
 echo 		############################################################################
-echo 		####                 CCB Insights On Prem Installer                     ####
+echo 		####                 Installer                                          ####
 echo 		############################################################################
 echo.
 echo.
@@ -14,7 +14,7 @@ setlocal
 set installPath=%cd%
 set TIMESTAMP=%DATE:~7,2%-%DATE:~4,2%-%DATE:~-4%-%TIME::=-%
 set TIMESTAMP=%TIMESTAMP: =%
-set LOG_FILE=CCB_INS_OP_Installer_%TIMESTAMP%.log
+set LOG_FILE=INS_OP_Installer_%TIMESTAMP%.log
 powershell .\installer.ps1; exit $LASTEXITCODE >> %LOG_FILE%
 
 echo Installation completed.
